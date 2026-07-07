@@ -1,0 +1,214 @@
+# LISTA TEMATÓW — mini-kursy ćwiczeniowe (cwiczenia/)
+
+Ten plik mapuje etapy głównego kursu na osobne
+mini-kursy ćwiczeniowe generowane przez CC w cwiczenia/<temat_slug>/.
+Każdy temat = jeden folder, 4 pliki (teoria.md, conftest.py, <temat_slug>.py,
+test_<temat_slug>.py), 10–15 zadań, zgodnie z procedurą /nowy-temat.
+
+Kolejność = kolejność nauki. Spirala: każdy temat od punktu 2 wzwyż zazębia
+się z co najmniej jednym pojęciem z tematu poprzedniego.
+
+---
+
+## Etap 0-1 — Podstawy i struktura programu
+
+### 1. `funkcje_return_warunki` ✅ WYGENEROWANY
+Zakres: return vs print, if/elif/else, early return, kontrakt funkcji,
+None jako sygnał braku wartości.
+
+### 2. `listy_petle`
+Zakres: iteracja for, akumulator, enumerate, zip, list comprehension.
+Zazębienie: funkcja z zadania 1 użyta jako warunek filtrowania w pętli.
+
+### 3. `slowniki`
+Zakres: dostęp przez klucz, .get(), iteracja po .items(), budowanie słownika
+w pętli, sprawdzanie obecności klucza (in).
+Zazębienie: list comprehension z tematu 2 przy budowaniu słownika.
+
+### 4. `import_try_except_pathlib`
+Zakres: podział kodu na pliki, import lokalny, try/except (kolejność
+wyjątków szczegółowy→ogólny), pathlib (Path, parent, /), if __name__ ==
+"__main__".
+Zazębienie: funkcja ze słownikami (temat 3) importowana z innego pliku.
+
+---
+
+## Etap 2A — Pliki tekstowe
+
+### 5. `pliki_tekstowe`
+Zakres: open(), with, read()/readlines(), write(), tryb "r"/"w"/"a",
+newline, encoding="utf-8".
+Zazębienie: try/except z tematu 4 przy otwieraniu nieistniejącego pliku.
+
+---
+
+## Etap 2B — CSV
+
+### 6. `csv_dict_reader_writer`
+Zakres: csv.DictReader, csv.DictWriter, newline="" przy open(), fieldnames,
+iteracja po wierszach jako słownik.
+Zazębienie: słowniki z tematu 3, obsługa błędu pliku z tematu 5.
+
+---
+
+## Etap 2C — JSON
+
+### 7. `json_load_dump`
+Zakres: json.load/dump (pliki), json.loads/dumps (stringi), zagnieżdżone
+struktury (lista słowników), json.JSONDecodeError.
+Zazębienie: struktura danych ze słowników (temat 3) zapisana jako JSON.
+
+---
+
+## Etap 3A — pandas wstęp
+
+### 8. `pandas_wstep`
+Zakres: pd.read_csv/read_excel, df["kolumna"], .sum()/.mean(), filtrowanie
+boolean (df[df["kolumna"] > x]), brak side effects (.copy()).
+Zazębienie: dane wejściowe z CSV (temat 6).
+
+---
+
+## Etap 3B — pandas zaawansowany
+
+### 9. `pandas_groupby_chaining`
+Zakres: .groupby(), agregacje (.agg(), COUNT/AVG/SUM odpowiedniki),
+.assign(), method chaining, .copy() w łańcuchu.
+Zazębienie: filtrowanie boolean z tematu 8 jako krok w chainingu.
+
+---
+
+## Etap 3C — Excel z formatowaniem
+
+### 10. `openpyxl_formatowanie`
+Zakres: load_workbook, Font, PatternFill, Alignment, Border/Side,
+freeze_panes, iter_rows, column_dimensions, index=False przy
+df.to_excel(), wb.save() przed return True.
+Zazębienie: DataFrame z tematu 9 jako źródło danych do wyeksportowania.
+
+---
+
+## Etap 4 — API i requests
+
+### 11. `requests_api_podstawy`
+Zakres: requests.get z params/timeout, requests.post z json/headers,
+status_code, raise_for_status(), RequestException, parsowanie
+response.json().
+Zazębienie: zapis odpowiedzi API do CSV/JSON (tematy 6-7).
+
+---
+
+## Etap 5 — Web scraping
+
+### 12. `scraping_beautifulsoup`
+Zakres: BeautifulSoup, find/find_all, selektory CSS, .text/.get_text(),
+atrybuty (.get("href")), robots.txt + User-Agent, rate limiting (time.sleep).
+Zazębienie: requests z tematu 11 jako źródło HTML, zapis wyniku do CSV.
+
+---
+
+## Etap 6 — pytest zaawansowany
+
+### 13. `pytest_fixtures_parametrize`
+Zakres: fixture (scope function/module/session), conftest.py, parametrize,
+pytest.raises, pytest.approx, monkeypatch (setenv/setattr).
+Zazębienie: testowanie funkcji z tematu 11 (mock requests) i tematu 4
+(try/except) przez pytest.raises.
+
+---
+
+## Etap 6.5 — SQL + PostgreSQL
+
+### 14. `sql_podstawy`
+Zakres: CREATE TABLE, INSERT, SELECT/WHERE/ORDER BY/LIMIT, GROUP BY/HAVING,
+agregacje (COUNT/AVG/SUM), JOIN (INNER/LEFT).
+Zazębienie: brak (SQL czysty, poza Pythonem) — most do tematu 15.
+
+### 15. `psycopg2_sqlalchemy`
+Zakres: psycopg2.connect/cursor/execute, zapytania parametryzowane (%s),
+executemany, context manager (with), SQLAlchemy create_engine,
+pd.read_sql/to_sql.
+Zazębienie: SQL z tematu 14, DataFrame z tematu 9, try/except z tematu 4
+(psycopg2.Error).
+
+---
+
+## Etap 7 — Testy API + FastAPI
+
+### 16. `fastapi_pydantic`
+Zakres: FastAPI(), @app.get/@app.post, parametr ścieżki, BaseModel,
+walidacja przez type hint, response_model, TestClient, kod 422.
+Zazębienie: JSON z tematu 7 jako response_model, testy z tematu 13
+(TestClient jako specjalny fixture).
+
+---
+
+## Etap 8 — Selenium
+
+### 17. `selenium_podstawy`
+Zakres: webdriver.Chrome, Service, Options (headless, window-size),
+find_element/find_elements + By, WebDriverWait + expected_conditions,
+send_keys/click, try/finally + quit().
+Zazębienie: try/except z tematu 4 (TimeoutException), logging wprowadzony
+tu pierwszy raz jako nowy element stdlib (pełna teoria przed zadaniem).
+
+### 18. `selenium_alerty_screenshoty`
+Zakres: save_screenshot (Path→str), switch_to.alert, accept/dismiss,
+alert_is_present.
+Zazębienie: Path z tematu 4, driver z tematu 17.
+
+---
+
+## Etap 8.5 — AI / LLM API
+
+### 19. `llm_api_klient`
+Zakres: request/response do /v1/messages (nagłówki x-api-key,
+anthropic-version), payload (model, max_tokens, messages), parsowanie
+content[0]["text"], 4-warstwowa obsługa wyjątków z raise...from error,
+logging (%s, basicConfig w __main__).
+Zazębienie: requests z tematu 11, try/except z tematu 4, logging
+z tematu 17.
+
+### 20. `llm_structured_extraction`
+Zakres: prompt engineering (podwójne klamry w f-stringu), dwie warstwy
+błędu JSON (struktura API vs treść modelu), json.loads + JSONDecodeError,
+defensywne czyszczenie markdown (removeprefix/removesuffix), mock
+w testach (patch tam gdzie używane).
+Zazębienie: json.loads z tematu 7, klient z tematu 19, mock z tematu 13.
+
+---
+
+## Etap 9 — brak nowego tematu ćwiczeniowego
+Etap 9 to portfolio + proposale, nie nowa wiedza techniczna — mini-kursy
+ćwiczeniowe się tu kończą. Ewentualne przyszłe tematy (Docker, GitHub
+Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
+
+---
+
+## STATUS GENEROWANIA (aktualizować po każdym /nowy-temat):
+1. funkcje_return_warunki — ✅ wygenerowany, ✅ wykonany
+2. listy_petle — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
+3. slowniki — ⬜
+4. import_try_except_pathlib — ⬜
+5. pliki_tekstowe — ⬜
+6. csv_dict_reader_writer — ⬜
+7. json_load_dump — ⬜
+8. pandas_wstep — ⬜
+9. pandas_groupby_chaining — ⬜
+10. openpyxl_formatowanie — ⬜
+11. requests_api_podstawy — ⬜
+12. scraping_beautifulsoup — ⬜
+13. pytest_fixtures_parametrize — ⬜
+14. sql_podstawy — ⬜
+15. psycopg2_sqlalchemy — ⬜
+16. fastapi_pydantic — ⬜
+17. selenium_podstawy — ⬜
+18. selenium_alerty_screenshoty — ⬜
+19. llm_api_klient — ⬜
+20. llm_structured_extraction — ⬜
+
+### Zasada auto-odhaczania (dla CC):
+- Po wykonaniu /nowy-temat <slug> → CC sam zmienia status z ⬜ na ✅ wygenerowany
+- Po /review-temat <slug>, gdy widać że wszystkie TODO uzupełnione (bez pass/...) → ✅ wykonany
+- Po /review-temat <slug>, gdy raport.md wychodzi bez 🔴/🟡 → ✅ sprawdzony (można przejść dalej)
+- CC edytuje ten plik bezpośrednio po każdej z tych trzech akcji, bez pytania o potwierdzenie
