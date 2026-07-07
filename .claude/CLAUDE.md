@@ -7,6 +7,12 @@ teoria_<temat_slug>.md, conftest.py, <temat_slug>.py, test_<temat_slug>.py
 ZAKAZ: nie twórz podfolderów src/ ani tests/ w cwiczenia/ — struktura
 jest płaska, jeden folder = jeden temat, 4 pliki.
 
+OBOWIĄZEK: każda funkcja w szkielecie <temat_slug>.py musi zawierać
+komentarz # TODO: z konkretną wskazówką (metoda/wzorzec do użycia),
+umieszczony bezpośrednio przed ..., np.:
+    # TODO: użyj slownik.get(klucz, domyslna)
+    ...
+
 Standardy techniczne (type hinty, docstring Args/Returns, is None,
 dwie puste linie, importy stdlib→third-party→local) — zgodnie z
 INSTRUKCJA_PROJEKTU.md w głównym projekcie Claude.ai (poza tym repo).
