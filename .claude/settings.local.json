@@ -11,7 +11,8 @@
       "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\funkcje_return_warunki\\\\test_funkcje_return_warunki.py\" -v 2>&1)",
       "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\")",
       "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\\\\test_listy_petle.py\" -q --tb=line 2>&1)",
-      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\\\\test_listy_petle.py\" -v 2>&1)"
+      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\\\\test_listy_petle.py\" -v 2>&1)",
+      "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\slowniki\" -Force)"
     ]
   }
 }
