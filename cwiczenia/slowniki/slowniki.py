@@ -11,8 +11,7 @@ def zadanie_01_wartosc_po_kluczu(slownik: dict[str, int], klucz: str) -> int:
     Returns:
         int: wartość przypisana do klucza.
     """
-    # TODO: użyj slownik["klucz"], aby pobrać wartość pod kluczem
-    ...
+    return slownik[klucz]
 
 
 def zadanie_02_get_z_domyslna(slownik: dict[str, int], klucz: str, domyslna: int) -> int:
@@ -26,8 +25,7 @@ def zadanie_02_get_z_domyslna(slownik: dict[str, int], klucz: str, domyslna: int
     Returns:
         int: wartość klucza lub domyslna.
     """
-    # TODO: użyj slownik.get(klucz, domyslna)
-    ...
+    return slownik.get(klucz, domyslna)
 
 
 def zadanie_03_czy_klucz_istnieje(slownik: dict[str, int], klucz: str) -> bool:
@@ -40,8 +38,7 @@ def zadanie_03_czy_klucz_istnieje(slownik: dict[str, int], klucz: str) -> bool:
     Returns:
         bool: True jeśli klucz istnieje, False w przeciwnym razie.
     """
-    # TODO: użyj operatora in — klucz in slownik zwraca bool
-    ...
+    return klucz in slownik
 
 
 def zadanie_04_dodaj_lub_nadpisz(slownik: dict[str, int], klucz: str, wartosc: int) -> dict[str, int]:
@@ -55,8 +52,9 @@ def zadanie_04_dodaj_lub_nadpisz(slownik: dict[str, int], klucz: str, wartosc: i
     Returns:
         dict[str, int]: kopia słownika z wprowadzoną zmianą.
     """
-    # TODO: skopiuj słownik przez dict(slownik), dodaj/nadpisz klucz, zwróć kopię
-    ...
+    new_dict = slownik.copy()
+    new_dict[klucz] = wartosc
+    return new_dict
 
 
 def zadanie_05_klucze_jako_lista(slownik: dict[str, int]) -> list[str]:
@@ -68,8 +66,7 @@ def zadanie_05_klucze_jako_lista(slownik: dict[str, int]) -> list[str]:
     Returns:
         list[str]: lista kluczy w kolejności wstawienia.
     """
-    # TODO: użyj list(slownik.keys())
-    ...
+    return list(slownik.keys())
 
 
 def zadanie_06_wartosci_jako_lista(slownik: dict[str, int]) -> list[int]:
@@ -81,8 +78,7 @@ def zadanie_06_wartosci_jako_lista(slownik: dict[str, int]) -> list[int]:
     Returns:
         list[int]: lista wartości w kolejności wstawienia.
     """
-    # TODO: użyj list(slownik.values())
-    ...
+    return list(slownik.values())
 
 
 def zadanie_07_opisy_z_items(slownik: dict[str, int]) -> list[str]:
@@ -94,8 +90,10 @@ def zadanie_07_opisy_z_items(slownik: dict[str, int]) -> list[str]:
     Returns:
         list[str]: lista napisów w formacie "klucz: wartosc".
     """
-    # TODO: zbuduj listę iterując po slownik.items(), użyj f-stringa "k: v"
-    ...
+    lista_napisow = []
+    for k, v in slownik.items():
+        lista_napisow.append(f"{k}: {v}")
+    return lista_napisow
 
 
 def zadanie_08_suma_wartosci(slownik: dict[str, int]) -> int:
@@ -107,8 +105,10 @@ def zadanie_08_suma_wartosci(slownik: dict[str, int]) -> int:
     Returns:
         int: suma wartości (0 dla pustego słownika).
     """
-    # TODO: akumulator suma = 0, iteruj po slownik.values(), zwróć sumę
-    ...
+    suma = 0
+    for v in slownik.values():
+        suma += v
+    return suma
 
 
 def zadanie_09_zbuduj_ze_list(klucze: list[str], wartosci: list[int]) -> dict[str, int]:
@@ -123,8 +123,10 @@ def zadanie_09_zbuduj_ze_list(klucze: list[str], wartosci: list[int]) -> dict[st
     Returns:
         dict[str, int]: słownik zbudowany z par (klucz, wartość).
     """
-    # TODO: pusty słownik wynik = {}, for k, v in zip(klucze, wartosci): wynik[k] = v
-    ...
+    wynik = {}
+    for k, v in zip(klucze, wartosci):
+        wynik[k] = v
+    return wynik
 
 
 def zadanie_10_zlicz_wystapienia(slowa: list[str]) -> dict[str, int]:
@@ -136,8 +138,13 @@ def zadanie_10_zlicz_wystapienia(slowa: list[str]) -> dict[str, int]:
     Returns:
         dict[str, int]: słownik {slowo: liczba_wystapien}.
     """
-    # TODO: pusty słownik, dla każdego słowa: if slowo in licznik → += 1, else → = 1
-    ...
+    licznik = {}
+    for slowo in slowa:
+        if slowo in licznik:
+            licznik[slowo] += 1
+        else:
+            licznik[slowo] = 1
+    return licznik
 
 
 def zadanie_11_znajdz_klucz_po_wartosci(slownik: dict[str, int], szukana: int) -> Optional[str]:
@@ -150,8 +157,9 @@ def zadanie_11_znajdz_klucz_po_wartosci(slownik: dict[str, int], szukana: int) -
     Returns:
         Optional[str]: pierwszy klucz z pasującą wartością lub None.
     """
-    # TODO: iteruj po slownik.items(), gdy v == szukana → return k (early return); na końcu return None
-    ...
+    for k, v in slownik.items():
+        if v == szukana:
+            return k
 
 
 def zadanie_12_klucze_powyzej_progu(slownik: dict[str, int], prog: int) -> list[str]:
@@ -167,4 +175,4 @@ def zadanie_12_klucze_powyzej_progu(slownik: dict[str, int], prog: int) -> list[
         list[str]: klucze gdzie wartość > prog, w kolejności wstawienia.
     """
     # TODO: list comprehension — [k for k, v in slownik.items() if v > prog]
-    ...
+    return [k for k, v in slownik.items() if v > prog]
