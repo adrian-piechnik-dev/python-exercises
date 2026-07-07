@@ -11,7 +11,7 @@ OBOWIĄZEK: każda funkcja w szkielecie <temat_slug>.py musi zawierać
 komentarz # TODO: z konkretną wskazówką (metoda/wzorzec do użycia),
 umieszczony bezpośrednio przed ..., np.:
     # TODO: użyj slownik.get(klucz, domyslna)
-    ...
+    pass
 
 Standardy techniczne (type hinty, docstring Args/Returns, is None,
 dwie puste linie, importy stdlib→third-party→local) — zgodnie z
