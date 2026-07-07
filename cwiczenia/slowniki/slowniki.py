@@ -114,8 +114,6 @@ def zadanie_08_suma_wartosci(slownik: dict[str, int]) -> int:
 def zadanie_09_zbuduj_ze_list(klucze: list[str], wartosci: list[int]) -> dict[str, int]:
     """Buduje słownik z listy kluczy i listy wartości, iterując po obu jednocześnie.
 
-    Spirala z listy_petle: użyj zip do iteracji po dwóch listach równocześnie.
-
     Args:
         klucze: lista kluczy tekstowych.
         wartosci: lista wartości całkowitych (tej samej długości co klucze).
@@ -160,12 +158,11 @@ def zadanie_11_znajdz_klucz_po_wartosci(slownik: dict[str, int], szukana: int) -
     for k, v in slownik.items():
         if v == szukana:
             return k
+    return None
 
 
 def zadanie_12_klucze_powyzej_progu(slownik: dict[str, int], prog: int) -> list[str]:
     """Zwraca listę kluczy, których wartość jest większa od podanego progu.
-
-    Spirala z listy_petle: użyj list comprehension z filtrem na .items().
 
     Args:
         slownik: słownik str -> int.
@@ -174,5 +171,4 @@ def zadanie_12_klucze_powyzej_progu(slownik: dict[str, int], prog: int) -> list[
     Returns:
         list[str]: klucze gdzie wartość > prog, w kolejności wstawienia.
     """
-    # TODO: list comprehension — [k for k, v in slownik.items() if v > prog]
     return [k for k, v in slownik.items() if v > prog]

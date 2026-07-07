@@ -189,7 +189,7 @@ Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
 1. funkcje_return_warunki — ✅ wygenerowany, ✅ wykonany
 2. listy_petle — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 3. slowniki — ✅ wygenerowany
-4. import_try_except_pathlib — ⬜
+4. import_try_except_pathlib — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 5. pliki_tekstowe — ⬜
 6. csv_dict_reader_writer — ⬜
 7. json_load_dump — ⬜

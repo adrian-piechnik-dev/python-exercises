@@ -1,18 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Piechu\\\\python_execise\\\\cwiczenia\\\\funkcje_podstawy\\\\src\")",
-      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Piechu\\\\python_execise\\\\cwiczenia\\\\funkcje_podstawy\\\\tests\")",
-      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\funkcje_return_warunki\")",
-      "PowerShell(Get-Command py -ErrorAction SilentlyContinue; Get-Command pytest -ErrorAction SilentlyContinue; \\(Get-ChildItem \"C:\\\\Users\\\\Piechu\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\\" -ErrorAction SilentlyContinue | Select-Object -First 5\\); where.exe python 2>$null)",
-      "PowerShell(py -m pip install pytest --quiet)",
-      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\funkcje_return_warunki\\\\test_zadania.py\" -v --tb=line 2>&1)",
-      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\funkcje_return_warunki\\\\test_funkcje_return_warunki.py\" -q 2>&1)",
-      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\funkcje_return_warunki\\\\test_funkcje_return_warunki.py\" -v 2>&1)",
-      "PowerShell(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\")",
-      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\\\\test_listy_petle.py\" -q --tb=line 2>&1)",
-      "PowerShell(py -m pytest \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\listy_petle\\\\test_listy_petle.py\" -v 2>&1)",
-      "PowerShell(New-Item -ItemType Directory -Path \"C:\\\\Users\\\\Piechu\\\\Desktop\\\\python_execise\\\\cwiczenia\\\\slowniki\" -Force)"
+      "Write(cwiczenia/**)",
+      "Edit(cwiczenia/**)",
+      "Edit(LISTA_TEMATOW_CWICZENIA.md)",
+
+      "Bash(pytest cwiczenia/**)",
+      "Bash(git add cwiczenia/**)",
+      "Bash(git commit *)",
+      "Bash(git push)",
+      "Bash(git pull)",
+
+      "PowerShell(New-Item -ItemType Directory *cwiczenia*)",
+      "PowerShell(py -m pytest cwiczenia\\**)",
+      "PowerShell(py -m pip install pytest --quiet)"
     ]
   }
 }
