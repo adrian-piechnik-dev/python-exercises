@@ -36,8 +36,6 @@ def zadanie_03_policz_linie(sciezka: str) -> int:
     Returns:
         int: liczba linii; 0 dla pustego pliku.
     """
-    # TODO: otwórz plik w trybie "r" encoding="utf-8"
-    # TODO: wczytaj przez f.read().splitlines() i zwróć len() tej listy
     with open(sciezka, "r", encoding="utf-8") as f:
         linie = f.read().splitlines()
         return len(linie)
@@ -53,9 +51,8 @@ def zadanie_04_zapisz_tekst(sciezka: str, tresc: str) -> None:
     Returns:
         None
     """
-    # TODO: użyj with open(sciezka, "w", encoding="utf-8") as f:
-    # TODO: f.write(tresc)
-    pass
+    with open(sciezka, "w", encoding="utf-8") as f:
+        f.write(tresc)
 
 
 def zadanie_05_zapisz_linie(sciezka: str, linie: list[str]) -> None:
@@ -68,9 +65,8 @@ def zadanie_05_zapisz_linie(sciezka: str, linie: list[str]) -> None:
     Returns:
         None
     """
-    # TODO: użyj with open(sciezka, "w", encoding="utf-8") as f:
-    # TODO: f.write("\n".join(linie))
-    pass
+    with open(sciezka, "w", encoding="utf-8") as f:
+        f.write("\n".join(linie))
 
 
 def zadanie_06_dopisz_linie(sciezka: str, linia: str) -> None:
@@ -85,9 +81,8 @@ def zadanie_06_dopisz_linie(sciezka: str, linia: str) -> None:
     Returns:
         None
     """
-    # TODO: użyj with open(sciezka, "a", encoding="utf-8") as f:
-    # TODO: f.write(linia + "\n")
-    pass
+    with open(sciezka, "a", encoding="utf-8") as f:
+        f.write(linia + "\n")
 
 
 def zadanie_07_pierwsza_linia(sciezka: str) -> Optional[str]:
@@ -99,10 +94,11 @@ def zadanie_07_pierwsza_linia(sciezka: str) -> Optional[str]:
     Returns:
         Optional[str]: pierwsza linia bez znaku nowej linii, lub None.
     """
-    # TODO: otwórz plik, wywołaj f.read().splitlines() i przypisz do linie
-    # TODO: jeśli lista jest pusta (not linie) — return None
-    # TODO: return linie[0]
-    pass
+    with open(sciezka, "r", encoding="utf-8") as f:
+        linie = f.read().splitlines()
+        if not linie:
+            return None
+        return linie[0]
 
 
 def zadanie_08_szukaj_frazy(sciezka: str, fraza: str) -> list[str]:
@@ -115,9 +111,9 @@ def zadanie_08_szukaj_frazy(sciezka: str, fraza: str) -> list[str]:
     Returns:
         list[str]: linie zawierające frazę, bez znaków nowej linii.
     """
-    # TODO: wczytaj linie przez f.read().splitlines()
-    # TODO: użyj list comprehension: [l for l in linie if fraza in l]
-    pass
+    with open(sciezka, "r", encoding="utf-8") as f:
+        linie = f.read().splitlines()
+        return [l for l in linie if fraza in l]
 
 
 def zadanie_09_licz_slowa(sciezka: str) -> int:
@@ -129,9 +125,9 @@ def zadanie_09_licz_slowa(sciezka: str) -> int:
     Returns:
         int: łączna liczba słów; 0 dla pustego pliku.
     """
-    # TODO: wczytaj całość przez f.read()
-    # TODO: użyj str.split() (dzieli po wszystkich białych znakach) i len()
-    pass
+    with open(sciezka, "r", encoding="utf-8") as f:
+        slowa = f.read().split()
+        return len(slowa)
 
 
 def zadanie_10_czytaj_bezpiecznie(sciezka: str) -> Optional[str]:
@@ -143,10 +139,11 @@ def zadanie_10_czytaj_bezpiecznie(sciezka: str) -> Optional[str]:
     Returns:
         Optional[str]: zawartość pliku lub None gdy plik nie istnieje.
     """
-    # TODO: użyj try/except FileNotFoundError
-    # TODO: w bloku try: otwórz plik i zwróć f.read()
-    # TODO: w except FileNotFoundError: return None
-    pass
+    try:
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return None
 
 
 def zadanie_11_skopiuj_plik(zrodlo: str, cel: str) -> bool:
@@ -159,10 +156,14 @@ def zadanie_11_skopiuj_plik(zrodlo: str, cel: str) -> bool:
     Returns:
         bool: True gdy kopiowanie się powiodło, False gdy plik źródłowy nie istnieje.
     """
-    # TODO: try/except FileNotFoundError — w except return False
-    # TODO: w bloku try: otwórz zrodlo w "r" i wczytaj; otwórz cel w "w" i zapisz
-    # TODO: return True po powodzeniu
-    pass
+    try:
+        with open(zrodlo, "r", encoding="utf-8") as src:
+            tekst = src.read()
+            with open(cel, "w", encoding="utf-8") as dst:
+                dst.write(tekst)
+        return True
+    except FileNotFoundError:
+        return False
 
 
 def zadanie_12_filtruj_i_zapisz(wejscie: str, wyjscie: str, fraza: str) -> int:
@@ -178,9 +179,12 @@ def zadanie_12_filtruj_i_zapisz(wejscie: str, wyjscie: str, fraza: str) -> int:
     Returns:
         int: liczba zapisanych linii; 0 gdy plik wejściowy nie istnieje.
     """
-    # TODO: try/except FileNotFoundError — w except: return 0
-    # TODO: wczytaj linie z pliku wejscie (splitlines)
-    # TODO: przefiltruj linie zawierające frazę (jak w zadaniu_08)
-    # TODO: zapisz pasujące linie do pliku wyjscie ("\n".join(pasujace))
-    # TODO: return len(pasujace)
-    pass
+    try:
+        with open(wejscie, "r", encoding="utf-8") as fin:
+            linie = fin.read().splitlines()
+            pasujace = [l for l in linie if fraza in l]
+            with open(wyjscie, "w", encoding="utf-8") as fout:
+                fout.write("\n".join(pasujace))
+        return len(pasujace)
+    except FileNotFoundError:
+        return 0
