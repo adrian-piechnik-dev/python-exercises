@@ -1,24 +1,41 @@
-# Kontekst projektu — ćwiczenia Python
+# Kontekst projektu — cwiczenia Python
 
-To repo służy do generowania mini-kursów ćwiczeniowych (nie portfolio).
-Każdy temat = jeden folder w cwiczenia/<temat_slug>/ z 4 plikami:
-teoria_<temat_slug>.md, conftest.py, <temat_slug>.py, test_<temat_slug>.py
+To repo sluzy do generowania mini-kursow cwiczeniowych (nie portfolio).
+Kazdy temat = jeden folder w cwiczenia/<temat_slug>/ z 4 plikami:
+teoria.md, conftest.py, <temat_slug>.py, test_<temat_slug>.py
 
-ZAKAZ: nie twórz podfolderów src/ ani tests/ w cwiczenia/ — struktura
-jest płaska, jeden folder = jeden temat, 4 pliki.
+## ZAKAZY:
+- Nie tworz podfolderow src/ ani tests/ w cwiczenia/ — struktura jest
+  plaska, jeden folder = jeden temat, 4 pliki.
+- Nigdy nie poprawiaj kodu usera samodzielnie podczas review — review
+  wskazuje, user poprawia.
+- Nigdy nie wypelniaj TODO za usera w szkieletach.
 
-OBOWIĄZEK: każda funkcja w szkielecie <temat_slug>.py musi zawierać
-komentarz # TODO: z konkretną wskazówką (metoda/wzorzec do użycia),
-umieszczony bezpośrednio przed ..., np.:
-    # TODO: użyj slownik.get(klucz, domyslna)
-    pass
+## STANDARDY TECHNICZNE (egzekwuj we wszystkich generowanych plikach):
+- Type hinty na kazdej funkcji (takze testowej: -> None).
+- Docstring w formacie Args/Returns; gdy funkcja bez argumentow,
+  w Args wpisz "Brak." (nie zostawiaj pustej sekcji).
+- is None / is True / is False — nigdy == None / == True.
+- Dwie puste linie miedzy funkcjami (i przed pierwsza funkcja po importach).
+- Kolejnosc importow: stdlib -> third-party -> local, grupy oddzielone
+  pusta linia.
+- Kontrakt funkcji: jeden typ zwracany albo None — nigdy string-jako-blad.
+  Sygnalizacja bledu przez wyjatek lub None.
+- Bez martwego kodu (nieuzywane importy, puste sekcje docstringa).
+- Dla plikow CSV: open(..., newline=""), encoding="utf-8".
 
-Standardy techniczne (type hinty, docstring Args/Returns, is None,
-dwie puste linie, importy stdlib→third-party→local) — zgodnie z
-INSTRUKCJA_PROJEKTU.md w głównym projekcie Claude.ai (poza tym repo).
+## KONWENCJA GIT (dla auto-commitow z /review-temat i pracy w repo):
+- Commit messages po angielsku, tryb rozkazujacy ("Add csv exercises",
+  nie "added csv exercises").
+- git add TYLKO konkretnych sciezek — nigdy git add .
+- Push po kazdym zamknietym temacie (repo synchronizowane miedzy
+  dwoma komputerami).
 
-Pełne reguły generowania nowego tematu i review — patrz slash commands:
+## WORKFLOW:
+Pelne reguly generowania nowego tematu i review — patrz slash commands:
 /nowy-temat, /review-temat
 
-Lista tematów i ich zakres: patrz LISTA_TEMATOW_CWICZENIA.md w tym repo.
-  Sprawdź tam status przed /nowy-temat (nie duplikuj wygenerowanych).
+Lista tematow, ich zakres i statusy: LISTA_TEMATOW_CWICZENIA.md w tym repo.
+Przed /nowy-temat sprawdz tam status (nie duplikuj wygenerowanych).
+Po /nowy-temat i /review-temat aktualizuj statusy zgodnie z zasada
+auto-odhaczania opisana w tym pliku listy.

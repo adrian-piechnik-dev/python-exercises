@@ -190,7 +190,7 @@ Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
 2. listy_petle — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 3. slowniki — ✅ wygenerowany
 4. import_try_except_pathlib — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-5. pliki_tekstowe — ✅ wygenerowany
+5. pliki_tekstowe — ✅ wygenerowany, ✅ wykonany
 6. csv_dict_reader_writer — ⬜
 7. json_load_dump — ⬜
 8. pandas_wstep — ⬜
