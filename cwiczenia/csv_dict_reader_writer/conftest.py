@@ -24,7 +24,6 @@ def plik_csv(tmp_path: Path) -> Path:
     return p
 
 
-
 @pytest.fixture
 def plik_pusty_csv(tmp_path: Path) -> Path:
     """Tymczasowy plik CSV zawierający wyłącznie nagłówek, bez wierszy danych.

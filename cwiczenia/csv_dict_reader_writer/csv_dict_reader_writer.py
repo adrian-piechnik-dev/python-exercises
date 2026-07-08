@@ -1,8 +1,6 @@
 import csv
 from typing import Optional
 
-from pygments.lexers.csound import newline
-
 
 def zadanie_01_wczytaj_wiersze(sciezka: str) -> list[dict[str, str]]:
     """Wczytuje wszystkie wiersze pliku CSV jako listę słowników.
@@ -100,7 +98,6 @@ def zadanie_06_dopisz_wiersz(
         writer.writerow(wiersz)
 
 
-
 def zadanie_07_filtruj_wiersze(
     sciezka: str, kolumna: str, wartosc: str
 ) -> list[dict[str, str]]:
@@ -141,7 +138,6 @@ def zadanie_08_szukaj_wiersza(
         return None
 
 
-
 def zadanie_09_zsumuj_kolumne(sciezka: str, kolumna: str) -> int:
     """Sumuje wartości liczbowe z podanej kolumny.
 
@@ -152,9 +148,6 @@ def zadanie_09_zsumuj_kolumne(sciezka: str, kolumna: str) -> int:
     Returns:
         int: suma wartości z kolumny; 0 gdy plik nie zawiera wierszy danych.
     """
-    # TODO: wczytaj wiersze przez list(DictReader)
-    # TODO: akumulator suma = 0, iteruj po wierszach: suma += int(w[kolumna])
-    # TODO: zwróć suma
     with open(sciezka, "r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         wiersze = list(reader)
@@ -168,8 +161,6 @@ def zadanie_10_wczytaj_bezpiecznie(
     sciezka: str,
 ) -> Optional[list[dict[str, str]]]:
     """Wczytuje plik CSV; zwraca None gdy plik nie istnieje.
-
-    Spirala z pliki_tekstowe: try/except FileNotFoundError jako kontrakt None.
 
     Args:
         sciezka: ścieżka do pliku CSV.
@@ -189,8 +180,6 @@ def zadanie_11_filtruj_i_zapisz(
 ) -> int:
     """Filtruje wiersze z pliku wejściowego i zapisuje pasujące do pliku wyjściowego.
 
-    Spirala z slowniki: iteracja po wierszach-słownikach + filtrowanie po kluczu.
-
     Args:
         wejscie: ścieżka do pliku CSV źródłowego.
         wyjscie: ścieżka do pliku CSV wynikowego.
@@ -200,17 +189,20 @@ def zadanie_11_filtruj_i_zapisz(
     Returns:
         int: liczba zapisanych wierszy.
     """
-    # TODO: wczytaj wiersze i fieldnames z pliku wejscie (list(DictReader))
-    # TODO: odfiltruj wiersze gdzie w[kolumna] == wartosc
-    # TODO: zapisz pasujące do pliku wyjscie przez DictWriter (writeheader + writerows)
-    # TODO: zwróć len(pasujace)
-    pass
+    with open(wejscie, "r", newline="", encoding="utf-8") as src:
+        reader = csv.DictReader(src)
+        wiersze = list(reader)
+        pasujace = [w for w in wiersze if w[kolumna] == wartosc]
+        fieldnames = reader.fieldnames
+        with open(wyjscie, "w", newline="", encoding="utf-8") as dst:
+            writer = csv.DictWriter(dst, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(pasujace)
+        return len(pasujace)
 
 
 def zadanie_12_zlicz_po_wartosci(sciezka: str, kolumna: str) -> dict[str, int]:
     """Zlicza wiersze pogrupowane po wartości podanej kolumny.
-
-    Spirala z slowniki: wzorzec akumulatora słownikowego (if klucz in licznik).
 
     Args:
         sciezka: ścieżka do pliku CSV z nagłówkiem.
@@ -219,10 +211,14 @@ def zadanie_12_zlicz_po_wartosci(sciezka: str, kolumna: str) -> dict[str, int]:
     Returns:
         dict[str, int]: słownik {wartość_kolumny: liczba_wierszy}.
     """
-    # TODO: wczytaj wiersze przez list(DictReader)
-    # TODO: pusty słownik licznik = {}
-    # TODO: dla każdego wiersza: wartość = w[kolumna]
-    #       if wartość in licznik: licznik[wartość] += 1
-    #       else: licznik[wartość] = 1
-    # TODO: zwróć licznik
-    pass
+    with open(sciezka, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        wiersze = list(reader)
+        licznik = {}
+        for w in wiersze:
+            wartosc = w[kolumna]
+            if wartosc in licznik:
+                licznik[wartosc] += 1
+            else:
+                licznik[wartosc] = 1
+        return licznik

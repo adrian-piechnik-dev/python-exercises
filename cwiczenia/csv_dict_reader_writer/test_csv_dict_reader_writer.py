@@ -255,11 +255,14 @@ def test_zadanie_11_filtruje_i_zapisuje(plik_csv: Path, tmp_path: Path) -> None:
     Co udaje: nic — używam plik_csv jako wejście, tmp_path jako cel.
     Co sprawdzam: wynik == 1 i plik wyjściowy zawiera jeden wiersz z 'Warszawa'.
     """
-    # TODO: przygotuj ścieżkę pliku wynikowego w tmp_path
-    # TODO: wywołaj zadanie_11_filtruj_i_zapisz(str(plik_csv), str(cel), 'miasto', 'Warszawa')
-    # TODO: sprawdź że wynik == 1
-    # TODO: wczytaj plik wynikowy i sprawdź że zawiera jeden wiersz z 'Anna'
-    pass
+    cel = tmp_path / "dane.csv"
+    wynik = zadanie_11_filtruj_i_zapisz(str(plik_csv), str(cel), "miasto", "Warszawa")
+    assert wynik == 1
+    with open(str(cel), "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        wiersze = list(reader)
+        assert len(wiersze) == 1
+        assert wiersze[0]["miasto"] == "Warszawa"
 
 
 def test_zadanie_11_zero_gdy_brak_dopasowania(plik_csv: Path, tmp_path: Path) -> None:
@@ -267,9 +270,9 @@ def test_zadanie_11_zero_gdy_brak_dopasowania(plik_csv: Path, tmp_path: Path) ->
     Co udaje: nic — używam plik_csv, szukam 'Gdynia' (nie istnieje).
     Co sprawdzam: wynik == 0.
     """
-    # TODO: wywołaj zadanie_11_filtruj_i_zapisz z wartością 'Gdynia'
-    # TODO: sprawdź że wynik == 0
-    pass
+    cel = tmp_path / "dane.csv"
+    wynik = zadanie_11_filtruj_i_zapisz(str(plik_csv), str(cel), "miasto", "Gdynia")
+    assert wynik == 0
 
 
 # --- zadanie_12 ---
@@ -279,9 +282,8 @@ def test_zadanie_12_zlicza_po_miescie(plik_csv: Path) -> None:
     Co udaje: nic — używam fixture plik_csv (3 różne miasta, każde raz).
     Co sprawdzam: wynik == {'Warszawa': 1, 'Krakow': 1, 'Gdansk': 1}.
     """
-    # TODO: wywołaj zadanie_12_zlicz_po_wartosci(str(plik_csv), 'miasto')
-    # TODO: sprawdź że wynik == {'Warszawa': 1, 'Krakow': 1, 'Gdansk': 1}
-    pass
+    wynik = zadanie_12_zlicz_po_wartosci(str(plik_csv), "miasto")
+    assert wynik == {'Warszawa': 1, 'Krakow': 1, "Gdansk": 1}
 
 
 def test_zadanie_12_pusty_csv_zwraca_pusty_slownik(plik_pusty_csv: Path) -> None:
@@ -289,6 +291,5 @@ def test_zadanie_12_pusty_csv_zwraca_pusty_slownik(plik_pusty_csv: Path) -> None
     Co udaje: nic — używam fixture plik_pusty_csv.
     Co sprawdzam: wynik == {}.
     """
-    # TODO: wywołaj zadanie_12_zlicz_po_wartosci(str(plik_pusty_csv), 'miasto')
-    # TODO: sprawdź że wynik == {}
-    pass
+    wynik = zadanie_12_zlicz_po_wartosci(str(plik_pusty_csv), "miasto")
+    assert wynik == {}
