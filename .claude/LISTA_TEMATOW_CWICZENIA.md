@@ -192,7 +192,7 @@ Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
 4. import_try_except_pathlib — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 5. pliki_tekstowe — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 6. csv_dict_reader_writer — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-7. json_load_dump — ⬜
+7. json_load_dump — ✅ wygenerowany
 8. pandas_wstep — ⬜
 9. pandas_groupby_chaining — ⬜
 10. openpyxl_formatowanie — ⬜
