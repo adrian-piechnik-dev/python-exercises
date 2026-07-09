@@ -179,9 +179,109 @@ Zazębienie: json.loads z tematu 7, klient z tematu 19, mock z tematu 13.
 ---
 
 ## Etap 9 — brak nowego tematu ćwiczeniowego
-Etap 9 to portfolio + proposale, nie nowa wiedza techniczna — mini-kursy
-ćwiczeniowe się tu kończą. Ewentualne przyszłe tematy (Docker, GitHub
-Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
+Etap 9 to portfolio + proposale, nie nowa wiedza techniczna — tematy 1-20
+się tu kończą. Dalsza ścieżka po ukończeniu tematu 20 — trzy tory poniżej.
+
+---
+
+## PO TEMACIE 20 — TOR A: przyszłe tematy techniczne (numery 21+)
+Kolejność priorytetowa (zgodna z planem po Etapie 9):
+
+### 21. `docker_podstawy`
+Zakres: Dockerfile (FROM, COPY, RUN, CMD), docker build/run, docker-compose
+(services, ports, volumes), konteneryzacja jednego istniejącego projektu.
+Zazębienie: projekt z tematów 11-12 (API/scraping) jako obiekt konteneryzacji;
+tu wracają flagi --no-sandbox / --disable-gpu z Selenium dla CI.
+
+### 22. `github_actions_ci`
+Zakres: workflow YAML (on: push, jobs, steps), uses/run, actions/checkout,
+setup-python, uruchomienie pytest w CI, badge w README.
+Zazębienie: testy z dowolnego ukończonego tematu jako obiekt automatyzacji;
+Docker z tematu 21 (opcjonalnie job w kontenerze).
+
+### 23. `async_httpx`
+Zakres: async/await (coroutine, event loop), httpx.AsyncClient, asyncio.gather,
+równoległe pobieranie wielu URL-i, porównanie czasu sync vs async.
+Zazębienie: requests z tematu 11 (ten sam wzorzec, inna biblioteka),
+scraping z tematu 12 (skala).
+
+## PO TEMACIE 20 — TOR B: Playwright (tematy 24+)
+Szczegółowy plan i kolejność podtematów: playwright_todo.md (w tym repo).
+Zasady: wersja SYNC najpierw (async dopiero po temacie 23), locator-first
+zamiast selektorów CSS/XPath, pytest-playwright jako integracja.
+Sloty tematów (generować przez /nowy-temat jak dotychczas):
+
+### 24. `playwright_podstawy`
+Zakres: sync_playwright, browser/new_page/goto, locatory (get_by_role,
+get_by_text, get_by_label), akcje z auto-waiting (click, fill, check),
+expect + to_be_visible.
+Zazębienie: Selenium z tematów 17-18 (mapowanie pojęć: By → locatory,
+WebDriverWait → auto-wait, expected_conditions → actionability).
+
+### 25. `playwright_pytest_network`
+Zakres: pytest-playwright (fixture page/browser, --headed/--headless),
+page.route (przechwytywanie i mockowanie requestów), request_context
+(testy REST API przez Playwright), codegen + trace viewer.
+Zazębienie: mock/monkeypatch z tematów 11/13 (ta sama idea podmiany,
+inne narzędzie), testy API z tematu 16.
+
+Notatka rynkowa (z playwright_todo.md): Playwright nie blokuje Fazy 1 —
+wchodzić dopiero, gdy realnie zabraknie ofert pod Selenium.
+
+## PO TEMACIE 20 — TOR C: mini-projekty utrwalające (M1, M2, ...)
+Mini-projekty łączą kilka ukończonych tematów w jedno zadanie — INNE niż
+projekty portfolio (nie duplikować scrapera cytatów, walidatora, pipeline'u
+pogodowego itd.). Generowane przez /nowy-temat z REGUŁAMI ZAOSTRZONYMI
+(sekcja poniżej). Przykładowe sloty (dobierać wg potrzeb utrwalania):
+
+### M1. `mini_raport_wydatkow`
+Łączy: CSV (6) + pandas (8-9) + openpyxl (10).
+Brief: wczytaj wydatki z CSV, agreguj po kategoriach, wygeneruj
+sformatowany raport Excel.
+
+### M2. `mini_api_katalog`
+Łączy: requests (11) + JSON (7) + FastAPI (16).
+Brief: pobierz dane z publicznego API, przefiltruj, wystaw własnym
+endpointem FastAPI z walidacją Pydantic.
+
+### M3. `mini_monitor_cen`
+Łączy: scraping (12) + SQL (14-15) + pytest (13).
+Brief: scrapuj ceny z piaskownicy, zapisuj do PostgreSQL, raportuj
+zmiany; testy z mockiem sieci.
+
+Kolejne mini-projekty (M4+): dopisywać tu przed generowaniem, z jawną
+listą łączonych tematów i briefem 1-2 zdania.
+
+---
+
+## REGUŁY ZAOSTRZONE dla mini-projektów (TOR C) — nadpisują /nowy-temat:
+Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
+
+1. TODO = instrukcje naprowadzające, NIE kod do przepisania:
+   - ZAKAZ: `# TODO: wywołaj requests.get(url, timeout=10) i zwróć
+     response.json()` (gotowiec — user przepisuje bez myślenia).
+   - ZAMIAST: `# TODO: pobierz dane z API z kontrolą błędów serwera
+     i zwróć sparsowaną treść (wzorzec znasz z tematu 11)`.
+   - TODO mówi CO osiągnąć i ewentualnie ODSYŁA do tematu/wzorca —
+     nie mówi JAK linijka po linijce, nie podaje nazw metod z argumentami.
+   - Dopuszczalny wyjątek: konkretny import, którego user nie ćwiczył
+     osobno (zasada kompletności briefu z INSTRUKCJI) — import podać wprost.
+
+2. Gotowe dane WYŻSZE niż dotychczas (to zostaje ułatwione):
+   - Żmudne/monotonne dane user dostaje GOTOWE w pliku: przykładowe
+     DataFrame'y, snippety HTML do parsowania, listy słowników, payloady
+     JSON, dane wejściowe CSV.
+   - Cel: user pisze LOGIKĘ, nie przepisuje danych.
+
+3. Teoria: minimalny poziom jak dotychczas, MOŻE być rozszerzona:
+   - Pokrycie pojęć: bez zmian (wszystko potrzebne do zadań musi być).
+   - Wolno dodać sekcje przekrojowe (jak tematy łączą się w pipeline,
+     decyzje architektoniczne), skoro TODO nie prowadzą za rękę.
+   - Teoria NIE może zawierać gotowych rozwiązań zadań z projektu
+     (przykłady na innych danych/nazwach niż zadania).
+
+4. Struktura plików i review: bez zmian (4 pliki, /review-temat,
+   auto-odhaczanie, te same standardy techniczne).
 
 ---
 
@@ -195,17 +295,27 @@ Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
 7. json_load_dump — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 8. pandas_wstep — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 9. pandas_groupby_chaining — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-10. openpyxl_formatowanie — ⬜
-11. requests_api_podstawy — ⬜
-12. scraping_beautifulsoup — ⬜
-13. pytest_fixtures_parametrize — ⬜
-14. sql_podstawy — ⬜
-15. psycopg2_sqlalchemy — ⬜
-16. fastapi_pydantic — ⬜
-17. selenium_podstawy — ⬜
-18. selenium_alerty_screenshoty — ⬜
+10. openpyxl_formatowanie — ✅ wygenerowany
+11. requests_api_podstawy — ✅ wygenerowany
+12. scraping_beautifulsoup — ✅ wygenerowany
+13. pytest_fixtures_parametrize — ✅ wygenerowany
+14. sql_podstawy — ✅ wygenerowany
+15. psycopg2_sqlalchemy — ✅ wygenerowany
+16. fastapi_pydantic — ✅ wygenerowany
+17. selenium_podstawy — ✅ wygenerowany
+18. selenium_alerty_screenshoty — ✅ wygenerowany
 19. llm_api_klient — ⬜
 20. llm_structured_extraction — ⬜
+
+Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
+21. docker_podstawy — ⬜
+22. github_actions_ci — ⬜
+23. async_httpx — ⬜
+24. playwright_podstawy — ⬜
+25. playwright_pytest_network — ⬜
+M1. mini_raport_wydatkow — ⬜
+M2. mini_api_katalog — ⬜
+M3. mini_monitor_cen — ⬜
 
 ### Zasada auto-odhaczania (dla CC):
 - Po wykonaniu /nowy-temat <slug> → CC sam zmienia status z ⬜ na ✅ wygenerowany
