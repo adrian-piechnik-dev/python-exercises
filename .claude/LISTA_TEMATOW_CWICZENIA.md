@@ -194,7 +194,7 @@ Actions, async/httpx) dostaną numery 21+ gdy nadejdzie ich etap.
 6. csv_dict_reader_writer — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 7. json_load_dump — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 8. pandas_wstep — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-9. pandas_groupby_chaining — ⬜
+9. pandas_groupby_chaining — ✅ wygenerowany
 10. openpyxl_formatowanie — ⬜
 11. requests_api_podstawy — ⬜
 12. scraping_beautifulsoup — ⬜
