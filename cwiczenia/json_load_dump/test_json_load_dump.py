@@ -24,11 +24,10 @@ def test_zadanie_01_zwraca_string() -> None:
     Co udaje: nic — przekazuję słownik bezpośrednio.
     Co sprawdzam: wynik jest stringiem i po deserializacji zwraca klucz "imie" == "Anna".
     """
-    # TODO: przygotuj slownik = {"imie": "Anna", "wiek": 30}
-    # TODO: wywołaj zadanie_01_serializuj_slownik(slownik)
-    # TODO: sprawdź isinstance(wynik, str) is True
-    # TODO: sprawdź json.loads(wynik)["imie"] == "Anna"
-    pass
+    slownik = {"imie": "Anna", "wiek": 30}
+    wynik = zadanie_01_serializuj_slownik(slownik)
+    assert isinstance(wynik, str)
+    assert json.loads(wynik)["imie"] == "Anna"
 
 
 def test_zadanie_01_liczba_zachowana_jako_int() -> None:
@@ -36,10 +35,9 @@ def test_zadanie_01_liczba_zachowana_jako_int() -> None:
     Co udaje: nic — przekazuję słownik z wartością int.
     Co sprawdzam: json.loads(wynik)["wiek"] == 30 (int, nie "30").
     """
-    # TODO: przygotuj slownik = {"wiek": 30}
-    # TODO: wywołaj zadanie_01_serializuj_slownik(slownik)
-    # TODO: sprawdź json.loads(wynik)["wiek"] == 30
-    pass
+    slownik = {"wiek": 30}
+    wynik = zadanie_01_serializuj_slownik(slownik)
+    assert json.loads(wynik)["wiek"] == 30
 
 
 # --- zadanie_02 ---
@@ -49,11 +47,10 @@ def test_zadanie_02_zwraca_slownik() -> None:
     Co udaje: nic — podaję gotowy string JSON.
     Co sprawdzam: wynik to dict i wynik["imie"] == "Anna".
     """
-    # TODO: przygotuj tekst = '{"imie": "Anna", "wiek": 30}'
-    # TODO: wywołaj zadanie_02_deserializuj_string(tekst)
-    # TODO: sprawdź isinstance(wynik, dict) is True
-    # TODO: sprawdź wynik["imie"] == "Anna"
-    pass
+    tekst = '{"imie": "Anna", "wiek": 30}'
+    wynik = zadanie_02_deserializuj_string(tekst)
+    assert isinstance(wynik, dict)
+    assert wynik["imie"] == "Anna"
 
 
 def test_zadanie_02_liczba_jako_int() -> None:
@@ -61,11 +58,10 @@ def test_zadanie_02_liczba_jako_int() -> None:
     Co udaje: nic — podaję string JSON z liczbą.
     Co sprawdzam: wynik["wiek"] == 30 i isinstance(wynik["wiek"], int) is True.
     """
-    # TODO: przygotuj tekst = '{"wiek": 30}'
-    # TODO: wywołaj zadanie_02_deserializuj_string(tekst)
-    # TODO: sprawdź wynik["wiek"] == 30
-    # TODO: sprawdź isinstance(wynik["wiek"], int) is True
-    pass
+    tekst = '{"wiek": 30}'
+    wynik = zadanie_02_deserializuj_string(tekst)
+    assert isinstance(wynik["wiek"], int)
+    assert wynik["wiek"] == 30
 
 
 # --- zadanie_03 ---
@@ -75,10 +71,11 @@ def test_zadanie_03_plik_zawiera_poprawny_json(tmp_path: Path) -> None:
     Co udaje: nic — używam tmp_path jako cel zapisu.
     Co sprawdzam: wczytanie pliku przez json.load daje słownik z "imie" == "Anna".
     """
-    # TODO: przygotuj p = tmp_path / "osoba.json" i slownik = {"imie": "Anna", "wiek": 30}
-    # TODO: wywołaj zadanie_03_zapisz_do_pliku(str(p), slownik)
-    # TODO: otwórz plik (encoding="utf-8") i sprawdź json.load(f)["imie"] == "Anna"
-    pass
+    p = tmp_path / "osoba.json"
+    slownik = {"imie": "Anna", "wiek": 30}
+    zadanie_03_zapisz_do_pliku(str(p), slownik)
+    with open(str(p), "r", encoding="utf-8") as f:
+        assert json.load(f)["imie"] == "Anna"
 
 
 def test_zadanie_03_nadpisuje_istniejacy_plik(tmp_path: Path) -> None:
@@ -86,11 +83,11 @@ def test_zadanie_03_nadpisuje_istniejacy_plik(tmp_path: Path) -> None:
     Co udaje: nic — tworzę plik z innymi danymi przed wywołaniem.
     Co sprawdzam: po wywołaniu plik zawiera nowe dane (nie stare).
     """
-    # TODO: przygotuj p = tmp_path / "osoba.json"
-    # TODO: zapisz do p stary słownik przez p.write_text(json.dumps({"stare": "dane"}), encoding="utf-8")
-    # TODO: wywołaj zadanie_03_zapisz_do_pliku(str(p), {"imie": "Piotr"})
-    # TODO: otwórz plik i sprawdź json.load(f) == {"imie": "Piotr"} (nie stare dane)
-    pass
+    p = tmp_path / "osoba.json"
+    p.write_text(json.dumps({"stare": "dane"}))
+    zadanie_03_zapisz_do_pliku(str(p), {"imie": "Piotr"})
+    with open(str(p), "r", encoding="utf-8") as f:
+        assert json.load(f) == {"imie": "Piotr"}
 
 
 # --- zadanie_04 ---
@@ -100,9 +97,8 @@ def test_zadanie_04_zwraca_slownik(plik_json_slownik: Path) -> None:
     Co udaje: nic — używam fixture plik_json_slownik.
     Co sprawdzam: wynik["imie"] == "Anna".
     """
-    # TODO: wywołaj zadanie_04_wczytaj_z_pliku(str(plik_json_slownik))
-    # TODO: sprawdź wynik["imie"] == "Anna"
-    pass
+    wynik = zadanie_04_wczytaj_z_pliku(str(plik_json_slownik))
+    assert wynik["imie"] == "Anna"
 
 
 def test_zadanie_04_liczba_wczytana_jako_int(plik_json_slownik: Path) -> None:
@@ -110,10 +106,9 @@ def test_zadanie_04_liczba_wczytana_jako_int(plik_json_slownik: Path) -> None:
     Co udaje: nic — używam fixture plik_json_slownik (zawiera "wiek": 30).
     Co sprawdzam: wynik["wiek"] == 30 i isinstance(wynik["wiek"], int) is True.
     """
-    # TODO: wywołaj zadanie_04_wczytaj_z_pliku(str(plik_json_slownik))
-    # TODO: sprawdź wynik["wiek"] == 30
-    # TODO: sprawdź isinstance(wynik["wiek"], int) is True
-    pass
+    wynik = zadanie_04_wczytaj_z_pliku(str(plik_json_slownik))
+    assert wynik["wiek"] == 30
+    assert isinstance(wynik["wiek"], int)
 
 
 # --- zadanie_05 ---
@@ -123,11 +118,10 @@ def test_zadanie_05_zwraca_string_z_wcieciami() -> None:
     Co udaje: nic — przekazuję słownik bezpośrednio.
     Co sprawdzam: wynik jest stringiem i zawiera znak nowej linii (efekt indent).
     """
-    # TODO: przygotuj slownik = {"imie": "Anna", "wiek": 30}
-    # TODO: wywołaj zadanie_05_sformatowany_json(slownik, 2)
-    # TODO: sprawdź isinstance(wynik, str) is True
-    # TODO: sprawdź "\n" in wynik (indent dodaje nowe linie)
-    pass
+    slownik = {"imie": "Anna", "wiek": 30}
+    wynik = zadanie_05_sformatowany_json(slownik, 2)
+    assert isinstance(wynik, str)
+    assert "\n" in wynik
 
 
 def test_zadanie_05_wynik_parsuje_sie_do_oryginalu() -> None:
@@ -135,10 +129,9 @@ def test_zadanie_05_wynik_parsuje_sie_do_oryginalu() -> None:
     Co udaje: nic — przekazuję słownik bezpośrednio.
     Co sprawdzam: json.loads(wynik) == slownik (round-trip bez straty danych).
     """
-    # TODO: przygotuj slownik = {"imie": "Anna", "wiek": 30}
-    # TODO: wywołaj zadanie_05_sformatowany_json(slownik, 4)
-    # TODO: sprawdź json.loads(wynik) == slownik
-    pass
+    slownik = {"imie": "Anna", "wiek": 30}
+    wynik = zadanie_05_sformatowany_json(slownik, 4)
+    assert json.loads(wynik) == slownik
 
 
 # --- zadanie_06 ---
@@ -148,11 +141,10 @@ def test_zadanie_06_zwraca_string() -> None:
     Co udaje: nic — przekazuję listę bezpośrednio.
     Co sprawdzam: wynik jest stringiem i json.loads(wynik) ma 2 elementy.
     """
-    # TODO: przygotuj lista = [{"imie": "Anna"}, {"imie": "Piotr"}]
-    # TODO: wywołaj zadanie_06_serializuj_liste(lista)
-    # TODO: sprawdź isinstance(wynik, str) is True
-    # TODO: sprawdź len(json.loads(wynik)) == 2
-    pass
+    lista = [{"imie": "Anna"}, {"imie": "Piotr"}]
+    wynik = zadanie_06_serializuj_liste(lista)
+    assert isinstance(wynik, str)
+    assert len(json.loads(wynik)) == 2
 
 
 def test_zadanie_06_pierwszy_element_zachowany() -> None:
@@ -160,10 +152,9 @@ def test_zadanie_06_pierwszy_element_zachowany() -> None:
     Co udaje: nic — przekazuję listę bezpośrednio.
     Co sprawdzam: json.loads(wynik)[0]["imie"] == "Anna".
     """
-    # TODO: przygotuj lista = [{"imie": "Anna", "wiek": 30}, {"imie": "Piotr", "wiek": 25}]
-    # TODO: wywołaj zadanie_06_serializuj_liste(lista)
-    # TODO: sprawdź json.loads(wynik)[0]["imie"] == "Anna"
-    pass
+    lista = [{"imie": "Anna", "wiek": 30}, {"imie": "Piotr", "wiek": 25}]
+    wynik = zadanie_06_serializuj_liste(lista)
+    assert json.loads(wynik)[0]["imie"] == "Anna"
 
 
 # --- zadanie_07 ---
@@ -173,10 +164,9 @@ def test_zadanie_07_zwraca_liste_trzech_elementow(plik_json_lista: Path) -> None
     Co udaje: nic — używam fixture plik_json_lista (3 osoby).
     Co sprawdzam: wynik to lista z 3 elementami.
     """
-    # TODO: wywołaj zadanie_07_wczytaj_liste_z_pliku(str(plik_json_lista))
-    # TODO: sprawdź isinstance(wynik, list) is True
-    # TODO: sprawdź len(wynik) == 3
-    pass
+    wynik = zadanie_07_wczytaj_liste_z_pliku(str(plik_json_lista))
+    assert isinstance(wynik, list)
+    assert len(wynik) == 3
 
 
 def test_zadanie_07_pierwszy_element_to_anna(plik_json_lista: Path) -> None:
@@ -184,10 +174,9 @@ def test_zadanie_07_pierwszy_element_to_anna(plik_json_lista: Path) -> None:
     Co udaje: nic — używam fixture plik_json_lista.
     Co sprawdzam: wynik[0]["imie"] == "Anna" i wynik[0]["wiek"] == 30.
     """
-    # TODO: wywołaj zadanie_07_wczytaj_liste_z_pliku(str(plik_json_lista))
-    # TODO: sprawdź wynik[0]["imie"] == "Anna"
-    # TODO: sprawdź wynik[0]["wiek"] == 30
-    pass
+    wynik = zadanie_07_wczytaj_liste_z_pliku(str(plik_json_lista))
+    assert wynik[0]["imie"] == "Anna"
+    assert wynik[0]["wiek"] == 30
 
 
 # --- zadanie_08 ---
@@ -197,10 +186,9 @@ def test_zadanie_08_poprawny_json_zwraca_slownik() -> None:
     Co udaje: nic — podaję poprawny string JSON.
     Co sprawdzam: wynik["imie"] == "Anna" (nie None).
     """
-    # TODO: przygotuj tekst = '{"imie": "Anna", "wiek": 30}'
-    # TODO: wywołaj zadanie_08_parsuj_bezpiecznie(tekst)
-    # TODO: sprawdź wynik["imie"] == "Anna"
-    pass
+    tekst = '{"imie": "Anna", "wiek": 30}'
+    wynik = zadanie_08_parsuj_bezpiecznie(tekst)
+    assert wynik["imie"] == "Anna"
 
 
 def test_zadanie_08_niepoprawny_json_zwraca_none() -> None:
@@ -208,10 +196,9 @@ def test_zadanie_08_niepoprawny_json_zwraca_none() -> None:
     Co udaje: nic — podaję niepoprawny string.
     Co sprawdzam: wynik is None (nie wyjątek JSONDecodeError).
     """
-    # TODO: przygotuj tekst = "to nie jest json"
-    # TODO: wywołaj zadanie_08_parsuj_bezpiecznie(tekst)
-    # TODO: sprawdź wynik is None
-    pass
+    tekst = "to nie jest json"
+    wynik = zadanie_08_parsuj_bezpiecznie(tekst)
+    assert wynik is None
 
 
 # --- zadanie_09 ---
@@ -221,9 +208,8 @@ def test_zadanie_09_istniejacy_plik_zwraca_liste(plik_json_lista: Path) -> None:
     Co udaje: nic — używam fixture plik_json_lista (3 osoby).
     Co sprawdzam: wynik to lista z 3 elementami (nie None).
     """
-    # TODO: wywołaj zadanie_09_wczytaj_plik_bezpiecznie(str(plik_json_lista))
-    # TODO: sprawdź len(wynik) == 3
-    pass
+    wynik = zadanie_09_wczytaj_plik_bezpiecznie(str(plik_json_lista))
+    assert len(wynik) == 3
 
 
 def test_zadanie_09_brak_pliku_zwraca_none() -> None:
@@ -231,9 +217,8 @@ def test_zadanie_09_brak_pliku_zwraca_none() -> None:
     Co udaje: nic — używam ścieżki do pliku, który na pewno nie istnieje.
     Co sprawdzam: wynik is None (nie wyjątek FileNotFoundError).
     """
-    # TODO: wywołaj zadanie_09_wczytaj_plik_bezpiecznie("nieistniejacy_plik.json")
-    # TODO: sprawdź wynik is None
-    pass
+    wynik = zadanie_09_wczytaj_plik_bezpiecznie("nieistniejacy_plik.json")
+    assert wynik is None
 
 
 # --- zadanie_10 ---
@@ -243,11 +228,11 @@ def test_zadanie_10_plik_zawiera_liste(tmp_path: Path) -> None:
     Co udaje: nic — używam tmp_path jako cel zapisu.
     Co sprawdzam: wczytanie pliku przez json.load daje listę z 2 elementami.
     """
-    # TODO: przygotuj p = tmp_path / "lista.json"
-    # TODO: przygotuj lista = [{"imie": "Anna"}, {"imie": "Piotr"}]
-    # TODO: wywołaj zadanie_10_zapisz_liste_do_pliku(str(p), lista)
-    # TODO: otwórz plik (encoding="utf-8") i sprawdź len(json.load(f)) == 2
-    pass
+    p = tmp_path / "lista.json"
+    lista = [{"imie": "Anna"}, {"imie": "Piotr"}]
+    zadanie_10_zapisz_liste_do_pliku(str(p), lista)
+    with open(str(p), "r", encoding="utf-8") as f:
+        assert len(json.load(f)) == 2
 
 
 def test_zadanie_10_pusta_lista_tworzy_plik(tmp_path: Path) -> None:
@@ -255,10 +240,10 @@ def test_zadanie_10_pusta_lista_tworzy_plik(tmp_path: Path) -> None:
     Co udaje: nic — używam tmp_path.
     Co sprawdzam: wczytanie pliku daje [] (pusta lista, nie None ani błąd).
     """
-    # TODO: przygotuj p = tmp_path / "lista.json"
-    # TODO: wywołaj zadanie_10_zapisz_liste_do_pliku(str(p), [])
-    # TODO: otwórz plik (encoding="utf-8") i sprawdź json.load(f) == []
-    pass
+    p = tmp_path / "lista.json"
+    zadanie_10_zapisz_liste_do_pliku(str(p), [])
+    with open(str(p), "r", encoding="utf-8") as f:
+        assert json.load(f) == []
 
 
 # --- zadanie_11 ---
@@ -268,10 +253,10 @@ def test_zadanie_11_lista_rosnie_o_jeden(plik_json_lista: Path) -> None:
     Co udaje: nic — używam fixture plik_json_lista (3 osoby).
     Co sprawdzam: po wywołaniu lista w pliku ma 4 elementy.
     """
-    # TODO: przygotuj nowy_wpis = {"imie": "Marek", "wiek": 28, "miasto": "Gdansk"}
-    # TODO: wywołaj zadanie_11_dopisz_wpis(str(plik_json_lista), nowy_wpis)
-    # TODO: otwórz plik (encoding="utf-8") i sprawdź len(json.load(f)) == 4
-    pass
+    nowy_wpis = {"imie": "Marek", "wiek": 28, "miasto": "Gdansk"}
+    zadanie_11_dopisz_wpis(str(plik_json_lista), nowy_wpis)
+    with open(str(plik_json_lista), "r", encoding="utf-8") as f:
+        assert len(json.load(f)) == 4
 
 
 def test_zadanie_11_nowy_wpis_na_koncu(plik_json_lista: Path) -> None:
@@ -279,10 +264,10 @@ def test_zadanie_11_nowy_wpis_na_koncu(plik_json_lista: Path) -> None:
     Co udaje: nic — używam fixture plik_json_lista.
     Co sprawdzam: ostatni element listy to dopisany słownik z "imie" == "Marek".
     """
-    # TODO: przygotuj nowy_wpis = {"imie": "Marek", "wiek": 28, "miasto": "Gdansk"}
-    # TODO: wywołaj zadanie_11_dopisz_wpis(str(plik_json_lista), nowy_wpis)
-    # TODO: otwórz plik (encoding="utf-8") i sprawdź json.load(f)[-1]["imie"] == "Marek"
-    pass
+    nowy_wpis = {"imie": "Marek", "wiek": 28, "miasto": "Gdansk"}
+    zadanie_11_dopisz_wpis(str(plik_json_lista), nowy_wpis)
+    with open(str(plik_json_lista), "r", encoding="utf-8") as f:
+        assert json.load(f)[-1]["imie"] == "Marek"
 
 
 # --- zadanie_12 ---
@@ -292,9 +277,8 @@ def test_zadanie_12_zlicza_po_miescie(plik_json_lista: Path) -> None:
     Co udaje: nic — używam fixture plik_json_lista (Warszawa×2, Krakow×1).
     Co sprawdzam: wynik == {"Warszawa": 2, "Krakow": 1}.
     """
-    # TODO: wywołaj zadanie_12_zlicz_po_kluczu(str(plik_json_lista), "miasto")
-    # TODO: sprawdź wynik == {"Warszawa": 2, "Krakow": 1}
-    pass
+    wynik = zadanie_12_zlicz_po_kluczu(str(plik_json_lista), "miasto")
+    assert wynik == {"Warszawa": 2, "Krakow": 1}
 
 
 def test_zadanie_12_pusta_lista_zwraca_pusty_slownik(tmp_path: Path) -> None:
@@ -302,8 +286,7 @@ def test_zadanie_12_pusta_lista_zwraca_pusty_slownik(tmp_path: Path) -> None:
     Co udaje: nic — tworzę plik z "[]" przez tmp_path.
     Co sprawdzam: wynik == {}.
     """
-    # TODO: przygotuj p = tmp_path / "pusta.json"
-    # TODO: p.write_text("[]", encoding="utf-8")
-    # TODO: wywołaj zadanie_12_zlicz_po_kluczu(str(p), "miasto")
-    # TODO: sprawdź wynik == {}
-    pass
+    p = tmp_path / "pusta.json"
+    p.write_text("[]", encoding="utf-8")
+    wynik = zadanie_12_zlicz_po_kluczu(str(p), "miasto")
+    assert wynik == {}

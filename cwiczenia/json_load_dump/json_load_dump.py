@@ -11,8 +11,7 @@ def zadanie_01_serializuj_slownik(slownik: dict[str, Any]) -> str:
     Returns:
         str: string JSON reprezentujący przekazany słownik.
     """
-    # TODO: użyj json.dumps(slownik) i zwróć wynik
-    pass
+    return json.dumps(slownik)
 
 
 def zadanie_02_deserializuj_string(tekst: str) -> dict[str, Any]:
@@ -24,8 +23,7 @@ def zadanie_02_deserializuj_string(tekst: str) -> dict[str, Any]:
     Returns:
         dict[str, Any]: słownik odtworzony z JSON-a.
     """
-    # TODO: użyj json.loads(tekst) i zwróć wynik
-    pass
+    return json.loads(tekst)
 
 
 def zadanie_03_zapisz_do_pliku(sciezka: str, slownik: dict[str, Any]) -> None:
@@ -38,9 +36,8 @@ def zadanie_03_zapisz_do_pliku(sciezka: str, slownik: dict[str, Any]) -> None:
     Returns:
         None
     """
-    # TODO: otwórz plik: open(sciezka, "w", encoding="utf-8") w bloku with
-    # TODO: wewnątrz with użyj json.dump(slownik, f)
-    pass
+    with open(sciezka, "w", encoding="utf-8") as f:
+        json.dump(slownik, f, indent=2)
 
 
 def zadanie_04_wczytaj_z_pliku(sciezka: str) -> dict[str, Any]:
@@ -52,9 +49,8 @@ def zadanie_04_wczytaj_z_pliku(sciezka: str) -> dict[str, Any]:
     Returns:
         dict[str, Any]: słownik odtworzony z pliku JSON.
     """
-    # TODO: otwórz plik: open(sciezka, "r", encoding="utf-8") w bloku with
-    # TODO: użyj json.load(f) i zwróć wynik
-    pass
+    with open(sciezka, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def zadanie_05_sformatowany_json(slownik: dict[str, Any], wciecie: int) -> str:
@@ -67,8 +63,7 @@ def zadanie_05_sformatowany_json(slownik: dict[str, Any], wciecie: int) -> str:
     Returns:
         str: sformatowany string JSON z wcięciami o podanej szerokości.
     """
-    # TODO: użyj json.dumps(slownik, indent=wciecie) i zwróć wynik
-    pass
+    return json.dumps(slownik, indent=wciecie)
 
 
 def zadanie_06_serializuj_liste(lista: list[dict[str, Any]]) -> str:
@@ -80,8 +75,7 @@ def zadanie_06_serializuj_liste(lista: list[dict[str, Any]]) -> str:
     Returns:
         str: string JSON reprezentujący przekazaną listę słowników.
     """
-    # TODO: użyj json.dumps(lista) i zwróć wynik
-    pass
+    return json.dumps(lista)
 
 
 def zadanie_07_wczytaj_liste_z_pliku(sciezka: str) -> list[dict[str, Any]]:
@@ -93,9 +87,8 @@ def zadanie_07_wczytaj_liste_z_pliku(sciezka: str) -> list[dict[str, Any]]:
     Returns:
         list[dict[str, Any]]: lista słowników odtworzona z pliku JSON.
     """
-    # TODO: otwórz plik: open(sciezka, "r", encoding="utf-8") w bloku with
-    # TODO: użyj json.load(f) i zwróć wynik
-    pass
+    with open(sciezka, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 def zadanie_08_parsuj_bezpiecznie(tekst: str) -> Optional[dict[str, Any]]:
@@ -107,10 +100,10 @@ def zadanie_08_parsuj_bezpiecznie(tekst: str) -> Optional[dict[str, Any]]:
     Returns:
         Optional[dict[str, Any]]: słownik odtworzony z JSON-a lub None przy błędzie formatu.
     """
-    # TODO: użyj try/except json.JSONDecodeError
-    # TODO: w bloku try: return json.loads(tekst)
-    # TODO: w bloku except json.JSONDecodeError: return None
-    pass
+    try:
+        return json.loads(tekst)
+    except json.JSONDecodeError:
+        return None
 
 
 def zadanie_09_wczytaj_plik_bezpiecznie(
@@ -124,10 +117,13 @@ def zadanie_09_wczytaj_plik_bezpiecznie(
     Returns:
         Optional[list[dict[str, Any]]]: lista słowników lub None gdy brak pliku albo błąd formatu.
     """
-    # TODO: użyj try/except — obsłuż dwa wyjątki: FileNotFoundError i json.JSONDecodeError
-    # TODO: w bloku try: otwórz plik (encoding="utf-8"), użyj json.load(f), zwróć wynik
-    # TODO: w obu blokach except: return None
-    pass
+    try:
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+    except json.JSONDecodeError:
+        return None
 
 
 def zadanie_10_zapisz_liste_do_pliku(
@@ -142,9 +138,8 @@ def zadanie_10_zapisz_liste_do_pliku(
     Returns:
         None
     """
-    # TODO: otwórz plik: open(sciezka, "w", encoding="utf-8") w bloku with
-    # TODO: wewnątrz with użyj json.dump(lista, f)
-    pass
+    with open(sciezka, "w", encoding="utf-8") as f:
+        json.dump(lista, f)
 
 
 def zadanie_11_dopisz_wpis(sciezka: str, nowy_wpis: dict[str, Any]) -> None:
@@ -157,12 +152,11 @@ def zadanie_11_dopisz_wpis(sciezka: str, nowy_wpis: dict[str, Any]) -> None:
     Returns:
         None
     """
-    # TODO: wczytaj istniejącą listę z pliku:
-    #       open(sciezka, "r", encoding="utf-8") w bloku with, następnie json.load(f)
-    # TODO: użyj lista.append(nowy_wpis), żeby dodać wpis na koniec listy
-    # TODO: zapisz zaktualizowaną listę z powrotem do pliku:
-    #       open(sciezka, "w", encoding="utf-8") w bloku with, następnie json.dump(lista, f)
-    pass
+    with open(sciezka, "r", encoding="utf-8") as old:
+        lista = json.load(old)
+    lista.append(nowy_wpis)
+    with open(sciezka, "w", encoding="utf-8") as new:
+        json.dump(lista, new)
 
 
 def zadanie_12_zlicz_po_kluczu(sciezka: str, klucz: str) -> dict[str, int]:
@@ -175,11 +169,13 @@ def zadanie_12_zlicz_po_kluczu(sciezka: str, klucz: str) -> dict[str, int]:
     Returns:
         dict[str, int]: słownik {wartość_klucza: liczba_wpisów}; pusty gdy lista jest pusta.
     """
-    # TODO: wczytaj listę z pliku:
-    #       open(sciezka, "r", encoding="utf-8") w bloku with, następnie json.load(f)
-    # TODO: zbuduj słownik licznik = {} (tak jak w temacie 3 — Słowniki)
-    # TODO: dla każdego wpisu w liście: weź wartosc = wpis[klucz]
-    #       jeśli wartosc jest już w liczniku — zwiększ o 1
-    #       jeśli nie ma — ustaw licznik[wartosc] = 1
-    # TODO: return licznik
-    pass
+    with open(sciezka, "r", encoding="utf-8") as f:
+        lista = json.load(f)
+        licznik = {}
+        for wpis in lista:
+            wartosc = wpis[klucz]
+            if wartosc in licznik:
+                licznik[wartosc] += 1
+            else:
+                licznik[wartosc] = 1
+        return licznik

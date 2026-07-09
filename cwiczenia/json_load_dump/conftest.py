@@ -1,8 +1,9 @@
 import sys
 import os
 import json
-import pytest
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,7 +35,7 @@ def plik_json_lista(tmp_path: Path) -> Path:
     """
     p = tmp_path / "osoby.json"
     lista = [
-        {"imie": "Anna",  "wiek": 30, "miasto": "Warszawa"},
+        {"imie": "Anna", "wiek": 30, "miasto": "Warszawa"},
         {"imie": "Piotr", "wiek": 25, "miasto": "Krakow"},
         {"imie": "Zofia", "wiek": 35, "miasto": "Warszawa"},
     ]
