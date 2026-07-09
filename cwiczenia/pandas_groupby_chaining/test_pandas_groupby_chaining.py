@@ -23,10 +23,9 @@ def test_zadanie_01_zlicza_grupy_po_miescie(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (Warszawa×3, Krakow×2).
     Co sprawdzam: wynik["Warszawa"]==3 i wynik["Krakow"]==2.
     """
-    # TODO: wywołaj zadanie_01_grupuj_i_licz(df_osoby, "miasto")
-    # TODO: sprawdź że wynik["Warszawa"] == 3
-    # TODO: sprawdź że wynik["Krakow"] == 2
-    pass
+    wynik = zadanie_01_grupuj_i_licz(df_osoby, "miasto")
+    assert wynik["Warszawa"] == 3
+    assert wynik["Krakow"] == 2
 
 
 def test_zadanie_01_wynik_jest_series(df_osoby: pd.DataFrame) -> None:
@@ -34,9 +33,8 @@ def test_zadanie_01_wynik_jest_series(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.Series) jest True.
     """
-    # TODO: wywołaj zadanie_01_grupuj_i_licz(df_osoby, "miasto")
-    # TODO: sprawdź że wynik jest instancją pd.Series
-    pass
+    wynik = zadanie_01_grupuj_i_licz(df_osoby, "miasto")
+    assert isinstance(wynik, pd.Series)
 
 
 # --- zadanie_02 ---
@@ -46,10 +44,9 @@ def test_zadanie_02_sumuje_wiek_po_miescie(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (Warszawa: 20+40+35=95, Krakow: 30+25=55).
     Co sprawdzam: wynik["Warszawa"]==95 i wynik["Krakow"]==55.
     """
-    # TODO: wywołaj zadanie_02_grupuj_i_sumuj(df_osoby, "miasto", "wiek")
-    # TODO: sprawdź że wynik["Warszawa"] == 95
-    # TODO: sprawdź że wynik["Krakow"] == 55
-    pass
+    wynik = zadanie_02_grupuj_i_sumuj(df_osoby, "miasto", "wiek")
+    assert wynik["Warszawa"] == 95
+    assert wynik["Krakow"] == 55
 
 
 def test_zadanie_02_wynik_jest_series(df_osoby: pd.DataFrame) -> None:
@@ -57,9 +54,8 @@ def test_zadanie_02_wynik_jest_series(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.Series) jest True.
     """
-    # TODO: wywołaj zadanie_02_grupuj_i_sumuj(df_osoby, "miasto", "wiek")
-    # TODO: sprawdź że wynik jest instancją pd.Series
-    pass
+    wynik = zadanie_02_grupuj_i_sumuj(df_osoby, "miasto", "wiek")
+    assert isinstance(wynik, pd.Series)
 
 
 # --- zadanie_03 ---
@@ -69,9 +65,8 @@ def test_zadanie_03_srednia_wiek_krakow(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (Krakow: 30+25=55, /2=27.5).
     Co sprawdzam: wynik["Krakow"] == 27.5.
     """
-    # TODO: wywołaj zadanie_03_grupuj_i_srednia(df_osoby, "miasto", "wiek")
-    # TODO: sprawdź że wynik["Krakow"] == 27.5
-    pass
+    wynik = zadanie_03_grupuj_i_srednia(df_osoby, "miasto", "wiek")
+    assert wynik["Krakow"] == 27.5
 
 
 def test_zadanie_03_wynik_jest_series(df_osoby: pd.DataFrame) -> None:
@@ -79,9 +74,8 @@ def test_zadanie_03_wynik_jest_series(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.Series) jest True.
     """
-    # TODO: wywołaj zadanie_03_grupuj_i_srednia(df_osoby, "miasto", "wiek")
-    # TODO: sprawdź że wynik jest instancją pd.Series
-    pass
+    wynik = zadanie_03_grupuj_i_srednia(df_osoby, "miasto", "wiek")
+    assert isinstance(wynik, pd.Series)
 
 
 # --- zadanie_04 ---
@@ -91,9 +85,8 @@ def test_zadanie_04_agg_suma_zwraca_dataframe(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.DataFrame) jest True.
     """
-    # TODO: wywołaj zadanie_04_agg_suma(df_osoby, "miasto", "wiek")
-    # TODO: sprawdź że wynik jest instancją pd.DataFrame
-    pass
+    wynik = zadanie_04_agg_suma(df_osoby, "miasto", "wiek")
+    assert isinstance(wynik, pd.DataFrame)
 
 
 def test_zadanie_04_suma_wiek_warszawa(df_osoby: pd.DataFrame) -> None:
@@ -101,9 +94,8 @@ def test_zadanie_04_suma_wiek_warszawa(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (Anna 20 + Zofia 40 + Ewa 35 = 95).
     Co sprawdzam: wynik["wiek"]["Warszawa"] == 95.
     """
-    # TODO: wywołaj zadanie_04_agg_suma(df_osoby, "miasto", "wiek")
-    # TODO: sprawdź że wynik["wiek"]["Warszawa"] == 95
-    pass
+    wynik = zadanie_04_agg_suma(df_osoby, "miasto", "wiek")
+    assert wynik["wiek"]["Warszawa"] == 95
 
 
 # --- zadanie_05 ---
@@ -113,9 +105,8 @@ def test_zadanie_05_agg_srednia_zwraca_dataframe(df_osoby: pd.DataFrame) -> None
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.DataFrame) jest True.
     """
-    # TODO: wywołaj zadanie_05_agg_srednia(df_osoby, "miasto", "wynagrodzenie")
-    # TODO: sprawdź że wynik jest instancją pd.DataFrame
-    pass
+    wynik = zadanie_05_agg_srednia(df_osoby, "miasto", "wynagrodzenie")
+    assert isinstance(wynik, pd.DataFrame)
 
 
 def test_zadanie_05_srednia_wynagrodzenie_krakow(df_osoby: pd.DataFrame) -> None:
@@ -123,9 +114,8 @@ def test_zadanie_05_srednia_wynagrodzenie_krakow(df_osoby: pd.DataFrame) -> None
     Co udaje: nic — używam fixture df_osoby (Piotr 4000 + Marek 3500, /2 = 3750.0).
     Co sprawdzam: wynik["wynagrodzenie"]["Krakow"] == 3750.0.
     """
-    # TODO: wywołaj zadanie_05_agg_srednia(df_osoby, "miasto", "wynagrodzenie")
-    # TODO: sprawdź że wynik["wynagrodzenie"]["Krakow"] == 3750.0
-    pass
+    wynik = zadanie_05_agg_srednia(df_osoby, "miasto", "wynagrodzenie")
+    assert wynik["wynagrodzenie"]["Krakow"] == 3750.0
 
 
 # --- zadanie_06 ---
@@ -137,11 +127,10 @@ def test_zadanie_06_agg_wiele_kolumn_zwraca_dataframe(
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.DataFrame) i obie kolumny istnieją.
     """
-    # TODO: wywołaj zadanie_06_agg_wiele_kolumn(df_osoby, "miasto")
-    # TODO: sprawdź że wynik jest instancją pd.DataFrame
-    # TODO: sprawdź że "wiek" in wynik.columns
-    # TODO: sprawdź że "wynagrodzenie" in wynik.columns
-    pass
+    wynik = zadanie_06_agg_wiele_kolumn(df_osoby, "miasto")
+    assert isinstance(wynik, pd.DataFrame)
+    assert "wiek" in wynik.columns
+    assert "wynagrodzenie" in wynik.columns
 
 
 def test_zadanie_06_suma_wiek_i_srednia_wynagrodzenie(
@@ -151,10 +140,9 @@ def test_zadanie_06_suma_wiek_i_srednia_wynagrodzenie(
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: wynik["wiek"]["Warszawa"]==95 i wynik["wynagrodzenie"]["Krakow"]==3750.0.
     """
-    # TODO: wywołaj zadanie_06_agg_wiele_kolumn(df_osoby, "miasto")
-    # TODO: sprawdź że wynik["wiek"]["Warszawa"] == 95
-    # TODO: sprawdź że wynik["wynagrodzenie"]["Krakow"] == 3750.0
-    pass
+    wynik = zadanie_06_agg_wiele_kolumn(df_osoby, "miasto")
+    assert wynik["wiek"]["Warszawa"] == 95
+    assert wynik["wynagrodzenie"]["Krakow"] == 3750.0
 
 
 # --- zadanie_07 ---
@@ -164,10 +152,9 @@ def test_zadanie_07_assign_dodaje_kolumne_region(df_osoby: pd.DataFrame) -> None
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: "region" in wynik.columns i wynik["region"].tolist() == ["Europa"]*5.
     """
-    # TODO: wywołaj zadanie_07_assign_stala(df_osoby, "Europa")
-    # TODO: sprawdź że "region" in wynik.columns
-    # TODO: sprawdź że wynik["region"].tolist() == ["Europa"] * 5
-    pass
+    wynik = zadanie_07_assign_stala(df_osoby, "Europa")
+    assert "region" in wynik.columns
+    assert wynik["region"].tolist() == ["Europa"] * 5
 
 
 def test_zadanie_07_oryginal_bez_kolumny_region(df_osoby: pd.DataFrame) -> None:
@@ -175,9 +162,8 @@ def test_zadanie_07_oryginal_bez_kolumny_region(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: "region" not in df_osoby.columns po wywołaniu funkcji.
     """
-    # TODO: wywołaj zadanie_07_assign_stala(df_osoby, "Europa")
-    # TODO: sprawdź że "region" NIE jest w df_osoby.columns (oryginał niezmieniony)
-    pass
+    zadanie_07_assign_stala(df_osoby, "Europa")
+    assert "region" not in df_osoby.columns
 
 
 # --- zadanie_08 ---
@@ -187,9 +173,8 @@ def test_zadanie_08_assign_dodaje_kolumne_premia(df_osoby: pd.DataFrame) -> None
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: "premia" in wynik.columns.
     """
-    # TODO: wywołaj zadanie_08_assign_lambda(df_osoby, 0.1)
-    # TODO: sprawdź że "premia" in wynik.columns
-    pass
+    wynik = zadanie_08_assign_lambda(df_osoby, 0.1)
+    assert "premia" in wynik.columns
 
 
 def test_zadanie_08_premia_to_10_procent_wynagrodzenia(
@@ -199,9 +184,8 @@ def test_zadanie_08_premia_to_10_procent_wynagrodzenia(
     Co udaje: nic — używam fixture df_osoby (3000,4000,5000,3500,4500 → *0.1).
     Co sprawdzam: wynik["premia"].tolist() == [300.0, 400.0, 500.0, 350.0, 450.0].
     """
-    # TODO: wywołaj zadanie_08_assign_lambda(df_osoby, 0.1)
-    # TODO: sprawdź że wynik["premia"].tolist() == [300.0, 400.0, 500.0, 350.0, 450.0]
-    pass
+    wynik = zadanie_08_assign_lambda(df_osoby, 0.1)
+    assert wynik["premia"].tolist() == [300.0, 400.0, 500.0, 350.0, 450.0]
 
 
 # --- zadanie_09 ---
@@ -211,9 +195,8 @@ def test_zadanie_09_chain_zwraca_series(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: isinstance(wynik, pd.Series) jest True.
     """
-    # TODO: wywołaj zadanie_09_chain_assign_grupuj(df_osoby, 0.1, "miasto")
-    # TODO: sprawdź że wynik jest instancją pd.Series
-    pass
+    wynik = zadanie_09_chain_assign_grupuj(df_osoby, 0.1, "miasto")
+    assert isinstance(wynik, pd.Series)
 
 
 def test_zadanie_09_suma_premii_warszawa(df_osoby: pd.DataFrame) -> None:
@@ -221,9 +204,8 @@ def test_zadanie_09_suma_premii_warszawa(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (Warszawa: 300+500+450=1250.0).
     Co sprawdzam: wynik["Warszawa"] == 1250.0.
     """
-    # TODO: wywołaj zadanie_09_chain_assign_grupuj(df_osoby, 0.1, "miasto")
-    # TODO: sprawdź że wynik["Warszawa"] == 1250.0
-    pass
+    wynik = zadanie_09_chain_assign_grupuj(df_osoby, 0.1, "miasto")
+    assert wynik["Warszawa"] == 1250.0
 
 
 # --- zadanie_10 ---
@@ -233,9 +215,8 @@ def test_zadanie_10_copy_assign_dodaje_kolumne(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: "region" in wynik.columns.
     """
-    # TODO: wywołaj zadanie_10_copy_assign(df_osoby, "PL")
-    # TODO: sprawdź że "region" in wynik.columns
-    pass
+    wynik = zadanie_10_copy_assign(df_osoby, "PL")
+    assert "region" in wynik.columns
 
 
 def test_zadanie_10_oryginal_niezmieniony(df_osoby: pd.DataFrame) -> None:
@@ -243,9 +224,8 @@ def test_zadanie_10_oryginal_niezmieniony(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby.
     Co sprawdzam: "region" not in df_osoby.columns po wywołaniu.
     """
-    # TODO: wywołaj zadanie_10_copy_assign(df_osoby, "PL")
-    # TODO: sprawdź że "region" NIE jest w df_osoby.columns
-    pass
+    zadanie_10_copy_assign(df_osoby, "PL")
+    assert "region" not in df_osoby.columns
 
 
 # --- zadanie_11 ---
@@ -255,10 +235,9 @@ def test_zadanie_11_filtruje_i_liczy_grupy(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (>28: Piotr/30, Zofia/40, Ewa/35).
     Co sprawdzam: wynik["Warszawa"]==2 i wynik["Krakow"]==1.
     """
-    # TODO: wywołaj zadanie_11_filtruj_i_grupuj(df_osoby, "wiek", 28, "miasto")
-    # TODO: sprawdź że wynik["Warszawa"] == 2
-    # TODO: sprawdź że wynik["Krakow"] == 1
-    pass
+    wynik = zadanie_11_filtruj_i_grupuj(df_osoby, "wiek", 28, "miasto")
+    assert wynik["Warszawa"] == 2
+    assert wynik["Krakow"] == 1
 
 
 def test_zadanie_11_bardzo_wysoki_prog_daje_jedna_grupe(
@@ -268,10 +247,9 @@ def test_zadanie_11_bardzo_wysoki_prog_daje_jedna_grupe(
     Co udaje: nic — używam fixture df_osoby (>39: tylko Zofia/40/Warszawa).
     Co sprawdzam: len(wynik)==1 i wynik["Warszawa"]==1.
     """
-    # TODO: wywołaj zadanie_11_filtruj_i_grupuj(df_osoby, "wiek", 39, "miasto")
-    # TODO: sprawdź że len(wynik) == 1
-    # TODO: sprawdź że wynik["Warszawa"] == 1
-    pass
+    wynik = zadanie_11_filtruj_i_grupuj(df_osoby, "wiek", 39, "miasto")
+    assert len(wynik) == 1
+    assert wynik["Warszawa"] == 1
 
 
 # --- zadanie_12 ---
@@ -281,10 +259,9 @@ def test_zadanie_12_suma_wynagrodzen_po_miescie(df_osoby: pd.DataFrame) -> None:
     Co udaje: nic — używam fixture df_osoby (>=30: Piotr/4000, Zofia/5000, Ewa/4500).
     Co sprawdzam: wynik["wynagrodzenie"]["Warszawa"]==9500 i ["Krakow"]==4000.
     """
-    # TODO: wywołaj zadanie_12_pelny_lancuch(df_osoby, 30)
-    # TODO: sprawdź że wynik["wynagrodzenie"]["Warszawa"] == 9500
-    # TODO: sprawdź że wynik["wynagrodzenie"]["Krakow"] == 4000
-    pass
+    wynik = zadanie_12_pelny_lancuch(df_osoby, 30)
+    assert wynik["wynagrodzenie"]["Warszawa"] == 9500
+    assert wynik["wynagrodzenie"]["Krakow"] == 4000
 
 
 def test_zadanie_12_prog_powyzej_max_zwraca_pusty_dataframe(
@@ -294,6 +271,5 @@ def test_zadanie_12_prog_powyzej_max_zwraca_pusty_dataframe(
     Co udaje: nic — używam fixture df_osoby z prog_wiek=99 (nikt nie ma >= 99 lat).
     Co sprawdzam: len(wynik) == 0.
     """
-    # TODO: wywołaj zadanie_12_pelny_lancuch(df_osoby, 99)
-    # TODO: sprawdź że len(wynik) == 0
-    pass
+    wynik = zadanie_12_pelny_lancuch(df_osoby, 99)
+    assert len(wynik) == 0

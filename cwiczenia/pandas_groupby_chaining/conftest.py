@@ -19,10 +19,9 @@ def df_osoby() -> pd.DataFrame:
             5 wierszy: Warszawa×3 (Anna/20/3000, Zofia/40/5000, Ewa/35/4500)
             i Krakow×2 (Piotr/30/4000, Marek/25/3500).
     """
-    # TODO: stwórz i zwróć pd.DataFrame ze słownika z kolumnami:
-    #   "imie":          ["Anna", "Piotr", "Zofia", "Marek", "Ewa"]
-    #   "miasto":        ["Warszawa", "Krakow", "Warszawa", "Krakow", "Warszawa"]
-    #   "wiek":          [20, 30, 40, 25, 35]
-    #   "wynagrodzenie": [3000, 4000, 5000, 3500, 4500]
-    # skorzystaj z pd.DataFrame({"kolumna": [wartości, ...]})
-    pass
+    return pd.DataFrame({
+        "imie": ["Anna", "Piotr", "Zofia", "Marek", "Ewa"],
+        "miasto": ["Warszawa", "Krakow", "Warszawa", "Krakow", "Warszawa"],
+        "wiek": [20, 30, 40, 25, 35],
+        "wynagrodzenie": [3000, 4000, 5000, 3500, 4500]
+    })

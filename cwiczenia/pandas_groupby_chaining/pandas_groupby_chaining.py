@@ -1,17 +1,3 @@
-# Spis zadań:
-# 01 — zlicz wiersze w każdej grupie (.groupby + .size)
-# 02 — zsumuj kolumnę numeryczną w każdej grupie (.groupby + .sum)
-# 03 — policz średnią kolumny numerycznej w każdej grupie (.groupby + .mean)
-# 04 — zagreguj kolumnę przez .agg z funkcją "sum" → DataFrame
-# 05 — zagreguj kolumnę przez .agg z funkcją "mean" → DataFrame
-# 06 — zagreguj dwie kolumny różnymi funkcjami przez .agg → DataFrame
-# 07 — dodaj kolumnę ze stałą wartością przez .assign
-# 08 — dodaj kolumnę obliczoną lambdą przez .assign
-# 09 — łańcuch: assign + groupby + sum (bez zmiennych pośrednich)
-# 10 — łańcuch z .copy(): copy + assign
-# 11 — zazębienie: filtrowanie boolean + groupby + size
-# 12 — zazębienie: filtrowanie boolean + groupby + agg w łańcuchu
-
 import pandas as pd
 
 
@@ -25,8 +11,7 @@ def zadanie_01_grupuj_i_licz(df: pd.DataFrame, klucz: str) -> pd.Series:
     Returns:
         pd.Series: indeks = nazwy grup, wartości = liczba wierszy w grupie.
     """
-    # TODO: użyj df.groupby(klucz).size() i zwróć wynik
-    pass
+    return df.groupby(klucz).size()
 
 
 def zadanie_02_grupuj_i_sumuj(
@@ -42,8 +27,7 @@ def zadanie_02_grupuj_i_sumuj(
     Returns:
         pd.Series: indeks = nazwy grup, wartości = suma kolumna w danej grupie.
     """
-    # TODO: użyj df.groupby(klucz)[kolumna].sum() i zwróć wynik
-    pass
+    return df.groupby(klucz)[kolumna].sum()
 
 
 def zadanie_03_grupuj_i_srednia(
@@ -59,8 +43,7 @@ def zadanie_03_grupuj_i_srednia(
     Returns:
         pd.Series: indeks = nazwy grup, wartości = średnia kolumna w danej grupie.
     """
-    # TODO: użyj df.groupby(klucz)[kolumna].mean() i zwróć wynik
-    pass
+    return df.groupby(klucz)[kolumna].mean()
 
 
 def zadanie_04_agg_suma(
@@ -76,8 +59,7 @@ def zadanie_04_agg_suma(
     Returns:
         pd.DataFrame: indeks = nazwy grup, jedna kolumna z sumą.
     """
-    # TODO: użyj df.groupby(klucz).agg({kolumna: "sum"}) i zwróć wynik
-    pass
+    return df.groupby(klucz).agg({kolumna: "sum"})
 
 
 def zadanie_05_agg_srednia(
@@ -93,8 +75,7 @@ def zadanie_05_agg_srednia(
     Returns:
         pd.DataFrame: indeks = nazwy grup, jedna kolumna ze średnią.
     """
-    # TODO: użyj df.groupby(klucz).agg({kolumna: "mean"}) i zwróć wynik
-    pass
+    return df.groupby(klucz).agg({kolumna: "mean"})
 
 
 def zadanie_06_agg_wiele_kolumn(df: pd.DataFrame, klucz: str) -> pd.DataFrame:
@@ -107,9 +88,7 @@ def zadanie_06_agg_wiele_kolumn(df: pd.DataFrame, klucz: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: indeks = nazwy grup, kolumny "wiek" (suma) i "wynagrodzenie" (średnia).
     """
-    # TODO: użyj df.groupby(klucz).agg({"wiek": "sum", "wynagrodzenie": "mean"})
-    # TODO: zwróć wynik
-    pass
+    return df.groupby(klucz).agg({"wiek": "sum", "wynagrodzenie": "mean"})
 
 
 def zadanie_07_assign_stala(df: pd.DataFrame, wartosc: str) -> pd.DataFrame:
@@ -122,8 +101,7 @@ def zadanie_07_assign_stala(df: pd.DataFrame, wartosc: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: DataFrame z dodaną kolumną "region"; oryginał niezmieniony.
     """
-    # TODO: użyj df.assign(region=wartosc) i zwróć wynik
-    pass
+    return df.assign(region=wartosc)
 
 
 def zadanie_08_assign_lambda(df: pd.DataFrame, mnoznik: float) -> pd.DataFrame:
@@ -136,9 +114,7 @@ def zadanie_08_assign_lambda(df: pd.DataFrame, mnoznik: float) -> pd.DataFrame:
     Returns:
         pd.DataFrame: DataFrame z dodaną kolumną "premia"; oryginał niezmieniony.
     """
-    # TODO: użyj df.assign(premia=lambda d: d["wynagrodzenie"] * mnoznik)
-    # TODO: zwróć wynik
-    pass
+    return df.assign(premia=lambda d: d["wynagrodzenie"] * mnoznik)
 
 
 def zadanie_09_chain_assign_grupuj(
@@ -156,10 +132,12 @@ def zadanie_09_chain_assign_grupuj(
     Returns:
         pd.Series: indeks = nazwy grup, wartości = suma premii w danej grupie.
     """
-    # TODO: napisz jeden łańcuch: df.assign(...).groupby(klucz)["premia"].sum()
-    # TODO: użyj lambdy w assign: premia=lambda d: d["wynagrodzenie"] * mnoznik
-    # TODO: zwróć wynik (cały łańcuch jako jedno wyrażenie w nawiasach)
-    pass
+    return (
+        df
+        .assign(premia=lambda d: d["wynagrodzenie"] * mnoznik)
+        .groupby(klucz)["premia"]
+        .sum()
+    )
 
 
 def zadanie_10_copy_assign(df: pd.DataFrame, wartosc: str) -> pd.DataFrame:
@@ -172,9 +150,11 @@ def zadanie_10_copy_assign(df: pd.DataFrame, wartosc: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: kopia df z dodaną kolumną "region".
     """
-    # TODO: napisz łańcuch: df.copy().assign(region=wartosc)
-    # TODO: zwróć wynik
-    pass
+    return (
+        df
+        .copy()
+        .assign(region=wartosc)
+    )
 
 
 def zadanie_11_filtruj_i_grupuj(
@@ -191,10 +171,11 @@ def zadanie_11_filtruj_i_grupuj(
     Returns:
         pd.Series: indeks = nazwy grup, wartości = liczba wierszy po filtrze.
     """
-    # TODO: przefiltruj df: df[df[kolumna] > prog]
-    # TODO: na wyniku wywołaj .groupby(klucz).size()
-    # TODO: zwróć wynik (jeden łańcuch bez zmiennych pośrednich)
-    pass
+    return (
+        df[df[kolumna] > prog]
+        .groupby(klucz)
+        .size()
+    )
 
 
 def zadanie_12_pelny_lancuch(df: pd.DataFrame, prog_wiek: int) -> pd.DataFrame:
@@ -209,7 +190,8 @@ def zadanie_12_pelny_lancuch(df: pd.DataFrame, prog_wiek: int) -> pd.DataFrame:
     Returns:
         pd.DataFrame: indeks = nazwy miast, kolumna "wynagrodzenie" z sumą.
     """
-    # TODO: napisz łańcuch:
-    #   df[df["wiek"] >= prog_wiek].groupby("miasto").agg({"wynagrodzenie": "sum"})
-    # TODO: zwróć wynik
-    pass
+    return (
+        df[df["wiek"] >= prog_wiek]
+        .groupby("miasto")
+        .agg({"wynagrodzenie": "sum"})
+    )
