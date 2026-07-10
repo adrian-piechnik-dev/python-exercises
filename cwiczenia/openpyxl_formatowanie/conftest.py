@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -20,15 +20,12 @@ def plik_xlsx(tmp_path: Path) -> Path:
         Path: ścieżka do pliku .xlsx z nagłówkami ["miasto", "sprzedaz"]
             i wierszami: Warszawa/100, Krakow/200, Warszawa/300.
     """
-    # TODO: utwórz wb = Workbook() i pobierz ws = wb.active
-    # TODO: dodaj nagłówki: ws.append(["miasto", "sprzedaz"])
-    # TODO: dodaj trzy wiersze danych przez ws.append:
-    #       ["Warszawa", 100], ["Krakow", 200], ["Warszawa", 300]
-    # TODO: utwórz p = tmp_path / "dane.xlsx" i zapisz: wb.save(str(p))
-    # TODO: return p
     wb = Workbook()
     ws = wb.active
-    ws.append(["Warszawa", 100], ["Krakow", 200], ["Warszawa", 300])
+    ws.append(["miasto", "sprzedaz"])
+    ws.append(["Warszawa", 100])
+    ws.append(["Krakow", 200])
+    ws.append(["Warszawa", 300])
     p = tmp_path / "dane.xlsx"
     wb.save(str(p))
     return p
@@ -45,10 +42,6 @@ def df_sprzedaz() -> pd.DataFrame:
         pd.DataFrame: tabela z kolumnami "miasto" i "sprzedaz";
             wiersze: Warszawa/100, Krakow/200, Warszawa/300.
     """
-    # TODO: return pd.DataFrame({
-    #           "miasto": ["Warszawa", "Krakow", "Warszawa"],
-    #           "sprzedaz": [100, 200, 300],
-    #       })
     return pd.DataFrame({
         "miasto": ["Warszawa", "Krakow", "Warszawa"],
         "sprzedaz": [100, 200, 300],

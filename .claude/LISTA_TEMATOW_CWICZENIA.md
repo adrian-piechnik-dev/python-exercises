@@ -295,7 +295,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 7. json_load_dump — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 8. pandas_wstep — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 9. pandas_groupby_chaining — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-10. openpyxl_formatowanie — ✅ wygenerowany
+10. openpyxl_formatowanie — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 11. requests_api_podstawy — ✅ wygenerowany
 12. scraping_beautifulsoup — ✅ wygenerowany
 13. pytest_fixtures_parametrize — ✅ wygenerowany
@@ -304,11 +304,11 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 16. fastapi_pydantic — ✅ wygenerowany
 17. selenium_podstawy — ✅ wygenerowany
 18. selenium_alerty_screenshoty — ✅ wygenerowany
-19. llm_api_klient — ⬜
-20. llm_structured_extraction — ⬜
+19. llm_api_klient — ✅ wygenerowany
+20. llm_structured_extraction — ✅ wygenerowany
 
 Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
-21. docker_podstawy — ⬜
+21. docker_podstawy — ✅ wygenerowany
 22. github_actions_ci — ⬜
 23. async_httpx — ⬜
 24. playwright_podstawy — ⬜
