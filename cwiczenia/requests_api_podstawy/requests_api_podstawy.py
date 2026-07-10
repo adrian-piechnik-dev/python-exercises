@@ -3,20 +3,7 @@ import json
 from typing import Any, Optional
 
 import requests
-
-# --- SPIS ZADAŃ ---
-# zadanie_01 — pobierz kod statusu odpowiedzi (GET + timeout)
-# zadanie_02 — pobierz treść odpowiedzi jako słownik (response.json)
-# zadanie_03 — pobierz dane z parametrami zapytania (params)
-# zadanie_04 — sprawdź, czy zapytanie się powiodło (status_code == 200)
-# zadanie_05 — pobierz dane z kontrolą błędów serwera (raise_for_status)
-# zadanie_06 — pobierz dane bezpiecznie (RequestException → None)
-# zadanie_07 — wyślij dane POST-em i zwróć kod statusu (json=)
-# zadanie_08 — wyślij dane POST-em z nagłówkami (headers=)
-# zadanie_09 — pobierz listę użytkowników (GET + raise_for_status + json)
-# zadanie_10 — pobierz jedno pole z odpowiedzi (brak pola → None)
-# zadanie_11 — pobierz dane i zapisz je do pliku JSON (zazębienie: temat 7)
-# zadanie_12 — pobierz listę użytkowników i zapisz do CSV (zazębienie: temat 6)
+from requests import RequestException
 
 
 def zadanie_01_pobierz_status(url: str) -> int:
@@ -28,9 +15,8 @@ def zadanie_01_pobierz_status(url: str) -> int:
     Returns:
         int: kod statusu HTTP odpowiedzi (np. 200).
     """
-    # TODO: wywołaj requests.get(url, timeout=10) i zapisz do zmiennej response
-    # TODO: zwróć response.status_code
-    pass
+    response = requests.get(url, timeout=10)
+    return response.status_code
 
 
 def zadanie_02_pobierz_json(url: str) -> dict[str, Any]:
@@ -42,9 +28,8 @@ def zadanie_02_pobierz_json(url: str) -> dict[str, Any]:
     Returns:
         dict[str, Any]: sparsowana treść odpowiedzi.
     """
-    # TODO: wywołaj requests.get(url, timeout=10)
-    # TODO: zwróć response.json() (z nawiasami — to metoda!)
-    pass
+    response = requests.get(url, timeout=10)
+    return response.json()
 
 
 def zadanie_03_pobierz_z_parametrami(
@@ -59,9 +44,8 @@ def zadanie_03_pobierz_z_parametrami(
     Returns:
         dict[str, Any]: sparsowana treść odpowiedzi.
     """
-    # TODO: wywołaj requests.get(url, params=parametry, timeout=10)
-    # TODO: zwróć response.json()
-    pass
+    response = requests.get(url, params=parametry, timeout=10)
+    return response.json()
 
 
 def zadanie_04_czy_sukces(url: str) -> bool:
@@ -73,9 +57,8 @@ def zadanie_04_czy_sukces(url: str) -> bool:
     Returns:
         bool: True gdy status_code == 200, w przeciwnym razie False.
     """
-    # TODO: wywołaj requests.get(url, timeout=10)
-    # TODO: zwróć wynik porównania response.status_code == 200
-    pass
+    response = requests.get(url, timeout=10)
+    return response.status_code == 200
 
 
 def zadanie_05_pobierz_z_kontrola(url: str) -> dict[str, Any]:
@@ -87,10 +70,9 @@ def zadanie_05_pobierz_z_kontrola(url: str) -> dict[str, Any]:
     Returns:
         dict[str, Any]: sparsowana treść odpowiedzi (tylko przy sukcesie).
     """
-    # TODO: wywołaj requests.get(url, timeout=10)
-    # TODO: wywołaj response.raise_for_status() (PRZED .json()!)
-    # TODO: zwróć response.json()
-    pass
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    return response.json()
 
 
 def zadanie_06_pobierz_bezpiecznie(url: str) -> Optional[dict[str, Any]]:
@@ -103,11 +85,12 @@ def zadanie_06_pobierz_bezpiecznie(url: str) -> Optional[dict[str, Any]]:
         Optional[dict[str, Any]]: sparsowana treść odpowiedzi lub None
             przy dowolnym błędzie z rodziny RequestException.
     """
-    # TODO: użyj try/except requests.RequestException
-    # TODO: w try: requests.get(url, timeout=10), potem raise_for_status(),
-    #       potem return response.json()
-    # TODO: w except: return None
-    pass
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except RequestException:
+        return None
 
 
 def zadanie_07_wyslij_post(url: str, dane: dict[str, Any]) -> int:
@@ -120,10 +103,8 @@ def zadanie_07_wyslij_post(url: str, dane: dict[str, Any]) -> int:
     Returns:
         int: kod statusu HTTP odpowiedzi (np. 201 = utworzono).
     """
-    # TODO: wywołaj requests.post(url, json=dane, timeout=10)
-    #       — nazwany argument json=, nie pozycyjny!
-    # TODO: zwróć response.status_code
-    pass
+    response = requests.post(url, json=dane, timeout=10)
+    return response.status_code
 
 
 def zadanie_08_wyslij_post_z_naglowkami(
@@ -139,9 +120,8 @@ def zadanie_08_wyslij_post_z_naglowkami(
     Returns:
         dict[str, Any]: sparsowana treść odpowiedzi serwera.
     """
-    # TODO: wywołaj requests.post(url, json=dane, headers=naglowki, timeout=10)
-    # TODO: zwróć response.json()
-    pass
+    response = requests.post(url, json=dane, headers=naglowki, timeout=10)
+    return response.json()
 
 
 def zadanie_09_pobierz_liste_uzytkownikow(url: str) -> list[dict[str, Any]]:
@@ -153,10 +133,9 @@ def zadanie_09_pobierz_liste_uzytkownikow(url: str) -> list[dict[str, Any]]:
     Returns:
         list[dict[str, Any]]: lista słowników z danymi użytkowników.
     """
-    # TODO: wywołaj requests.get(url, timeout=10)
-    # TODO: wywołaj response.raise_for_status()
-    # TODO: zwróć response.json() (tym razem to lista słowników)
-    pass
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    return response.json()
 
 
 def zadanie_10_pobierz_pole(url: str, pole: str) -> Optional[Any]:
@@ -169,10 +148,9 @@ def zadanie_10_pobierz_pole(url: str, pole: str) -> Optional[Any]:
     Returns:
         Optional[Any]: wartość pola lub None, gdy pola nie ma w odpowiedzi.
     """
-    # TODO: wywołaj requests.get(url, timeout=10) i pobierz dane przez .json()
-    # TODO: zwróć dane.get(pole) — .get zwraca None gdy klucza brak
-    #       (znasz to z tematu 3 — Słowniki)
-    pass
+    response = requests.get(url, timeout=10)
+    dane = response.json()
+    return dane.get(pole)
 
 
 def zadanie_11_zapisz_odpowiedz_do_json(url: str, sciezka: str) -> bool:
@@ -185,13 +163,12 @@ def zadanie_11_zapisz_odpowiedz_do_json(url: str, sciezka: str) -> bool:
     Returns:
         bool: True po pomyślnym pobraniu i zapisie.
     """
-    # TODO: wywołaj requests.get(url, timeout=10)
-    # TODO: wywołaj response.raise_for_status()
-    # TODO: pobierz dane przez response.json()
-    # TODO: otwórz plik: open(sciezka, "w", encoding="utf-8") w bloku with
-    #       i zapisz dane przez json.dump(dane, f) (znasz z tematu 7)
-    # TODO: return True
-    pass
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    dane = response.json()
+    with open(sciezka, "w", encoding="utf-8") as f:
+        json.dump(dane, f)
+    return True
 
 
 def zadanie_12_zapisz_uzytkownikow_do_csv(url: str, sciezka: str) -> int:
@@ -204,12 +181,13 @@ def zadanie_12_zapisz_uzytkownikow_do_csv(url: str, sciezka: str) -> int:
     Returns:
         int: liczba zapisanych wierszy danych (bez nagłówka).
     """
-    # TODO: wywołaj requests.get(url, timeout=10) i raise_for_status()
-    # TODO: pobierz listę przez response.json()
-    # TODO: wyznacz fieldnames: list(lista[0].keys()) — klucze pierwszego słownika
-    # TODO: otwórz plik: open(sciezka, "w", newline="", encoding="utf-8")
-    #       w bloku with (newline="" — pamiętasz z tematu 6!)
-    # TODO: utwórz writer = csv.DictWriter(f, fieldnames=fieldnames),
-    #       wywołaj writer.writeheader() i writer.writerows(lista)
-    # TODO: zwróć len(lista)
-    pass
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    lista = response.json()
+    fieldnames = list(lista[0].keys())
+    with open(sciezka, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(lista)
+    return len(lista)
+

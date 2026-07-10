@@ -296,7 +296,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 8. pandas_wstep — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 9. pandas_groupby_chaining — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 10. openpyxl_formatowanie — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-11. requests_api_podstawy — ✅ wygenerowany
+11. requests_api_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 12. scraping_beautifulsoup — ✅ wygenerowany
 13. pytest_fixtures_parametrize — ✅ wygenerowany
 14. sql_podstawy — ✅ wygenerowany
@@ -313,9 +313,9 @@ Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 23. async_httpx — ✅ wygenerowany
 24. playwright_podstawy — ✅ wygenerowany
 25. playwright_pytest_network — ✅ wygenerowany
-M1. mini_raport_wydatkow — ⬜
-M2. mini_api_katalog — ⬜
-M3. mini_monitor_cen — ⬜
+M1. mini_raport_wydatkow — ✅ wygenerowany
+M2. mini_api_katalog — ✅ wygenerowany
+M3. mini_monitor_cen — ✅ wygenerowany
 
 ### Zasada auto-odhaczania (dla CC):
 - Po wykonaniu /nowy-temat <slug> → CC sam zmienia status z ⬜ na ✅ wygenerowany

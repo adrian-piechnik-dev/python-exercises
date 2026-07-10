@@ -25,9 +25,9 @@ class FakeResponse:
         Returns:
             None
         """
-        # TODO: zapisz status_code w atrybucie self.status_code
-        # TODO: zapisz dane w atrybucie self._dane (podkreślenie = wewnętrzny)
-        pass
+        self.status_code = status_code
+        self._dane = dane
+
 
     def json(self) -> Any:
         """Zwraca zapamiętane dane — jak .json() prawdziwej odpowiedzi.
@@ -38,8 +38,8 @@ class FakeResponse:
         Returns:
             Any: dane przekazane przy tworzeniu atrapy.
         """
-        # TODO: zwróć self._dane
-        pass
+        return self._dane
+
 
     def raise_for_status(self) -> None:
         """Rzuca requests.HTTPError przy kodach 4xx/5xx — jak prawdziwa odpowiedź.
@@ -50,6 +50,5 @@ class FakeResponse:
         Returns:
             None
         """
-        # TODO: jeśli self.status_code >= 400 —
-        #       raise requests.HTTPError(f"kod {self.status_code}")
-        pass
+        if self.status_code >= 400:
+            raise requests.HTTPError(f"kod {self.status_code}")
