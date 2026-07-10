@@ -309,10 +309,10 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 
 Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 21. docker_podstawy — ✅ wygenerowany
-22. github_actions_ci — ⬜
-23. async_httpx — ⬜
-24. playwright_podstawy — ⬜
-25. playwright_pytest_network — ⬜
+22. github_actions_ci — ✅ wygenerowany
+23. async_httpx — ✅ wygenerowany
+24. playwright_podstawy — ✅ wygenerowany
+25. playwright_pytest_network — ✅ wygenerowany
 M1. mini_raport_wydatkow — ⬜
 M2. mini_api_katalog — ⬜
 M3. mini_monitor_cen — ⬜
