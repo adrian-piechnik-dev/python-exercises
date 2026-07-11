@@ -39,9 +39,8 @@ def test_zadanie_01_dzieli_poprawnie(
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wynik == pytest.approx(oczekiwane) dla każdego zestawu.
     """
-    # TODO: wywołaj zadanie_01_podziel(dzielna, dzielnik)
-    # TODO: sprawdź wynik == pytest.approx(oczekiwane)
-    pass
+    wynik = zadanie_01_podziel(dzielna, dzielnik)
+    assert wynik == pytest.approx(oczekiwane)
 
 
 def test_zadanie_01_dzielnik_zero_rzuca_wyjatek() -> None:
@@ -49,9 +48,8 @@ def test_zadanie_01_dzielnik_zero_rzuca_wyjatek() -> None:
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wywołanie z dzielnikiem 0 rzuca ValueError (pytest.raises).
     """
-    # TODO: w bloku with pytest.raises(ValueError):
-    #       wywołaj zadanie_01_podziel(10, 0)
-    pass
+    with pytest.raises(ValueError):
+        zadanie_01_podziel(10,0)
 
 
 # --- zadanie_02 ---
@@ -61,9 +59,8 @@ def test_zadanie_02_liczy_srednia() -> None:
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wynik == pytest.approx(2.0).
     """
-    # TODO: wywołaj zadanie_02_srednia([1, 2, 3])
-    # TODO: sprawdź wynik == pytest.approx(2.0)
-    pass
+    wynik = zadanie_02_srednia([1, 2, 3])
+    assert wynik == pytest.approx(2.0)
 
 
 def test_zadanie_02_pusta_lista_rzuca_wyjatek() -> None:
@@ -71,9 +68,8 @@ def test_zadanie_02_pusta_lista_rzuca_wyjatek() -> None:
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wywołanie z [] rzuca ValueError (pytest.raises).
     """
-    # TODO: w bloku with pytest.raises(ValueError):
-    #       wywołaj zadanie_02_srednia([])
-    pass
+    with pytest.raises(ValueError):
+        zadanie_02_srednia([])
 
 
 # --- zadanie_03 ---
@@ -94,9 +90,8 @@ def test_zadanie_03_przypisuje_kategorie(wiek: int, oczekiwana: str) -> None:
     Co udaje: nic — czysta funkcja.
     Co sprawdzam: wynik == oczekiwana dla każdego zestawu z parametrize.
     """
-    # TODO: wywołaj zadanie_03_kategoria_wieku(wiek)
-    # TODO: sprawdź wynik == oczekiwana
-    pass
+    wynik = zadanie_03_kategoria_wieku(wiek)
+    assert wynik == oczekiwana
 
 
 def test_zadanie_03_ujemny_wiek_rzuca_wyjatek() -> None:
@@ -104,9 +99,8 @@ def test_zadanie_03_ujemny_wiek_rzuca_wyjatek() -> None:
     Co udaje: nic — czysta funkcja.
     Co sprawdzam: wywołanie z -1 rzuca ValueError (pytest.raises).
     """
-    # TODO: w bloku with pytest.raises(ValueError):
-    #       wywołaj zadanie_03_kategoria_wieku(-1)
-    pass
+    with pytest.raises(ValueError):
+        zadanie_03_kategoria_wieku(-1)
 
 
 # --- zadanie_04 ---
@@ -116,9 +110,8 @@ def test_zadanie_04_pole_kola_dla_promienia_1() -> None:
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wynik == pytest.approx(math.pi) — float wymaga approx.
     """
-    # TODO: wywołaj zadanie_04_pole_kola(1)
-    # TODO: sprawdź wynik == pytest.approx(math.pi)
-    pass
+    wynik = zadanie_04_pole_kola(1)
+    assert wynik == pytest.approx(math.pi)
 
 
 def test_zadanie_04_ujemny_promien_rzuca_wyjatek() -> None:
@@ -126,9 +119,8 @@ def test_zadanie_04_ujemny_promien_rzuca_wyjatek() -> None:
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wywołanie z -2 rzuca ValueError (pytest.raises).
     """
-    # TODO: w bloku with pytest.raises(ValueError):
-    #       wywołaj zadanie_04_pole_kola(-2)
-    pass
+    with pytest.raises(ValueError):
+        zadanie_04_pole_kola(-2)
 
 
 # --- zadanie_05 ---
@@ -140,10 +132,9 @@ def test_zadanie_05_czyta_ustawiona_zmienna(
     Co udaje: zmienną KOLOR_MOTYWU — setenv ustawia "ciemny" na czas testu.
     Co sprawdzam: wynik == "ciemny".
     """
-    # TODO: podmień: monkeypatch.setenv("KOLOR_MOTYWU", "ciemny")
-    # TODO: wywołaj zadanie_05_czytaj_ustawienie("KOLOR_MOTYWU")
-    # TODO: sprawdź wynik == "ciemny"
-    pass
+    monkeypatch.setenv("KOLOR_MOTYWU", "ciemny")
+    wynik = zadanie_05_czytaj_ustawienie("KOLOR_MOTYWU")
+    assert wynik == "ciemny"
 
 
 def test_zadanie_05_brak_zmiennej_zwraca_none(
@@ -153,10 +144,9 @@ def test_zadanie_05_brak_zmiennej_zwraca_none(
     Co udaje: brak zmiennej KOLOR_MOTYWU — delenv usuwa ją na czas testu.
     Co sprawdzam: wynik is None.
     """
-    # TODO: podmień: monkeypatch.delenv("KOLOR_MOTYWU", raising=False)
-    # TODO: wywołaj zadanie_05_czytaj_ustawienie("KOLOR_MOTYWU")
-    # TODO: sprawdź wynik is None
-    pass
+    monkeypatch.delenv("KOLOR_MOTYWU", raising=False)
+    wynik = zadanie_05_czytaj_ustawienie("KOLOR_MOTYWU")
+    assert wynik is None
 
 
 # --- zadanie_06 ---
@@ -168,10 +158,9 @@ def test_zadanie_06_zwraca_klucz_ze_srodowiska(
     Co udaje: zmienną API_KLUCZ — setenv ustawia "sekret-123" na czas testu.
     Co sprawdzam: wynik == "sekret-123".
     """
-    # TODO: podmień: monkeypatch.setenv("API_KLUCZ", "sekret-123")
-    # TODO: wywołaj zadanie_06_klucz_api()
-    # TODO: sprawdź wynik == "sekret-123"
-    pass
+    monkeypatch.setenv("API_KLUCZ", "sekret-123")
+    wynik = zadanie_06_klucz_api()
+    assert wynik == "sekret-123"
 
 
 def test_zadanie_06_brak_klucza_rzuca_wyjatek(
@@ -181,10 +170,9 @@ def test_zadanie_06_brak_klucza_rzuca_wyjatek(
     Co udaje: brak zmiennej API_KLUCZ — delenv usuwa ją na czas testu.
     Co sprawdzam: wywołanie rzuca ValueError (pytest.raises).
     """
-    # TODO: podmień: monkeypatch.delenv("API_KLUCZ", raising=False)
-    # TODO: w bloku with pytest.raises(ValueError):
-    #       wywołaj zadanie_06_klucz_api()
-    pass
+    monkeypatch.delenv("API_KLUCZ", raising=False)
+    with pytest.raises(ValueError):
+        zadanie_06_klucz_api()
 
 
 # --- zadanie_07 ---
@@ -203,9 +191,8 @@ def test_zadanie_07_waliduje_adresy(email: str, oczekiwane: bool) -> None:
     Co udaje: nic — czysta funkcja.
     Co sprawdzam: wynik is oczekiwane dla każdego zestawu z parametrize.
     """
-    # TODO: wywołaj zadanie_07_waliduj_email(email)
-    # TODO: sprawdź wynik is oczekiwane
-    pass
+    wynik = zadanie_07_waliduj_email(email)
+    assert wynik is oczekiwane
 
 
 def test_zadanie_07_pusty_string_daje_false() -> None:
@@ -213,9 +200,8 @@ def test_zadanie_07_pusty_string_daje_false() -> None:
     Co udaje: nic — czysta funkcja.
     Co sprawdzam: wynik is False.
     """
-    # TODO: wywołaj zadanie_07_waliduj_email("")
-    # TODO: sprawdź wynik is False
-    pass
+    wynik = zadanie_07_waliduj_email("")
+    assert wynik is False
 
 
 # --- zadanie_08 ---
@@ -235,9 +221,8 @@ def test_zadanie_08_liczy_brutto(
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wynik == pytest.approx(oczekiwana) — floaty wymagają approx.
     """
-    # TODO: wywołaj zadanie_08_cena_brutto(netto, stawka)
-    # TODO: sprawdź wynik == pytest.approx(oczekiwana)
-    pass
+    wynik = zadanie_08_cena_brutto(netto, stawka)
+    assert wynik == pytest.approx(oczekiwana)
 
 
 def test_zadanie_08_ujemne_netto_rzuca_wyjatek() -> None:
@@ -245,9 +230,8 @@ def test_zadanie_08_ujemne_netto_rzuca_wyjatek() -> None:
     Co udaje: nic — czysta funkcja liczbowa.
     Co sprawdzam: wywołanie z netto=-10 rzuca ValueError (pytest.raises).
     """
-    # TODO: w bloku with pytest.raises(ValueError):
-    #       wywołaj zadanie_08_cena_brutto(-10, 0.23)
-    pass
+    with pytest.raises(ValueError):
+        zadanie_08_cena_brutto(-10, 0.23)
 
 
 # --- zadanie_09 ---
@@ -257,9 +241,8 @@ def test_zadanie_09_wczytuje_konfiguracje(plik_konfiguracyjny: Path) -> None:
     Co udaje: nic — fixture plik_konfiguracyjny tworzy prawdziwy plik tymczasowy.
     Co sprawdzam: wynik == {"jezyk": "pl", "limit": 10}.
     """
-    # TODO: wywołaj zadanie_09_wczytaj_konfiguracje(str(plik_konfiguracyjny))
-    # TODO: sprawdź wynik == {"jezyk": "pl", "limit": 10}
-    pass
+    wynik = zadanie_09_wczytaj_konfiguracje(str(plik_konfiguracyjny))
+    assert wynik == {"jezyk": "pl", "limit": 10}
 
 
 def test_zadanie_09_liczba_wraca_jako_int(plik_konfiguracyjny: Path) -> None:
@@ -267,10 +250,9 @@ def test_zadanie_09_liczba_wraca_jako_int(plik_konfiguracyjny: Path) -> None:
     Co udaje: nic — używam fixture plik_konfiguracyjny.
     Co sprawdzam: wynik["limit"] == 10 i isinstance(wynik["limit"], int) is True.
     """
-    # TODO: wywołaj zadanie_09_wczytaj_konfiguracje(str(plik_konfiguracyjny))
-    # TODO: sprawdź wynik["limit"] == 10
-    # TODO: sprawdź isinstance(wynik["limit"], int) is True
-    pass
+    wynik = zadanie_09_wczytaj_konfiguracje(str(plik_konfiguracyjny))
+    assert wynik["limit"] == 10
+    assert isinstance(wynik["limit"], int) is True
 
 
 # --- zadanie_10 ---
@@ -283,9 +265,8 @@ def test_zadanie_10_zwraca_wartosc_ustawienia(
     współdzielona przez cały plik, tylko-do-odczytu).
     Co sprawdzam: wynik == "pl" dla klucza "jezyk".
     """
-    # TODO: wywołaj zadanie_10_pobierz_ustawienie(konfiguracja_globalna, "jezyk")
-    # TODO: sprawdź wynik == "pl"
-    pass
+    wynik = zadanie_10_pobierz_ustawienie(konfiguracja_globalna, "jezyk")
+    assert wynik == "pl"
 
 
 def test_zadanie_10_brak_klucza_zwraca_none(
@@ -296,9 +277,8 @@ def test_zadanie_10_brak_klucza_zwraca_none(
     (pytest utworzył ją tylko raz na cały plik).
     Co sprawdzam: wynik is None dla klucza "motyw".
     """
-    # TODO: wywołaj zadanie_10_pobierz_ustawienie(konfiguracja_globalna, "motyw")
-    # TODO: sprawdź wynik is None
-    pass
+    wynik = zadanie_10_pobierz_ustawienie(konfiguracja_globalna, "motyw")
+    assert wynik is None
 
 
 # --- zadanie_11 ---
@@ -311,14 +291,11 @@ def test_zadanie_11_zwraca_kurs_jako_float(
     (mock jak w temacie 11).
     Co sprawdzam: wynik == pytest.approx(4.25).
     """
-    # TODO: przygotuj zamiennik:
-    #       def podmieniony_get(url, timeout=None):
-    #           return FakeResponse(200, {"kurs": 4.25})
-    # TODO: podmień: monkeypatch.setattr(
-    #           "pytest_fixtures_parametrize.requests.get", podmieniony_get)
-    # TODO: wywołaj zadanie_11_pobierz_kurs("https://api.przyklad.pl/eur")
-    # TODO: sprawdź wynik == pytest.approx(4.25)
-    pass
+    def podmieniony_get(url, params=None, timeout=None):
+        return FakeResponse(200, {"kurs": 4.25})
+    monkeypatch.setattr("pytest_fixtures_parametrize.requests.get", podmieniony_get)
+    wynik = zadanie_11_pobierz_kurs("https://api.przyklad.pl/eur")
+    assert wynik == pytest.approx(4.25)
 
 
 def test_zadanie_11_blad_serwera_rzuca_wyjatek(
@@ -329,11 +306,11 @@ def test_zadanie_11_blad_serwera_rzuca_wyjatek(
     raise_for_status rzuci HTTPError.
     Co sprawdzam: wywołanie rzuca requests.HTTPError (pytest.raises + mock).
     """
-    # TODO: przygotuj zamiennik zwracający FakeResponse(500, {})
-    # TODO: podmień "pytest_fixtures_parametrize.requests.get"
-    # TODO: w bloku with pytest.raises(requests.HTTPError):
-    #       wywołaj zadanie_11_pobierz_kurs("https://api.przyklad.pl/eur")
-    pass
+    def podmieniony(url, params=None, timeout=None):
+        return FakeResponse(500, {})
+    monkeypatch.setattr("pytest_fixtures_parametrize.requests.get", podmieniony)
+    with pytest.raises(requests.HTTPError):
+        zadanie_11_pobierz_kurs("https://api.przyklad.pl/eur")
 
 
 # --- zadanie_12 ---
@@ -343,12 +320,11 @@ def test_zadanie_12_sukces_zwraca_kurs(monkeypatch: pytest.MonkeyPatch) -> None:
     Co udaje: requests.get — zwraca FakeResponse(200, {"kurs": 3.98}).
     Co sprawdzam: wynik == pytest.approx(3.98).
     """
-    # TODO: przygotuj zamiennik zwracający FakeResponse(200, {"kurs": 3.98})
-    # TODO: podmień "pytest_fixtures_parametrize.requests.get"
-    # TODO: wywołaj zadanie_12_pobierz_kurs_bezpiecznie(
-    #           "https://api.przyklad.pl/usd")
-    # TODO: sprawdź wynik == pytest.approx(3.98)
-    pass
+    def podmieniony_get(url, params=None, timeout=None):
+        return FakeResponse(200, {"kurs": 3.98})
+    monkeypatch.setattr("pytest_fixtures_parametrize.requests.get", podmieniony_get)
+    wynik = zadanie_12_pobierz_kurs_bezpiecznie("https://api.przyklad.pl/usd")
+    assert wynik == pytest.approx(3.98)
 
 
 def test_zadanie_12_awaria_sieci_zwraca_none(
@@ -359,10 +335,8 @@ def test_zadanie_12_awaria_sieci_zwraca_none(
     zwracać odpowiedź.
     Co sprawdzam: wynik is None (wyjątek złapany w funkcji, nie w teście).
     """
-    # TODO: przygotuj zamiennik, który zamiast return robi:
-    #       raise requests.ConnectionError("brak internetu")
-    # TODO: podmień "pytest_fixtures_parametrize.requests.get"
-    # TODO: wywołaj zadanie_12_pobierz_kurs_bezpiecznie(
-    #           "https://api.przyklad.pl/usd")
-    # TODO: sprawdź wynik is None
-    pass
+    def podmieniony(url, params=None, timeout=None):
+        raise requests.ConnectionError("brak internetu")
+    monkeypatch.setattr("pytest_fixtures_parametrize.requests.get", podmieniony)
+    wynik = zadanie_12_pobierz_kurs_bezpiecznie("https://api.przyklad.pl/usd")
+    assert wynik is None

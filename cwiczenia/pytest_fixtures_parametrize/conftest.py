@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 import json
 from pathlib import Path
 from typing import Any
@@ -28,9 +28,8 @@ class FakeResponse:
         Returns:
             None
         """
-        # TODO: zapisz status_code w atrybucie self.status_code
-        # TODO: zapisz dane w atrybucie self._dane
-        pass
+        self.status_code = status_code
+        self._dane = dane
 
     def json(self) -> Any:
         """Zwraca zapamiętane dane — jak .json() prawdziwej odpowiedzi.
@@ -41,8 +40,7 @@ class FakeResponse:
         Returns:
             Any: dane przekazane przy tworzeniu atrapy.
         """
-        # TODO: zwróć self._dane
-        pass
+        return self._dane
 
     def raise_for_status(self) -> None:
         """Rzuca requests.HTTPError przy kodach 4xx/5xx.
@@ -53,9 +51,8 @@ class FakeResponse:
         Returns:
             None
         """
-        # TODO: jeśli self.status_code >= 400 —
-        #       raise requests.HTTPError(f"kod {self.status_code}")
-        pass
+        if self.status_code >= 400:
+            raise requests.HTTPError(f" kod {self.status_code}")
 
 
 @pytest.fixture
@@ -68,11 +65,9 @@ def plik_konfiguracyjny(tmp_path: Path) -> Path:
     Returns:
         Path: ścieżka do pliku JSON z {"jezyk": "pl", "limit": 10}.
     """
-    # TODO: utwórz p = tmp_path / "konfiguracja.json"
-    # TODO: zapisz dane: p.write_text(
-    #           json.dumps({"jezyk": "pl", "limit": 10}), encoding="utf-8")
-    # TODO: return p
-    pass
+    p = tmp_path / "konfiguracja.json"
+    p.write_text(json.dumps({"jezyk": "pl", "limit": 10}), encoding="utf-8")
+    return p
 
 
 @pytest.fixture(scope="module")
@@ -88,5 +83,4 @@ def konfiguracja_globalna() -> dict[str, Any]:
     Returns:
         dict[str, Any]: słownik {"jezyk": "pl", "limit": 10}.
     """
-    # TODO: return {"jezyk": "pl", "limit": 10}
-    pass
+    return {"jezyk": "pl", "limit": 10}
