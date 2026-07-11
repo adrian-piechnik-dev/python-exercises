@@ -27,9 +27,8 @@ def test_zadanie_01_zwraca_tekst_h1(html_strona: str) -> None:
     Co udaje: nic — HTML podaję bezpośrednio jako string (fixture html_strona).
     Co sprawdzam: wynik == "Sklep Python".
     """
-    # TODO: wywołaj zadanie_01_tytul_strony(html_strona)
-    # TODO: sprawdź wynik == "Sklep Python"
-    pass
+    wynik = zadanie_01_tytul_strony(html_strona)
+    assert wynik == "Sklep Python"
 
 
 def test_zadanie_01_brak_h1_zwraca_none() -> None:
@@ -37,10 +36,9 @@ def test_zadanie_01_brak_h1_zwraca_none() -> None:
     Co udaje: nic — podaję własny minimalny HTML bez h1.
     Co sprawdzam: wynik is None.
     """
-    # TODO: przygotuj html = "<html><body><p>Sama treść</p></body></html>"
-    # TODO: wywołaj zadanie_01_tytul_strony(html)
-    # TODO: sprawdź wynik is None
-    pass
+    html = "<html><body><p>Sama treść</p></body></html>"
+    wynik = zadanie_01_tytul_strony(html)
+    assert wynik is None
 
 
 # --- zadanie_02 ---
@@ -50,9 +48,8 @@ def test_zadanie_02_zbiera_teksty_linkow(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona (2 linki).
     Co sprawdzam: wynik == ["Produkty", "Kontakt"].
     """
-    # TODO: wywołaj zadanie_02_teksty_linkow(html_strona)
-    # TODO: sprawdź wynik == ["Produkty", "Kontakt"]
-    pass
+    wynik = zadanie_02_teksty_linkow(html_strona)
+    assert wynik == ["Produkty", "Kontakt"]
 
 
 def test_zadanie_02_brak_linkow_pusta_lista() -> None:
@@ -60,10 +57,9 @@ def test_zadanie_02_brak_linkow_pusta_lista() -> None:
     Co udaje: nic — podaję własny HTML bez znaczników a.
     Co sprawdzam: wynik == [].
     """
-    # TODO: przygotuj html = "<html><body><h1>Tytuł</h1></body></html>"
-    # TODO: wywołaj zadanie_02_teksty_linkow(html)
-    # TODO: sprawdź wynik == []
-    pass
+    html = "<html><body><h1>Tytuł</h1></body></html>"
+    wynik = zadanie_02_teksty_linkow(html)
+    assert wynik == []
 
 
 # --- zadanie_03 ---
@@ -73,9 +69,8 @@ def test_zadanie_03_zbiera_adresy_href(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik == ["/produkty", "/kontakt"].
     """
-    # TODO: wywołaj zadanie_03_adresy_linkow(html_strona)
-    # TODO: sprawdź wynik == ["/produkty", "/kontakt"]
-    pass
+    wynik = zadanie_03_adresy_linkow(html_strona)
+    assert wynik == ["/produkty", "/kontakt"]
 
 
 def test_zadanie_03_link_bez_href_daje_none_na_liscie() -> None:
@@ -83,10 +78,9 @@ def test_zadanie_03_link_bez_href_daje_none_na_liscie() -> None:
     Co udaje: nic — podaję własny HTML z linkiem bez atrybutu href.
     Co sprawdzam: wynik == [None].
     """
-    # TODO: przygotuj html = "<html><body><a>Bez adresu</a></body></html>"
-    # TODO: wywołaj zadanie_03_adresy_linkow(html)
-    # TODO: sprawdź wynik == [None]
-    pass
+    html = "<html><body><a>Bez adresu</a></body></html>"
+    wynik = zadanie_03_adresy_linkow(html)
+    assert wynik == [None]
 
 
 # --- zadanie_04 ---
@@ -96,9 +90,8 @@ def test_zadanie_04_znajduje_po_klasie(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona (2 divy tej klasy).
     Co sprawdzam: wynik == ["Klawiatura", "Myszka"].
     """
-    # TODO: wywołaj zadanie_04_teksty_po_klasie(html_strona, "produkt")
-    # TODO: sprawdź wynik == ["Klawiatura", "Myszka"]
-    pass
+    wynik = zadanie_04_teksty_po_klasie(html_strona, "produkt")
+    assert wynik == ["Klawiatura", "Myszka"]
 
 
 def test_zadanie_04_nieistniejaca_klasa_pusta_lista(html_strona: str) -> None:
@@ -106,9 +99,8 @@ def test_zadanie_04_nieistniejaca_klasa_pusta_lista(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik == [] dla klasy "promocja".
     """
-    # TODO: wywołaj zadanie_04_teksty_po_klasie(html_strona, "promocja")
-    # TODO: sprawdź wynik == []
-    pass
+    wynik = zadanie_04_teksty_po_klasie(html_strona, "promocja")
+    assert wynik == []
 
 
 # --- zadanie_05 ---
@@ -118,9 +110,8 @@ def test_zadanie_05_znajduje_po_id(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona (p o id "stopka").
     Co sprawdzam: wynik == "Copyright 2026".
     """
-    # TODO: wywołaj zadanie_05_tekst_po_id(html_strona, "stopka")
-    # TODO: sprawdź wynik == "Copyright 2026"
-    pass
+    wynik = zadanie_05_tekst_po_id(html_strona, "stopka")
+    assert wynik == "Copyright 2026"
 
 
 def test_zadanie_05_brak_id_zwraca_none(html_strona: str) -> None:
@@ -128,9 +119,8 @@ def test_zadanie_05_brak_id_zwraca_none(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik is None dla id "naglowek".
     """
-    # TODO: wywołaj zadanie_05_tekst_po_id(html_strona, "naglowek")
-    # TODO: sprawdź wynik is None
-    pass
+    wynik = zadanie_05_tekst_po_id(html_strona, "naglowek")
+    assert wynik is None
 
 
 # --- zadanie_06 ---
@@ -140,9 +130,8 @@ def test_zadanie_06_selektor_klasy(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik == ["Klawiatura", "Myszka"].
     """
-    # TODO: wywołaj zadanie_06_teksty_selektorem(html_strona, "div.produkt")
-    # TODO: sprawdź wynik == ["Klawiatura", "Myszka"]
-    pass
+    wynik = zadanie_06_teksty_selektorem(html_strona, "div.produkt")
+    assert wynik == ["Klawiatura", "Myszka"]
 
 
 def test_zadanie_06_selektor_bez_dopasowan_pusta_lista(html_strona: str) -> None:
@@ -150,9 +139,8 @@ def test_zadanie_06_selektor_bez_dopasowan_pusta_lista(html_strona: str) -> None
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik == [] dla selektora "span.cena".
     """
-    # TODO: wywołaj zadanie_06_teksty_selektorem(html_strona, "span.cena")
-    # TODO: sprawdź wynik == []
-    pass
+    wynik = zadanie_06_teksty_selektorem(html_strona, "span.cena")
+    assert wynik == []
 
 
 # --- zadanie_07 ---
@@ -162,9 +150,8 @@ def test_zadanie_07_selektor_id(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik == "Copyright 2026".
     """
-    # TODO: wywołaj zadanie_07_pierwszy_selektorem(html_strona, "#stopka")
-    # TODO: sprawdź wynik == "Copyright 2026"
-    pass
+    wynik = zadanie_07_pierwszy_selektorem(html_strona, "#stopka")
+    assert wynik == "Copyright 2026"
 
 
 def test_zadanie_07_brak_dopasowania_zwraca_none(html_strona: str) -> None:
@@ -172,9 +159,8 @@ def test_zadanie_07_brak_dopasowania_zwraca_none(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona.
     Co sprawdzam: wynik is None dla selektora "#cennik".
     """
-    # TODO: wywołaj zadanie_07_pierwszy_selektorem(html_strona, "#cennik")
-    # TODO: sprawdź wynik is None
-    pass
+    wynik = zadanie_07_pierwszy_selektorem(html_strona, "#cennik")
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -184,9 +170,8 @@ def test_zadanie_08_tabela_na_liste_list(html_tabela: str) -> None:
     Co udaje: nic — używam fixture html_tabela (2 wiersze po 2 komórki).
     Co sprawdzam: wynik == [["Anna", "30"], ["Piotr", "25"]].
     """
-    # TODO: wywołaj zadanie_08_tabela_do_listy(html_tabela)
-    # TODO: sprawdź wynik == [["Anna", "30"], ["Piotr", "25"]]
-    pass
+    wynik = zadanie_08_tabela_do_listy(html_tabela)
+    assert wynik == [["Anna", "30"], ["Piotr", "25"]]
 
 
 def test_zadanie_08_brak_tabeli_pusta_lista(html_strona: str) -> None:
@@ -194,9 +179,8 @@ def test_zadanie_08_brak_tabeli_pusta_lista(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona (nie ma w niej table/tr).
     Co sprawdzam: wynik == [].
     """
-    # TODO: wywołaj zadanie_08_tabela_do_listy(html_strona)
-    # TODO: sprawdź wynik == []
-    pass
+    wynik = zadanie_08_tabela_do_listy(html_strona)
+    assert wynik == []
 
 
 # --- zadanie_09 ---
@@ -206,9 +190,8 @@ def test_zadanie_09_zbiera_adresy_src(html_strona: str) -> None:
     Co udaje: nic — używam fixture html_strona (2 obrazki).
     Co sprawdzam: wynik == ["/logo.png", "/baner.png"].
     """
-    # TODO: wywołaj zadanie_09_adresy_obrazkow(html_strona)
-    # TODO: sprawdź wynik == ["/logo.png", "/baner.png"]
-    pass
+    wynik = zadanie_09_adresy_obrazkow(html_strona)
+    assert wynik == ["/logo.png", "/baner.png"]
 
 
 def test_zadanie_09_brak_obrazkow_pusta_lista(html_tabela: str) -> None:
@@ -216,9 +199,8 @@ def test_zadanie_09_brak_obrazkow_pusta_lista(html_tabela: str) -> None:
     Co udaje: nic — używam fixture html_tabela (nie ma w niej img).
     Co sprawdzam: wynik == [].
     """
-    # TODO: wywołaj zadanie_09_adresy_obrazkow(html_tabela)
-    # TODO: sprawdź wynik == []
-    pass
+    wynik = zadanie_09_adresy_obrazkow(html_tabela)
+    assert wynik == []
 
 
 # --- zadanie_10 ---
@@ -230,14 +212,11 @@ def test_zadanie_10_zwraca_tytul_pobranej_strony(
     Co udaje: requests.get — zwraca FakeResponse(200, html_strona).
     Co sprawdzam: wynik == "Sklep Python".
     """
-    # TODO: przygotuj zamiennik:
-    #       def podmieniony_get(url, headers=None, timeout=None):
-    #           return FakeResponse(200, html_strona)
-    # TODO: podmień: monkeypatch.setattr(
-    #           "scraping_beautifulsoup.requests.get", podmieniony_get)
-    # TODO: wywołaj zadanie_10_pobierz_tytul("https://sklep.przyklad.pl")
-    # TODO: sprawdź wynik == "Sklep Python"
-    pass
+    def podmieniony_get(url, headers=None, timeout=None):
+        return FakeResponse(200, html_strona)
+    monkeypatch.setattr("scraping_beautifulsoup.requests.get", podmieniony_get)
+    wynik = zadanie_10_pobierz_tytul("https://sklep.przyklad.pl")
+    assert wynik == "Sklep Python"
 
 
 def test_zadanie_10_wysyla_user_agenta(
@@ -248,13 +227,13 @@ def test_zadanie_10_wysyla_user_agenta(
     i zwraca FakeResponse(200, html_strona).
     Co sprawdzam: zapisane headers zawierają klucz "User-Agent".
     """
-    # TODO: przygotuj pustą listę zapamietane = []
-    # TODO: przygotuj zamiennik, który robi zapamietane.append(headers)
-    #       i zwraca FakeResponse(200, html_strona)
-    # TODO: podmień requests.get
-    # TODO: wywołaj zadanie_10_pobierz_tytul("https://sklep.przyklad.pl")
-    # TODO: sprawdź "User-Agent" in zapamietane[0]
-    pass
+    zapamietane = []
+    def podmieniony_get(url, headers=None, timeout=None):
+        zapamietane.append(headers)
+        return FakeResponse(200, html_strona)
+    monkeypatch.setattr("scraping_beautifulsoup.requests.get", podmieniony_get)
+    zadanie_10_pobierz_tytul("https://sklep.przyklad.pl")
+    assert "User-Agent" in zapamietane[0]
 
 
 # --- zadanie_11 ---
@@ -268,17 +247,18 @@ def test_zadanie_11_zbiera_tytuly_i_spi_po_kazdym(
     Co sprawdzam: wynik == ["Sklep Python", "Sklep Python"]
     i time.sleep wywołany 2 razy z wartością 1.5.
     """
-    # TODO: przygotuj zamiennik get zwracający FakeResponse(200, html_strona)
-    # TODO: podmień "scraping_beautifulsoup.requests.get"
-    # TODO: przygotuj pustą listę uspienia = [] i zamiennik:
-    #       def podmieniony_sleep(sekundy):
-    #           uspienia.append(sekundy)
-    # TODO: podmień "scraping_beautifulsoup.time.sleep"
-    # TODO: wywołaj zadanie_11_scrapuj_z_pauza(
-    #           ["https://a.przyklad.pl", "https://b.przyklad.pl"], 1.5)
-    # TODO: sprawdź wynik == ["Sklep Python", "Sklep Python"]
-    # TODO: sprawdź uspienia == [1.5, 1.5]
-    pass
+    def podmieniony_get(url, headers=None, timeout=None):
+        return FakeResponse(200, html_strona)
+    monkeypatch.setattr("scraping_beautifulsoup.requests.get", podmieniony_get)
+    uspienia = []
+    def podmieniony_sleep(sekundy):
+        uspienia.append(sekundy)
+    monkeypatch.setattr("scraping_beautifulsoup.time.sleep", podmieniony_sleep)
+    wynik = zadanie_11_scrapuj_z_pauza(
+        ["https://a.przyklad.pl", "https://b.przyklad.pl"], 1.5
+    )
+    assert wynik == ["Sklep Python", "Sklep Python"]
+    assert uspienia == [1.5, 1.5]
 
 
 def test_zadanie_11_pusta_lista_bez_zapytan(
@@ -288,13 +268,14 @@ def test_zadanie_11_pusta_lista_bez_zapytan(
     Co udaje: requests.get — zamiennik ZLICZA wywołania (nie powinno być żadnego).
     Co sprawdzam: wynik == [] i zero wywołań requests.get.
     """
-    # TODO: przygotuj pustą listę wywolania = [] i zamiennik get,
-    #       który robi wywolania.append(url) i zwraca FakeResponse(200, "")
-    # TODO: podmień "scraping_beautifulsoup.requests.get"
-    # TODO: wywołaj zadanie_11_scrapuj_z_pauza([], 1.0)
-    # TODO: sprawdź wynik == []
-    # TODO: sprawdź wywolania == []
-    pass
+    wywolania = []
+    def podmieniony_get(url, headers=None, timeout=None):
+        wywolania.append(url)
+        return FakeResponse(200, "")
+    monkeypatch.setattr("scraping_beautifulsoup.requests.get", podmieniony_get)
+    wynik = zadanie_11_scrapuj_z_pauza([], 1.0)
+    assert wynik == []
+    assert wywolania == []
 
 
 # --- zadanie_12 ---
@@ -307,17 +288,16 @@ def test_zadanie_12_zapisuje_linki_do_csv(
     Co sprawdzam: wynik == 2; plik wczytany przez csv.DictReader ma 2 wiersze,
     pierwszy to {"tekst": "Produkty", "adres": "/produkty"}.
     """
-    # TODO: przygotuj zamiennik get zwracający FakeResponse(200, html_strona)
-    # TODO: podmień "scraping_beautifulsoup.requests.get"
-    # TODO: przygotuj p = tmp_path / "linki.csv"
-    # TODO: wywołaj zadanie_12_zapisz_linki_do_csv(
-    #           "https://sklep.przyklad.pl", str(p)) i zapisz wynik
-    # TODO: sprawdź wynik == 2
-    # TODO: otwórz plik (newline="", encoding="utf-8"),
-    #       wczytaj wiersze = list(csv.DictReader(f))
-    # TODO: sprawdź len(wiersze) == 2
-    # TODO: sprawdź wiersze[0] == {"tekst": "Produkty", "adres": "/produkty"}
-    pass
+    def podmieniony_get(url, headers=None, timeout=None):
+        return FakeResponse(200, html_strona)
+    monkeypatch.setattr("scraping_beautifulsoup.requests.get", podmieniony_get)
+    p = tmp_path / "linki.csv"
+    wynik = zadanie_12_zapisz_linki_do_csv("https://sklep.przyklad.pl", str(p))
+    assert wynik == 2
+    with open(str(p), "r", newline="", encoding="utf-8") as f:
+        wiersze = list(csv.DictReader(f))
+        assert len(wiersze) == 2
+        assert wiersze[0] == {"tekst": "Produkty", "adres": "/produkty"}
 
 
 def test_zadanie_12_strona_bez_linkow_zwraca_zero(
@@ -327,13 +307,12 @@ def test_zadanie_12_strona_bez_linkow_zwraca_zero(
     Co udaje: requests.get — zwraca FakeResponse(200, HTML bez znaczników a).
     Co sprawdzam: wynik == 0; plik istnieje i ma 0 wierszy danych.
     """
-    # TODO: przygotuj html = "<html><body><h1>Pusto</h1></body></html>"
-    # TODO: przygotuj zamiennik get zwracający FakeResponse(200, html)
-    # TODO: podmień "scraping_beautifulsoup.requests.get"
-    # TODO: przygotuj p = tmp_path / "linki.csv"
-    # TODO: wywołaj zadanie_12_zapisz_linki_do_csv(
-    #           "https://sklep.przyklad.pl", str(p)) i zapisz wynik
-    # TODO: sprawdź wynik == 0
-    # TODO: otwórz plik (newline="", encoding="utf-8")
-    #       i sprawdź list(csv.DictReader(f)) == []
-    pass
+    html = "<html><body><h1>Pusto</h1></body></html>"
+    def podmieniony_get(url, headers=None, timeout=None):
+        return FakeResponse(200, html)
+    monkeypatch.setattr("scraping_beautifulsoup.requests.get", podmieniony_get)
+    p = tmp_path / "linki.csv"
+    wynik = zadanie_12_zapisz_linki_do_csv("https://sklep.przyklad.pl", str(p))
+    assert wynik == 0
+    with open(str(p), "r", newline="", encoding="utf-8") as f:
+        assert list(csv.DictReader(f)) == []

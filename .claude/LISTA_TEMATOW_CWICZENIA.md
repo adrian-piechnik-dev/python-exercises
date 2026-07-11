@@ -297,7 +297,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 9. pandas_groupby_chaining — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 10. openpyxl_formatowanie — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 11. requests_api_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-12. scraping_beautifulsoup — ✅ wygenerowany
+12. scraping_beautifulsoup — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 13. pytest_fixtures_parametrize — ✅ wygenerowany
 14. sql_podstawy — ✅ wygenerowany
 15. psycopg2_sqlalchemy — ✅ wygenerowany

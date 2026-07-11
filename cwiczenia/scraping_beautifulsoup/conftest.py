@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 import pytest
 import requests
@@ -25,10 +25,8 @@ class FakeResponse:
         Returns:
             None
         """
-        # TODO: zapisz status_code w atrybucie self.status_code
-        # TODO: zapisz text w atrybucie self.text (bez podkreślenia —
-        #       prawdziwa odpowiedź requests też ma atrybut .text)
-        pass
+        self.status_code = status_code
+        self.text = text
 
     def raise_for_status(self) -> None:
         """Rzuca requests.HTTPError przy kodach 4xx/5xx — jak prawdziwa odpowiedź.
@@ -39,9 +37,8 @@ class FakeResponse:
         Returns:
             None
         """
-        # TODO: jeśli self.status_code >= 400 —
-        #       raise requests.HTTPError(f"kod {self.status_code}")
-        pass
+        if self.status_code >= 400:
+            raise requests.HTTPError(f"kod {self.status_code}")
 
 
 @pytest.fixture
@@ -56,23 +53,21 @@ def html_strona() -> str:
             "produkt", divem klasy "opis", akapitem o id "stopka"
             i dwoma obrazkami.
     """
-    # TODO: zwróć poniższy HTML jako string (przepisz dokładnie):
-    #       <html>
-    #         <body>
-    #           <h1>Sklep Python</h1>
-    #           <a href="/produkty">Produkty</a>
-    #           <a href="/kontakt">Kontakt</a>
-    #           <div class="produkt">Klawiatura</div>
-    #           <div class="produkt">Myszka</div>
-    #           <div class="opis">Sklep z akcesoriami</div>
-    #           <p id="stopka">Copyright 2026</p>
-    #           <img src="/logo.png">
-    #           <img src="/baner.png">
-    #         </body>
-    #       </html>
-    #       Wskazówka: użyj potrójnych cudzysłowów \"\"\"...\"\"\" na
-    #       wieloliniowy string.
-    pass
+    return """
+          <html>
+            <body>
+              <h1>Sklep Python</h1>
+              <a href="/produkty">Produkty</a>
+              <a href="/kontakt">Kontakt</a>
+              <div class="produkt">Klawiatura</div>
+              <div class="produkt">Myszka</div>
+              <div class="opis">Sklep z akcesoriami</div>
+              <p id="stopka">Copyright 2026</p>
+              <img src="/logo.png">
+              <img src="/baner.png">
+            </body>
+          </html>
+          """
 
 
 @pytest.fixture
@@ -85,13 +80,13 @@ def html_tabela() -> str:
     Returns:
         str: strona z tabelą 2x2: wiersz Anna/30 i wiersz Piotr/25.
     """
-    # TODO: zwróć poniższy HTML jako string (przepisz dokładnie):
-    #       <html>
-    #         <body>
-    #           <table>
-    #             <tr><td>Anna</td><td>30</td></tr>
-    #             <tr><td>Piotr</td><td>25</td></tr>
-    #           </table>
-    #         </body>
-    #       </html>
-    pass
+    return """
+          <html>
+            <body>
+              <table>
+                <tr><td>Anna</td><td>30</td></tr>
+                <tr><td>Piotr</td><td>25</td></tr>
+              </table>
+            </body>
+          </html>
+          """

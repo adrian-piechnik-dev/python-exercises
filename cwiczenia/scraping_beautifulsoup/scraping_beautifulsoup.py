@@ -5,21 +5,6 @@ from typing import Optional
 import requests
 from bs4 import BeautifulSoup
 
-# --- SPIS ZADAŃ ---
-# zadanie_01 — wyciągnij tekst pierwszego nagłówka h1 (find + .text)
-# zadanie_02 — zbierz teksty wszystkich linków (find_all)
-# zadanie_03 — zbierz adresy href wszystkich linków (.get("href"))
-# zadanie_04 — zbierz teksty elementów o podanej klasie (class_)
-# zadanie_05 — znajdź element po id; brak elementu → None
-# zadanie_06 — zbierz teksty pasujące do selektora CSS (select)
-# zadanie_07 — pierwszy element selektora CSS lub None (select_one)
-# zadanie_08 — zamień tabelę HTML na listę list (tr/td)
-# zadanie_09 — zbierz adresy src wszystkich obrazków
-# zadanie_10 — pobierz stronę z User-Agentem i zwróć tytuł h1
-#              (zazębienie: requests z tematu 11)
-# zadanie_11 — scrapuj listę adresów z pauzą między zapytaniami (time.sleep)
-# zadanie_12 — pobierz stronę i zapisz linki do CSV (zazębienie: temat 6)
-
 
 def zadanie_01_tytul_strony(html: str) -> Optional[str]:
     """Zwraca tekst pierwszego nagłówka h1 lub None, gdy strona nie ma h1.
@@ -30,11 +15,11 @@ def zadanie_01_tytul_strony(html: str) -> Optional[str]:
     Returns:
         Optional[str]: treść znacznika h1 lub None przy jego braku.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: znajdź nagłówek: naglowek = soup.find("h1")
-    # TODO: jeśli naglowek is None — return None
-    # TODO: w przeciwnym razie return naglowek.text
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    naglowek = soup.find("h1")
+    if naglowek is None:
+        return None
+    return naglowek.text
 
 
 def zadanie_02_teksty_linkow(html: str) -> list[str]:
@@ -46,24 +31,21 @@ def zadanie_02_teksty_linkow(html: str) -> list[str]:
     Returns:
         list[str]: teksty linków w kolejności ze strony; pusta lista gdy brak.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: zwróć list comprehension: [link.text for link in soup.find_all("a")]
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    return [link.text for link in soup.find_all("a")]
 
 
-def zadanie_03_adresy_linkow(html: str) -> list[str]:
+def zadanie_03_adresy_linkow(html: str) -> list[Optional[str]]:
     """Zbiera adresy (atrybut href) wszystkich linków ze strony.
 
     Args:
         html: surowy HTML strony jako string.
 
     Returns:
-        list[str]: wartości href w kolejności ze strony; pusta lista gdy brak.
+        list[Optional[str]]: wartości href w kolejności ze strony; pusta lista gdy brak.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: zwróć list comprehension z link.get("href")
-    #       dla każdego linku z soup.find_all("a")
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    return [link.get("href") for link in soup.find_all("a")]
 
 
 def zadanie_04_teksty_po_klasie(html: str, klasa: str) -> list[str]:
@@ -76,11 +58,8 @@ def zadanie_04_teksty_po_klasie(html: str, klasa: str) -> list[str]:
     Returns:
         list[str]: teksty pasujących divów; pusta lista gdy brak dopasowań.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: znajdź elementy: soup.find_all("div", class_=klasa)
-    #       — pamiętaj o podkreśleniu w class_!
-    # TODO: zwróć listę tekstów znalezionych elementów
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    return [element.text for element in soup.find_all("div", class_=klasa)]
 
 
 def zadanie_05_tekst_po_id(html: str, identyfikator: str) -> Optional[str]:
@@ -93,10 +72,11 @@ def zadanie_05_tekst_po_id(html: str, identyfikator: str) -> Optional[str]:
     Returns:
         Optional[str]: treść elementu lub None przy braku dopasowania.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: znajdź element: element = soup.find(id=identyfikator)
-    # TODO: jeśli element is None — return None; inaczej return element.text
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    element = soup.find(id=identyfikator)
+    if element is None:
+        return None
+    return element.text
 
 
 def zadanie_06_teksty_selektorem(html: str, selektor: str) -> list[str]:
@@ -110,10 +90,9 @@ def zadanie_06_teksty_selektorem(html: str, selektor: str) -> list[str]:
         list[str]: teksty pasujących elementów (get_text ze strip=True);
             pusta lista gdy brak dopasowań.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: znajdź elementy: soup.select(selektor)
-    # TODO: zwróć listę element.get_text(strip=True) dla każdego elementu
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    element = soup.select(selektor)
+    return [e.get_text(strip=True) for e in element]
 
 
 def zadanie_07_pierwszy_selektorem(html: str, selektor: str) -> Optional[str]:
@@ -126,11 +105,11 @@ def zadanie_07_pierwszy_selektorem(html: str, selektor: str) -> Optional[str]:
     Returns:
         Optional[str]: tekst pierwszego dopasowania lub None gdy brak.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: znajdź element: element = soup.select_one(selektor)
-    # TODO: jeśli element is None — return None;
-    #       inaczej return element.get_text(strip=True)
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    element = soup.select_one(selektor)
+    if element is None:
+        return None
+    return element.get_text(strip=True)
 
 
 def zadanie_08_tabela_do_listy(html: str) -> list[list[str]]:
@@ -143,28 +122,25 @@ def zadanie_08_tabela_do_listy(html: str) -> list[list[str]]:
         list[list[str]]: jeden element listy = jeden wiersz tabeli
             (lista tekstów komórek td); pusta lista gdy tabeli brak.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: utwórz pustą listę wiersze = []
-    # TODO: dla każdego tr w soup.find_all("tr"):
-    #       zbuduj listę [td.text for td in tr.find_all("td")]
-    #       i dodaj ją do wiersze przez .append
-    # TODO: return wiersze
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    wiersze = []
+    for tr in soup.find_all("tr"):
+        komorki = [td.text for td in tr.find_all("td")]
+        wiersze.append(komorki)
+    return wiersze
 
 
-def zadanie_09_adresy_obrazkow(html: str) -> list[str]:
+def zadanie_09_adresy_obrazkow(html: str) -> list[Optional[str]]:
     """Zbiera adresy (atrybut src) wszystkich obrazków ze strony.
 
     Args:
         html: surowy HTML strony jako string.
 
     Returns:
-        list[str]: wartości src w kolejności ze strony; pusta lista gdy brak.
+        list[Optional[str]]: wartości src w kolejności ze strony; pusta lista gdy brak.
     """
-    # TODO: utwórz soup = BeautifulSoup(html, "html.parser")
-    # TODO: zwróć list comprehension z img.get("src")
-    #       dla każdego img z soup.find_all("img")
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    return [img.get("src") for img in soup.find_all("img")]
 
 
 def zadanie_10_pobierz_tytul(url: str) -> Optional[str]:
@@ -176,14 +152,14 @@ def zadanie_10_pobierz_tytul(url: str) -> Optional[str]:
     Returns:
         Optional[str]: treść nagłówka h1 lub None, gdy strona nie ma h1.
     """
-    # TODO: przygotuj naglowki = {"User-Agent": "KursPython/1.0 (nauka scrapingu)"}
-    # TODO: wywołaj requests.get(url, headers=naglowki, timeout=10)
-    #       (wzorzec z tematu 11)
-    # TODO: wywołaj response.raise_for_status()
-    # TODO: utwórz soup = BeautifulSoup(response.text, "html.parser")
-    #       — response.text, nie response.json()!
-    # TODO: znajdź h1; jeśli is None — return None; inaczej return jego .text
-    pass
+    naglowki = {"User-Agent": "KursPython/1.0 (nauka scrapingu)"}
+    response = requests.get(url, headers=naglowki, timeout=10)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+    naglowek = soup.find("h1")
+    if naglowek is None:
+        return None
+    return naglowek.text
 
 
 def zadanie_11_scrapuj_z_pauza(adresy: list[str], pauza: float) -> list[str]:
@@ -198,16 +174,15 @@ def zadanie_11_scrapuj_z_pauza(adresy: list[str], pauza: float) -> list[str]:
         list[str]: teksty nagłówków h1 kolejnych stron; pusta lista
             dla pustej listy adresów.
     """
-    # TODO: przygotuj naglowki = {"User-Agent": "KursPython/1.0 (nauka scrapingu)"}
-    # TODO: utwórz pustą listę tytuly = []
-    # TODO: dla każdego url w adresy:
-    #       - requests.get(url, headers=naglowki, timeout=10)
-    #       - response.raise_for_status()
-    #       - soup = BeautifulSoup(response.text, "html.parser")
-    #       - dodaj soup.find("h1").text do tytuly
-    #       - time.sleep(pauza) — pauza PO każdym zapytaniu
-    # TODO: return tytuly
-    pass
+    naglowki = {"User-Agent": "KursPython/1.0 (nauka scrapingu)"}
+    tytuly = []
+    for url in adresy:
+        response = requests.get(url, headers=naglowki, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "html.parser")
+        tytuly.append(soup.find("h1").text)
+        time.sleep(pauza)
+    return tytuly
 
 
 def zadanie_12_zapisz_linki_do_csv(url: str, sciezka: str) -> int:
@@ -220,16 +195,15 @@ def zadanie_12_zapisz_linki_do_csv(url: str, sciezka: str) -> int:
     Returns:
         int: liczba zapisanych linków (wierszy danych, bez nagłówka).
     """
-    # TODO: przygotuj naglowki = {"User-Agent": "KursPython/1.0 (nauka scrapingu)"}
-    # TODO: wywołaj requests.get(url, headers=naglowki, timeout=10)
-    #       i response.raise_for_status()
-    # TODO: utwórz soup = BeautifulSoup(response.text, "html.parser")
-    # TODO: zbuduj listę słowników:
-    #       [{"tekst": a.text, "adres": a.get("href")}
-    #        for a in soup.find_all("a")]
-    # TODO: otwórz plik: open(sciezka, "w", newline="", encoding="utf-8")
-    #       w bloku with (newline="" — wzorzec CSV z tematu 6)
-    # TODO: utwórz writer = csv.DictWriter(f, fieldnames=["tekst", "adres"]),
-    #       wywołaj writer.writeheader() i writer.writerows(lista)
-    # TODO: zwróć len(listy)
-    pass
+    naglowki = {"User-Agent": "KursPython/1.0 (nauka scrapingu)"}
+    response = requests.get(url, headers=naglowki, timeout=10)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+    lista = []
+    for a in soup.find_all("a"):
+        lista.append({"tekst": a.text, "adres": a.get("href")})
+    with open(sciezka, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["tekst", "adres"])
+        writer.writeheader()
+        writer.writerows(lista)
+    return len(lista)
