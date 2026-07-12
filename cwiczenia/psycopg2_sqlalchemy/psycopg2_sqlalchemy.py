@@ -5,23 +5,6 @@ import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 
-# --- SPIS ZADAŃ ---
-# Zadania 1-8: psycopg2 (funkcje dostają połączenie albo same je tworzą).
-# Zadania 9-12: SQLAlchemy + pandas (engine zamiast ręcznych połączeń).
-#
-# zadanie_01 — otwórz połączenie z serwerem (psycopg2.connect)
-# zadanie_02 — utwórz tabelę produkty (with cursor + commit)
-# zadanie_03 — wstaw jeden produkt zapytaniem parametryzowanym (%s)
-# zadanie_04 — wstaw wiele produktów hurtem (executemany)
-# zadanie_05 — pobierz wszystkie produkty (SELECT + fetchall)
-# zadanie_06 — znajdź produkt po nazwie (%s + fetchone, brak → None)
-# zadanie_07 — połącz bezpiecznie (psycopg2.Error → None)
-# zadanie_08 — policz produkty (COUNT + fetchone[0])
-# zadanie_09 — zbuduj silnik SQLAlchemy (create_engine)
-# zadanie_10 — zapisz DataFrame do bazy (to_sql, zazębienie: temat 9)
-# zadanie_11 — wczytaj zapytanie do DataFrame (read_sql)
-# zadanie_12 — raport groupby z DataFrame prosto do bazy (pełne zazębienie)
-
 
 def zadanie_01_polacz(
     host: str, baza: str, uzytkownik: str, haslo: str
@@ -39,7 +22,12 @@ def zadanie_01_polacz(
     """
     # TODO: zwróć psycopg2.connect(host=host, dbname=baza,
     #       user=uzytkownik, password=haslo)
-    pass
+    return psycopg2.connect(
+        host=host,
+        dbname=baza,
+        user=uzytkownik,
+        password=haslo,
+    )
 
 
 def zadanie_02_utworz_tabele(polaczenie: Any) -> None:

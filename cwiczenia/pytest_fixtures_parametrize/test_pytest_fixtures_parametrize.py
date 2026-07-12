@@ -49,7 +49,7 @@ def test_zadanie_01_dzielnik_zero_rzuca_wyjatek() -> None:
     Co sprawdzam: wywołanie z dzielnikiem 0 rzuca ValueError (pytest.raises).
     """
     with pytest.raises(ValueError):
-        zadanie_01_podziel(10,0)
+        zadanie_01_podziel(10, 0)
 
 
 # --- zadanie_02 ---

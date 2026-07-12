@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from pathlib import Path
 from typing import Any, Optional
 
@@ -29,7 +29,9 @@ class FakeCursor:
         # TODO: zapisz wiersze w atrybucie self.wiersze
         # TODO: utwórz pustą listę self.wykonane (zapisy execute)
         # TODO: utwórz pustą listę self.wykonane_wiele (zapisy executemany)
-        pass
+        self.wiersze = wiersze
+        self.wykonane = []
+        self.wykonane_wiele = []
 
     def execute(self, sql: str, parametry: Optional[tuple] = None) -> None:
         """Zapisuje zapytanie i parametry zamiast wysyłać je do bazy.
@@ -42,7 +44,7 @@ class FakeCursor:
             None
         """
         # TODO: dopisz krotkę (sql, parametry) do self.wykonane
-        pass
+        self.wykonane.append((sql, parametry))
 
     def executemany(self, sql: str, lista_parametrow: list[tuple]) -> None:
         """Zapisuje zapytanie hurtowe i listę krotek zamiast je wykonywać.
@@ -55,7 +57,7 @@ class FakeCursor:
             None
         """
         # TODO: dopisz krotkę (sql, lista_parametrow) do self.wykonane_wiele
-        pass
+        self.wykonane_wiele.append((sql, lista_parametrow))
 
     def fetchall(self) -> list[tuple]:
         """Zwraca zaprogramowane wiersze — jak fetchall prawdziwego kursora.
@@ -67,7 +69,7 @@ class FakeCursor:
             list[tuple]: wiersze przekazane przy tworzeniu atrapy.
         """
         # TODO: zwróć self.wiersze
-        pass
+        return self.wiersze
 
     def fetchone(self) -> Optional[tuple]:
         """Zwraca pierwszy zaprogramowany wiersz lub None, gdy brak wierszy.
@@ -80,7 +82,9 @@ class FakeCursor:
         """
         # TODO: jeśli self.wiersze jest puste — return None
         # TODO: w przeciwnym razie zwróć self.wiersze[0]
-        pass
+        if self.wiersze == []:
+            return None
+        return self.wiersze[0]
 
     def __enter__(self) -> "FakeCursor":
         """Wspiera blok with — zwraca samego siebie (trafia za "as").
@@ -92,7 +96,7 @@ class FakeCursor:
             FakeCursor: ta sama atrapa.
         """
         # TODO: return self
-        pass
+        return self
 
     def __exit__(self, typ: Any, wartosc: Any, slad: Any) -> None:
         """Wspiera wyjście z bloku with — nie połyka wyjątków.
@@ -106,7 +110,7 @@ class FakeCursor:
             None
         """
         # TODO: return None
-        pass
+        return None
 
 
 class FakeConnection:

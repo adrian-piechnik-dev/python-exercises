@@ -52,7 +52,7 @@ class FakeResponse:
             None
         """
         if self.status_code >= 400:
-            raise requests.HTTPError(f" kod {self.status_code}")
+            raise requests.HTTPError(f"kod {self.status_code}")
 
 
 @pytest.fixture
