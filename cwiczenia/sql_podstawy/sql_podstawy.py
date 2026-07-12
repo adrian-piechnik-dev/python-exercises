@@ -1,22 +1,5 @@
 import sqlite3
 
-# --- SPIS ZADAŃ ---
-# Uwaga: w tym temacie piszesz SQL — Python (sqlite3) jest tylko nośnikiem,
-# który wykonuje twoje zapytania. Każda funkcja dostaje otwarte połączenie.
-#
-# zadanie_01 — utwórz tabelę pracownicy (CREATE TABLE)
-# zadanie_02 — wstaw trzech pracowników (INSERT INTO ... VALUES)
-# zadanie_03 — pobierz wszystkie wiersze (SELECT *)
-# zadanie_04 — imiona pracowników z Warszawy (WHERE)
-# zadanie_05 — imiona i pensje malejąco po pensji (ORDER BY DESC)
-# zadanie_06 — dwoje najlepiej opłacanych (ORDER BY + LIMIT)
-# zadanie_07 — liczba wszystkich pracowników (COUNT)
-# zadanie_08 — średnia pensja (AVG)
-# zadanie_09 — suma pensji per miasto (GROUP BY + SUM)
-# zadanie_10 — miasta z co najmniej trzema pracownikami (GROUP BY + HAVING)
-# zadanie_11 — pracownicy z nazwami działów (INNER JOIN)
-# zadanie_12 — wszyscy pracownicy z działami lub None (LEFT JOIN)
-
 
 def zadanie_01_utworz_tabele(polaczenie: sqlite3.Connection) -> None:
     """Tworzy tabelę pracownicy o pięciu kolumnach.
@@ -27,11 +10,17 @@ def zadanie_01_utworz_tabele(polaczenie: sqlite3.Connection) -> None:
     Returns:
         None
     """
-    # TODO: wykonaj polaczenie.execute z zapytaniem CREATE TABLE pracownicy
-    #       o kolumnach: id INTEGER PRIMARY KEY, imie TEXT, miasto TEXT,
-    #       pensja INTEGER, dzial_id INTEGER
-    #       (pamiętaj: bez przecinka po ostatniej kolumnie)
-    pass
+    polaczenie.execute(
+        """
+        CREATE TABLE pracownicy (
+            id INTEGER PRIMARY KEY,
+            imie TEXT,
+            miasto TEXT,
+            pensja INTEGER,
+            dzial_id INTEGER
+        )
+        """
+    )
 
 
 def zadanie_02_wstaw_pracownikow(polaczenie: sqlite3.Connection) -> None:
@@ -43,13 +32,15 @@ def zadanie_02_wstaw_pracownikow(polaczenie: sqlite3.Connection) -> None:
     Returns:
         None
     """
-    # TODO: wykonaj polaczenie.execute z zapytaniem INSERT INTO pracownicy
-    #       (id, imie, miasto, pensja, dzial_id) VALUES — trzy wiersze naraz:
-    #       (1, 'Anna', 'Warszawa', 8000, 1),
-    #       (2, 'Piotr', 'Krakow', 6000, 1),
-    #       (3, 'Zofia', 'Warszawa', 9000, 2)
-    #       (teksty w apostrofach, liczby bez)
-    pass
+    polaczenie.execute(
+        """
+        INSERT INTO pracownicy
+        (id, imie, miasto, pensja, dzial_id) VALUES
+        (1, 'Anna', 'Warszawa', 8000, 1),
+        (2, 'Piotr', 'Krakow', 6000, 1),
+        (3, 'Zofia', 'Warszawa', 9000, 2)
+        """
+    )
 
 
 def zadanie_03_wszyscy_pracownicy(
@@ -63,9 +54,7 @@ def zadanie_03_wszyscy_pracownicy(
     Returns:
         list[tuple]: lista krotek — jedna krotka na wiersz tabeli.
     """
-    # TODO: wykonaj SELECT * FROM pracownicy
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute("SELECT * FROM pracownicy").fetchall()
 
 
 def zadanie_04_imiona_z_warszawy(
@@ -79,10 +68,9 @@ def zadanie_04_imiona_z_warszawy(
     Returns:
         list[tuple]: krotki jednoelementowe z imionami, w kolejności z tabeli.
     """
-    # TODO: wykonaj SELECT imie FROM pracownicy z warunkiem WHERE
-    #       miasto = 'Warszawa' (apostrofy! pojedyncze = !)
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        "SELECT imie FROM pracownicy WHERE miasto = 'Warszawa'"
+    ).fetchall()
 
 
 def zadanie_05_pensje_malejaco(
@@ -96,10 +84,9 @@ def zadanie_05_pensje_malejaco(
     Returns:
         list[tuple]: krotki (imie, pensja) posortowane malejąco po pensji.
     """
-    # TODO: wykonaj SELECT imie, pensja FROM pracownicy
-    #       z sortowaniem ORDER BY pensja DESC
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        "SELECT imie, pensja FROM pracownicy ORDER BY pensja DESC"
+    ).fetchall()
 
 
 def zadanie_06_najlepiej_oplacani(
@@ -114,10 +101,9 @@ def zadanie_06_najlepiej_oplacani(
         list[tuple]: dokładnie 2 krotki (imie, pensja) — najwyższe pensje
             na początku.
     """
-    # TODO: wykonaj SELECT imie, pensja FROM pracownicy
-    #       ORDER BY pensja DESC LIMIT 2 (LIMIT zawsze po ORDER BY)
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        "SELECT imie, pensja FROM pracownicy ORDER BY pensja DESC LIMIT 2"
+    ).fetchall()
 
 
 def zadanie_07_liczba_pracownikow(polaczenie: sqlite3.Connection) -> int:
@@ -129,10 +115,9 @@ def zadanie_07_liczba_pracownikow(polaczenie: sqlite3.Connection) -> int:
     Returns:
         int: liczba wierszy tabeli pracownicy.
     """
-    # TODO: wykonaj SELECT COUNT(*) FROM pracownicy
-    # TODO: zwróć wartość przez .fetchone()[0]
-    #       ([0] — bo fetchone daje krotkę, nawet jednoelementową)
-    pass
+    return polaczenie.execute(
+        "SELECT COUNT(*) FROM pracownicy"
+    ).fetchone()[0]
 
 
 def zadanie_08_srednia_pensja(polaczenie: sqlite3.Connection) -> float:
@@ -144,9 +129,7 @@ def zadanie_08_srednia_pensja(polaczenie: sqlite3.Connection) -> float:
     Returns:
         float: średnia wartość kolumny pensja.
     """
-    # TODO: wykonaj SELECT AVG(pensja) FROM pracownicy
-    # TODO: zwróć wartość przez .fetchone()[0]
-    pass
+    return polaczenie.execute("SELECT AVG(pensja) FROM pracownicy").fetchone()[0]
 
 
 def zadanie_09_suma_pensji_po_miescie(
@@ -161,10 +144,9 @@ def zadanie_09_suma_pensji_po_miescie(
         list[tuple]: krotki (miasto, suma_pensji) po jednej na miasto,
             w kolejności alfabetycznej miast.
     """
-    # TODO: wykonaj SELECT miasto, SUM(pensja) FROM pracownicy
-    #       z grupowaniem GROUP BY miasto i sortowaniem ORDER BY miasto
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        "SELECT miasto, SUM(pensja) FROM pracownicy GROUP BY miasto ORDER BY miasto"
+    ).fetchall()
 
 
 def zadanie_10_miasta_z_trojka(
@@ -179,11 +161,9 @@ def zadanie_10_miasta_z_trojka(
         list[tuple]: krotki (miasto, liczba_pracownikow) tylko dla miast
             z co najmniej 3 pracownikami.
     """
-    # TODO: wykonaj SELECT miasto, COUNT(*) FROM pracownicy
-    #       GROUP BY miasto z filtrem grup HAVING COUNT(*) >= 3
-    #       (HAVING, nie WHERE — filtrujemy PO agregacji)
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        "SELECT miasto, COUNT(*) FROM pracownicy GROUP BY miasto HAVING COUNT(*) >= 3"
+    ).fetchall()
 
 
 def zadanie_11_pracownicy_z_dzialami(
@@ -198,10 +178,12 @@ def zadanie_11_pracownicy_z_dzialami(
         list[tuple]: krotki (imie, nazwa_dzialu); pracownicy bez działu
             (dzial_id NULL) nie pojawiają się w wyniku.
     """
-    # TODO: wykonaj SELECT pracownicy.imie, dzialy.nazwa FROM pracownicy
-    #       INNER JOIN dzialy ON pracownicy.dzial_id = dzialy.id
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        """
+        SELECT pracownicy.imie, dzialy.nazwa
+        FROM pracownicy INNER JOIN dzialy ON pracownicy.dzial_id = dzialy.id
+        """
+    ).fetchall()
 
 
 def zadanie_12_wszyscy_z_dzialami(
@@ -216,8 +198,10 @@ def zadanie_12_wszyscy_z_dzialami(
         list[tuple]: krotki (imie, nazwa_dzialu lub None) — po jednej
             dla każdego pracownika, także nieprzypisanego do działu.
     """
-    # TODO: wykonaj SELECT pracownicy.imie, dzialy.nazwa FROM pracownicy
-    #       LEFT JOIN dzialy ON pracownicy.dzial_id = dzialy.id
-    #       (LEFT — cała lewa tabela zostaje, braki jako NULL)
-    # TODO: zwróć wynik przez .fetchall()
-    pass
+    return polaczenie.execute(
+        """
+        SELECT pracownicy.imie, dzialy.nazwa
+        FROM pracownicy
+        LEFT JOIN dzialy ON pracownicy.dzial_id = dzialy.id
+        """
+    ).fetchall()
