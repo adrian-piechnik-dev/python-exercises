@@ -30,17 +30,16 @@ def test_zadanie_01_przekazuje_dane_logowania(
     i zwraca FakeConnection().
     Co sprawdzam: zapisane argumenty == ("localhost", "sklep", "anna", "tajne").
     """
-    # TODO: przygotuj pustą listę zapamietane = []
-    # TODO: przygotuj zamiennik:
-    #       def podmieniony_connect(host=None, dbname=None,
-    #                               user=None, password=None):
-    #           zapamietane.append((host, dbname, user, password))
-    #           return FakeConnection()
-    # TODO: podmień: monkeypatch.setattr(
-    #           "psycopg2_sqlalchemy.psycopg2.connect", podmieniony_connect)
-    # TODO: wywołaj zadanie_01_polacz("localhost", "sklep", "anna", "tajne")
-    # TODO: sprawdź zapamietane[0] == ("localhost", "sklep", "anna", "tajne")
-    pass
+    zapamietane = []
+    def podmieniony_connect(
+            host=None, dbname=None, user=None, password=None
+    ):
+        zapamietane.append((host, dbname, user, password))
+        return FakeConnection()
+    monkeypatch.setattr("psycopg2_sqlalchemy.psycopg2.connect",
+                        podmieniony_connect)
+    zadanie_01_polacz("localhost", "sklep", "anna", "tajne")
+    assert zapamietane[0] == ("localhost", "sklep", "anna", "tajne")
 
 
 def test_zadanie_01_zwraca_polaczenie(
@@ -50,12 +49,15 @@ def test_zadanie_01_zwraca_polaczenie(
     Co udaje: psycopg2.connect — zwraca konkretną atrapę FakeConnection.
     Co sprawdzam: wynik is ta_sama_atrapa.
     """
-    # TODO: przygotuj atrapa = FakeConnection()
-    # TODO: przygotuj zamiennik connect zwracający atrapa
-    # TODO: podmień "psycopg2_sqlalchemy.psycopg2.connect"
-    # TODO: wywołaj zadanie_01_polacz("localhost", "sklep", "anna", "tajne")
-    # TODO: sprawdź wynik is atrapa
-    pass
+    atrapa = FakeConnection()
+    def podmieniony_connect(
+            host=None, dbname=None, user=None, password=None
+    ):
+        return atrapa
+    monkeypatch.setattr("psycopg2_sqlalchemy.psycopg2.connect", podmieniony_connect)
+    wynik = zadanie_01_polacz("localhost", "sklep", "anna", "tajne")
+    assert wynik is atrapa
+
 
 
 # --- zadanie_02 ---
@@ -66,11 +68,10 @@ def test_zadanie_02_wysyla_create_table(
     Co udaje: połączenie — FakeConnection z kursorem-szpiegiem.
     Co sprawdzam: zapisany SQL zawiera "CREATE TABLE produkty".
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: wywołaj zadanie_02_utworz_tabele(polaczenie)
-    # TODO: odbierz (sql, parametry) = polaczenie.kursor.wykonane[0]
-    # TODO: sprawdź "CREATE TABLE produkty" in sql
-    pass
+    polaczenie = FakeConnection()
+    zadanie_02_utworz_tabele(polaczenie)
+    (sql, parametry) = polaczenie.kursor.wykonane[0]
+    assert "CREATE TABLE produkty" in sql
 
 
 def test_zadanie_02_zatwierdza_zmiany(
@@ -80,10 +81,9 @@ def test_zadanie_02_zatwierdza_zmiany(
     Co udaje: połączenie — FakeConnection zliczające commity.
     Co sprawdzam: polaczenie.liczba_commitow == 1.
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: wywołaj zadanie_02_utworz_tabele(polaczenie)
-    # TODO: sprawdź polaczenie.liczba_commitow == 1
-    pass
+    polacznie = FakeConnection()
+    zadanie_02_utworz_tabele(polacznie)
+    assert polacznie.liczba_comitow == 1
 
 
 # --- zadanie_03 ---

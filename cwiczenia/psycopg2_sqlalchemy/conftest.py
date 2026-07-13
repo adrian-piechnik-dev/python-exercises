@@ -134,7 +134,10 @@ class FakeConnection:
         # TODO: utwórz self.kursor = FakeCursor(wiersze)
         #       (jeden współdzielony kursor, żeby test mógł zajrzeć w zapisy)
         # TODO: utwórz licznik self.liczba_commitow = 0
-        pass
+        if wiersze is None:
+            wiersze = []
+        self.kursor = FakeCursor(wiersze)
+        self.liczba_comitow = 0
 
     def cursor(self) -> FakeCursor:
         """Zwraca kursor-szpiega — jak cursor() prawdziwego połączenia.
@@ -146,7 +149,7 @@ class FakeConnection:
             FakeCursor: współdzielona atrapa kursora.
         """
         # TODO: return self.kursor
-        pass
+        return self.kursor
 
     def commit(self) -> None:
         """Zlicza wywołania commit zamiast zatwierdzać transakcję.
@@ -158,7 +161,7 @@ class FakeConnection:
             None
         """
         # TODO: zwiększ self.liczba_commitow o 1
-        pass
+        self.liczba_comitow += 1
 
 
 @pytest.fixture
@@ -174,4 +177,5 @@ def silnik_sqlite(tmp_path: Path) -> Engine:
     # TODO: zbuduj adres = f"sqlite:///{tmp_path / 'test.db'}"
     #       (trzy ukośniki — plik lokalny)
     # TODO: return create_engine(adres)
-    pass
+    adres = f"sqlite:///{tmp_path / 'test.db'}"
+    return create_engine(adres)

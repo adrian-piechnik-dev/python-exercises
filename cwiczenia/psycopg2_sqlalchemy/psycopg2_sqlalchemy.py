@@ -20,8 +20,6 @@ def zadanie_01_polacz(
     Returns:
         Any: obiekt połączenia zwrócony przez psycopg2.
     """
-    # TODO: zwróć psycopg2.connect(host=host, dbname=baza,
-    #       user=uzytkownik, password=haslo)
     return psycopg2.connect(
         host=host,
         dbname=baza,
@@ -48,7 +46,17 @@ def zadanie_02_utworz_tabele(polaczenie: Any) -> None:
     #       )
     #       (SERIAL — postgresowa autonumeracja wierszy)
     # TODO: po bloku with zatwierdź: polaczenie.commit()
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute(
+            """
+            CREATE TABLE produkty (
+                id SERIAL PRIMARY KEY,
+                nazwa TEXT,
+                cena NUMERIC
+            )
+            """
+        )
+    polaczenie.commit()
 
 
 def zadanie_03_wstaw_produkt(
