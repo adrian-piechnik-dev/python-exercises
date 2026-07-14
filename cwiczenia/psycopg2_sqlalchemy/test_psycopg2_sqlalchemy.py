@@ -95,13 +95,12 @@ def test_zadanie_03_uzywa_zaslepek_i_parametrow(
     Co sprawdzam: SQL zawiera "%s", a parametry == ("Klawiatura", 99.0);
     wartości NIE są wklejone w tekst zapytania.
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: wywołaj zadanie_03_wstaw_produkt(polaczenie, "Klawiatura", 99.0)
-    # TODO: odbierz (sql, parametry) = polaczenie.kursor.wykonane[0]
-    # TODO: sprawdź "%s" in sql
-    # TODO: sprawdź parametry == ("Klawiatura", 99.0)
-    # TODO: sprawdź "Klawiatura" not in sql (wartość nie sklejona w SQL!)
-    pass
+    polaczenie = FakeConnection()
+    zadanie_03_wstaw_produkt(polaczenie, "Klawiatura", 99.0)
+    (sql, parametry) = polaczenie.kursor.wykonane[0]
+    assert "%s" in sql
+    assert parametry == ("Klawiatura", 99.0)
+    assert "Klawiatura" not in sql
 
 
 def test_zadanie_03_zatwierdza_zmiany(
@@ -110,10 +109,9 @@ def test_zadanie_03_zatwierdza_zmiany(
     Co udaje: połączenie — FakeConnection zliczające commity.
     Co sprawdzam: polaczenie.liczba_commitow == 1.
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: wywołaj zadanie_03_wstaw_produkt(polaczenie, "Mysz", 49.0)
-    # TODO: sprawdź polaczenie.liczba_commitow == 1
-    pass
+    polaczenie = FakeConnection()
+    zadanie_03_wstaw_produkt(polaczenie, "Mysz", 49.0)
+    assert polaczenie.liczba_comitow == 1
 
 
 # --- zadanie_04 ---
@@ -124,13 +122,13 @@ def test_zadanie_04_uzywa_executemany(
     Co udaje: połączenie — FakeConnection z kursorem-szpiegiem.
     Co sprawdzam: wykonane_wiele zawiera zapis z listą trzech krotek.
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: przygotuj produkty = [("Klawiatura", 99.0), ("Mysz", 49.0),
-    #       ("Monitor", 899.0)]
-    # TODO: wywołaj zadanie_04_wstaw_wiele(polaczenie, produkty)
-    # TODO: odbierz (sql, lista) = polaczenie.kursor.wykonane_wiele[0]
-    # TODO: sprawdź "%s" in sql i lista == produkty
-    pass
+    polacznie = FakeConnection()
+    produkty = [("Klawiatura", 99.0), ("Mysz", 49.0), ("Monitor", 899.0)]
+    zadanie_04_wstaw_wiele(polacznie, produkty)
+    (sql, lista) = polacznie.kursor.wykonane_wiele[0]
+    assert "%s" in sql
+    assert len(lista) == 3
+
 
 
 def test_zadanie_04_zatwierdza_raz(
@@ -139,10 +137,9 @@ def test_zadanie_04_zatwierdza_raz(
     Co udaje: połączenie — FakeConnection zliczające commity.
     Co sprawdzam: polaczenie.liczba_commitow == 1 (nie po jednym na wiersz).
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: wywołaj zadanie_04_wstaw_wiele(polaczenie, [("Mysz", 49.0)])
-    # TODO: sprawdź polaczenie.liczba_commitow == 1
-    pass
+    polaczenie = FakeConnection()
+    zadanie_04_wstaw_wiele(polaczenie,[("Mysz", 49.0)])
+    assert polaczenie.liczba_comitow == 1
 
 
 # --- zadanie_05 ---
@@ -153,12 +150,10 @@ def test_zadanie_05_zwraca_wiersze_z_kursora(
     Co udaje: połączenie — FakeConnection z zaprogramowanymi 2 wierszami.
     Co sprawdzam: wynik == [(1, "Klawiatura", 99.0), (2, "Mysz", 49.0)].
     """
-    # TODO: przygotuj wiersze = [(1, "Klawiatura", 99.0), (2, "Mysz", 49.0)]
-    # TODO: przygotuj polaczenie = FakeConnection(wiersze)
-    # TODO: wywołaj zadanie_05_wszystkie_produkty(polaczenie)
-    # TODO: sprawdź wynik == wiersze
-    pass
-
+    wiersze = [(1, "Klawiatura", 99.0), (2, "Mysz", 49.0)]
+    polacznie = FakeConnection(wiersze)
+    wynik = zadanie_05_wszystkie_produkty(polacznie)
+    assert wynik == wiersze
 
 def test_zadanie_05_wysyla_select(
 ) -> None:
@@ -166,11 +161,11 @@ def test_zadanie_05_wysyla_select(
     Co udaje: połączenie — FakeConnection z kursorem-szpiegiem.
     Co sprawdzam: zapisany SQL zawiera "SELECT" i "produkty".
     """
-    # TODO: przygotuj polaczenie = FakeConnection()
-    # TODO: wywołaj zadanie_05_wszystkie_produkty(polaczenie)
-    # TODO: odbierz (sql, parametry) = polaczenie.kursor.wykonane[0]
-    # TODO: sprawdź "SELECT" in sql i "produkty" in sql
-    pass
+    polaczenie = FakeConnection()
+    zadanie_05_wszystkie_produkty(polaczenie)
+    (sql, parametry) = polaczenie.kursor.wykonane[0]
+    assert "SELECT" in sql
+    assert "produkty" in sql
 
 
 # --- zadanie_06 ---

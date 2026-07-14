@@ -5,6 +5,8 @@ import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 
+from CC_Cwiczenia.cwiczenia.psycopg2_sqlalchemy.conftest import FakeConnection
+
 
 def zadanie_01_polacz(
     host: str, baza: str, uzytkownik: str, haslo: str
@@ -37,15 +39,6 @@ def zadanie_02_utworz_tabele(polaczenie: Any) -> None:
     Returns:
         None
     """
-    # TODO: otwórz kursor w bloku: with polaczenie.cursor() as kursor:
-    # TODO: wewnątrz with wykonaj kursor.execute z zapytaniem:
-    #       CREATE TABLE produkty (
-    #           id SERIAL PRIMARY KEY,
-    #           nazwa TEXT,
-    #           cena NUMERIC
-    #       )
-    #       (SERIAL — postgresowa autonumeracja wierszy)
-    # TODO: po bloku with zatwierdź: polaczenie.commit()
     with polaczenie.cursor() as kursor:
         kursor.execute(
             """
@@ -72,13 +65,9 @@ def zadanie_03_wstaw_produkt(
     Returns:
         None
     """
-    # TODO: otwórz kursor w bloku with polaczenie.cursor() as kursor:
-    # TODO: wykonaj kursor.execute z zapytaniem:
-    #       INSERT INTO produkty (nazwa, cena) VALUES (%s, %s)
-    #       oraz krotką parametrów (nazwa, cena) jako DRUGIM argumentem
-    #       — nigdy f-string do sklejania SQL (SQL injection)!
-    # TODO: po bloku with zatwierdź: polaczenie.commit()
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute("INSERT INTO produkty (nazwa, cena) VALUES (%s, %s)", ("Klawiatura", 99.0))
+    polaczenie.commit()
 
 
 def zadanie_04_wstaw_wiele(
@@ -93,12 +82,9 @@ def zadanie_04_wstaw_wiele(
     Returns:
         None
     """
-    # TODO: otwórz kursor w bloku with polaczenie.cursor() as kursor:
-    # TODO: wykonaj kursor.executemany z zapytaniem
-    #       INSERT INTO produkty (nazwa, cena) VALUES (%s, %s)
-    #       i całą listą produkty jako drugim argumentem
-    # TODO: po bloku with zatwierdź: polaczenie.commit()
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.executemany("INSERT INTO produkty (nazwa, cena) VALUES (%s, %s)", produkty)
+    polaczenie.commit()
 
 
 def zadanie_05_wszystkie_produkty(polaczenie: Any) -> list[tuple]:
@@ -110,11 +96,9 @@ def zadanie_05_wszystkie_produkty(polaczenie: Any) -> list[tuple]:
     Returns:
         list[tuple]: wiersze tabeli produkty jako lista krotek.
     """
-    # TODO: otwórz kursor w bloku with polaczenie.cursor() as kursor:
-    # TODO: wykonaj kursor.execute("SELECT id, nazwa, cena FROM produkty")
-    # TODO: wewnątrz with zwróć kursor.fetchall()
-    #       (SELECT nie zmienia danych — commit zbędny)
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute("SELECT id, nazwa, cena FROM produkty")
+        return kursor.fetchall()
 
 
 def zadanie_06_znajdz_produkt(
