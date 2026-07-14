@@ -26,9 +26,6 @@ class FakeCursor:
         Returns:
             None
         """
-        # TODO: zapisz wiersze w atrybucie self.wiersze
-        # TODO: utwórz pustą listę self.wykonane (zapisy execute)
-        # TODO: utwórz pustą listę self.wykonane_wiele (zapisy executemany)
         self.wiersze = wiersze
         self.wykonane = []
         self.wykonane_wiele = []
@@ -43,7 +40,6 @@ class FakeCursor:
         Returns:
             None
         """
-        # TODO: dopisz krotkę (sql, parametry) do self.wykonane
         self.wykonane.append((sql, parametry))
 
     def executemany(self, sql: str, lista_parametrow: list[tuple]) -> None:
@@ -56,7 +52,6 @@ class FakeCursor:
         Returns:
             None
         """
-        # TODO: dopisz krotkę (sql, lista_parametrow) do self.wykonane_wiele
         self.wykonane_wiele.append((sql, lista_parametrow))
 
     def fetchall(self) -> list[tuple]:
@@ -68,7 +63,6 @@ class FakeCursor:
         Returns:
             list[tuple]: wiersze przekazane przy tworzeniu atrapy.
         """
-        # TODO: zwróć self.wiersze
         return self.wiersze
 
     def fetchone(self) -> Optional[tuple]:
@@ -80,8 +74,6 @@ class FakeCursor:
         Returns:
             Optional[tuple]: pierwszy wiersz albo None.
         """
-        # TODO: jeśli self.wiersze jest puste — return None
-        # TODO: w przeciwnym razie zwróć self.wiersze[0]
         if self.wiersze == []:
             return None
         return self.wiersze[0]
@@ -95,7 +87,6 @@ class FakeCursor:
         Returns:
             FakeCursor: ta sama atrapa.
         """
-        # TODO: return self
         return self
 
     def __exit__(self, typ: Any, wartosc: Any, slad: Any) -> None:
@@ -109,7 +100,6 @@ class FakeCursor:
         Returns:
             None
         """
-        # TODO: return None
         return None
 
 
@@ -130,14 +120,10 @@ class FakeConnection:
         Returns:
             None
         """
-        # TODO: jeśli wiersze is None — użyj pustej listy
-        # TODO: utwórz self.kursor = FakeCursor(wiersze)
-        #       (jeden współdzielony kursor, żeby test mógł zajrzeć w zapisy)
-        # TODO: utwórz licznik self.liczba_commitow = 0
         if wiersze is None:
             wiersze = []
         self.kursor = FakeCursor(wiersze)
-        self.liczba_comitow = 0
+        self.liczba_commitow = 0
 
     def cursor(self) -> FakeCursor:
         """Zwraca kursor-szpiega — jak cursor() prawdziwego połączenia.
@@ -148,7 +134,6 @@ class FakeConnection:
         Returns:
             FakeCursor: współdzielona atrapa kursora.
         """
-        # TODO: return self.kursor
         return self.kursor
 
     def commit(self) -> None:
@@ -160,8 +145,7 @@ class FakeConnection:
         Returns:
             None
         """
-        # TODO: zwiększ self.liczba_commitow o 1
-        self.liczba_comitow += 1
+        self.liczba_commitow += 1
 
 
 @pytest.fixture
@@ -174,8 +158,5 @@ def silnik_sqlite(tmp_path: Path) -> Engine:
     Returns:
         Engine: silnik wskazujący świeżą, pustą bazę sqlite w pliku.
     """
-    # TODO: zbuduj adres = f"sqlite:///{tmp_path / 'test.db'}"
-    #       (trzy ukośniki — plik lokalny)
-    # TODO: return create_engine(adres)
     adres = f"sqlite:///{tmp_path / 'test.db'}"
     return create_engine(adres)

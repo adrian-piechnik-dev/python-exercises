@@ -5,8 +5,6 @@ import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 
-from CC_Cwiczenia.cwiczenia.psycopg2_sqlalchemy.conftest import FakeConnection
-
 
 def zadanie_01_polacz(
     host: str, baza: str, uzytkownik: str, haslo: str
@@ -66,7 +64,10 @@ def zadanie_03_wstaw_produkt(
         None
     """
     with polaczenie.cursor() as kursor:
-        kursor.execute("INSERT INTO produkty (nazwa, cena) VALUES (%s, %s)", ("Klawiatura", 99.0))
+        kursor.execute(
+            "INSERT INTO produkty (nazwa, cena) VALUES (%s, %s)",
+            (nazwa, cena)
+        )
     polaczenie.commit()
 
 
@@ -113,13 +114,12 @@ def zadanie_06_znajdz_produkt(
     Returns:
         Optional[tuple]: wiersz produktu lub None, gdy brak dopasowania.
     """
-    # TODO: otwórz kursor w bloku with polaczenie.cursor() as kursor:
-    # TODO: wykonaj kursor.execute z zapytaniem
-    #       SELECT id, nazwa, cena FROM produkty WHERE nazwa = %s
-    #       i krotką (nazwa,) — przecinek! krotka jednoelementowa
-    # TODO: wewnątrz with zwróć kursor.fetchone()
-    #       (fetchone sam daje None przy braku wyników)
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute(
+            "SELECT id, nazwa, cena FROM produkty WHERE nazwa = %s",
+            (nazwa,)
+        )
+        return kursor.fetchone()
 
 
 def zadanie_07_polacz_bezpiecznie(
@@ -137,12 +137,12 @@ def zadanie_07_polacz_bezpiecznie(
         Optional[Any]: obiekt połączenia lub None przy błędzie
             z rodziny psycopg2.Error.
     """
-    # TODO: użyj try/except psycopg2.Error (wzorzec z tematu 4:
-    #       sygnalizacja błędu przez None)
-    # TODO: w try: return psycopg2.connect(host=host, dbname=baza,
-    #       user=uzytkownik, password=haslo)
-    # TODO: w except: return None
-    pass
+    try:
+        return psycopg2.connect(
+            host=host, dbname=baza, user=uzytkownik, password=haslo
+        )
+    except psycopg2.Error:
+        return None
 
 
 def zadanie_08_policz_produkty(polaczenie: Any) -> int:
@@ -154,11 +154,9 @@ def zadanie_08_policz_produkty(polaczenie: Any) -> int:
     Returns:
         int: liczba wierszy tabeli produkty.
     """
-    # TODO: otwórz kursor w bloku with polaczenie.cursor() as kursor:
-    # TODO: wykonaj kursor.execute("SELECT COUNT(*) FROM produkty")
-    # TODO: wewnątrz with zwróć kursor.fetchone()[0]
-    #       ([0] — fetchone daje krotkę, pamiętasz z tematu 14)
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute("SELECT COUNT(*) FROM produkty")
+        return kursor.fetchone()[0]
 
 
 def zadanie_09_utworz_silnik(adres: str) -> Engine:
@@ -171,8 +169,7 @@ def zadanie_09_utworz_silnik(adres: str) -> Engine:
     Returns:
         Engine: silnik gotowy do użycia przez pandas.
     """
-    # TODO: zwróć create_engine(adres)
-    pass
+    return create_engine(adres)
 
 
 def zadanie_10_df_do_bazy(
@@ -188,10 +185,7 @@ def zadanie_10_df_do_bazy(
     Returns:
         None
     """
-    # TODO: wywołaj df.to_sql(nazwa_tabeli, silnik, index=False,
-    #       if_exists="replace")
-    #       (index=False — bez śmieciowej kolumny; replace — nadpisz)
-    pass
+    df.to_sql(nazwa_tabeli, silnik, index=False, if_exists="replace")
 
 
 def zadanie_11_czytaj_do_df(zapytanie: str, silnik: Engine) -> pd.DataFrame:
@@ -204,8 +198,7 @@ def zadanie_11_czytaj_do_df(zapytanie: str, silnik: Engine) -> pd.DataFrame:
     Returns:
         pd.DataFrame: wynik zapytania jako tabela pandas.
     """
-    # TODO: zwróć pd.read_sql(zapytanie, silnik)
-    pass
+    return pd.read_sql(zapytanie, silnik)
 
 
 def zadanie_12_raport_do_bazy(df: pd.DataFrame, silnik: Engine) -> int:
@@ -218,9 +211,6 @@ def zadanie_12_raport_do_bazy(df: pd.DataFrame, silnik: Engine) -> int:
     Returns:
         int: liczba wierszy zapisanego raportu (liczba unikalnych miast).
     """
-    # TODO: zbuduj wynik łańcuchem znanym z tematów 9-10:
-    #       df.groupby("miasto").agg({"sprzedaz": "sum"}).reset_index()
-    # TODO: zapisz wynik przez .to_sql("raport", silnik, index=False,
-    #       if_exists="replace")
-    # TODO: zwróć len(wynik)
-    pass
+    wynik = df.groupby("miasto").agg({"sprzedaz": "sum"}).reset_index()
+    wynik.to_sql("raport", silnik, index=False, if_exists="replace")
+    return len(wynik)

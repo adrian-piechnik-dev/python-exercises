@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 import pytest
 import psycopg2
@@ -59,7 +61,6 @@ def test_zadanie_01_zwraca_polaczenie(
     assert wynik is atrapa
 
 
-
 # --- zadanie_02 ---
 
 def test_zadanie_02_wysyla_create_table(
@@ -70,7 +71,7 @@ def test_zadanie_02_wysyla_create_table(
     """
     polaczenie = FakeConnection()
     zadanie_02_utworz_tabele(polaczenie)
-    (sql, parametry) = polaczenie.kursor.wykonane[0]
+    (sql, _) = polaczenie.kursor.wykonane[0]
     assert "CREATE TABLE produkty" in sql
 
 
@@ -81,9 +82,9 @@ def test_zadanie_02_zatwierdza_zmiany(
     Co udaje: połączenie — FakeConnection zliczające commity.
     Co sprawdzam: polaczenie.liczba_commitow == 1.
     """
-    polacznie = FakeConnection()
-    zadanie_02_utworz_tabele(polacznie)
-    assert polacznie.liczba_comitow == 1
+    polaczenie = FakeConnection()
+    zadanie_02_utworz_tabele(polaczenie)
+    assert polaczenie.liczba_commitow == 1
 
 
 # --- zadanie_03 ---
@@ -111,7 +112,7 @@ def test_zadanie_03_zatwierdza_zmiany(
     """
     polaczenie = FakeConnection()
     zadanie_03_wstaw_produkt(polaczenie, "Mysz", 49.0)
-    assert polaczenie.liczba_comitow == 1
+    assert polaczenie.liczba_commitow == 1
 
 
 # --- zadanie_04 ---
@@ -122,13 +123,12 @@ def test_zadanie_04_uzywa_executemany(
     Co udaje: połączenie — FakeConnection z kursorem-szpiegiem.
     Co sprawdzam: wykonane_wiele zawiera zapis z listą trzech krotek.
     """
-    polacznie = FakeConnection()
+    polaczenie = FakeConnection()
     produkty = [("Klawiatura", 99.0), ("Mysz", 49.0), ("Monitor", 899.0)]
-    zadanie_04_wstaw_wiele(polacznie, produkty)
-    (sql, lista) = polacznie.kursor.wykonane_wiele[0]
+    zadanie_04_wstaw_wiele(polaczenie, produkty)
+    (sql, lista) = polaczenie.kursor.wykonane_wiele[0]
     assert "%s" in sql
     assert len(lista) == 3
-
 
 
 def test_zadanie_04_zatwierdza_raz(
@@ -138,8 +138,8 @@ def test_zadanie_04_zatwierdza_raz(
     Co sprawdzam: polaczenie.liczba_commitow == 1 (nie po jednym na wiersz).
     """
     polaczenie = FakeConnection()
-    zadanie_04_wstaw_wiele(polaczenie,[("Mysz", 49.0)])
-    assert polaczenie.liczba_comitow == 1
+    zadanie_04_wstaw_wiele(polaczenie, [("Mysz", 49.0)])
+    assert polaczenie.liczba_commitow == 1
 
 
 # --- zadanie_05 ---
@@ -151,9 +151,10 @@ def test_zadanie_05_zwraca_wiersze_z_kursora(
     Co sprawdzam: wynik == [(1, "Klawiatura", 99.0), (2, "Mysz", 49.0)].
     """
     wiersze = [(1, "Klawiatura", 99.0), (2, "Mysz", 49.0)]
-    polacznie = FakeConnection(wiersze)
-    wynik = zadanie_05_wszystkie_produkty(polacznie)
+    polaczenie = FakeConnection(wiersze)
+    wynik = zadanie_05_wszystkie_produkty(polaczenie)
     assert wynik == wiersze
+
 
 def test_zadanie_05_wysyla_select(
 ) -> None:
@@ -163,7 +164,7 @@ def test_zadanie_05_wysyla_select(
     """
     polaczenie = FakeConnection()
     zadanie_05_wszystkie_produkty(polaczenie)
-    (sql, parametry) = polaczenie.kursor.wykonane[0]
+    (sql, _) = polaczenie.kursor.wykonane[0]
     assert "SELECT" in sql
     assert "produkty" in sql
 
@@ -176,12 +177,11 @@ def test_zadanie_06_zwraca_znaleziony_wiersz(
     Co udaje: połączenie — FakeConnection z jednym zaprogramowanym wierszem.
     Co sprawdzam: wynik == (1, "Klawiatura", 99.0) i parametry == ("Klawiatura",).
     """
-    # TODO: przygotuj polaczenie = FakeConnection([(1, "Klawiatura", 99.0)])
-    # TODO: wywołaj zadanie_06_znajdz_produkt(polaczenie, "Klawiatura")
-    # TODO: sprawdź wynik == (1, "Klawiatura", 99.0)
-    # TODO: odbierz (sql, parametry) = polaczenie.kursor.wykonane[0]
-    # TODO: sprawdź parametry == ("Klawiatura",) — krotka jednoelementowa
-    pass
+    polaczenie = FakeConnection([(1, "Klawiatura", 99.0)])
+    wynik = zadanie_06_znajdz_produkt(polaczenie, "Klawiatura")
+    assert wynik == (1, "Klawiatura", 99.0)
+    (sql, parametry) = polaczenie.kursor.wykonane[0]
+    assert parametry == ("Klawiatura",)
 
 
 def test_zadanie_06_brak_produktu_zwraca_none(
@@ -190,10 +190,9 @@ def test_zadanie_06_brak_produktu_zwraca_none(
     Co udaje: połączenie — FakeConnection bez wierszy (fetchone da None).
     Co sprawdzam: wynik is None.
     """
-    # TODO: przygotuj polaczenie = FakeConnection()  (bez wierszy)
-    # TODO: wywołaj zadanie_06_znajdz_produkt(polaczenie, "Drukarka")
-    # TODO: sprawdź wynik is None
-    pass
+    polaczenie = FakeConnection()
+    wynik = zadanie_06_znajdz_produkt(polaczenie, "Drukarka")
+    assert wynik is None
 
 
 # --- zadanie_07 ---
@@ -205,13 +204,16 @@ def test_zadanie_07_sukces_zwraca_polaczenie(
     Co udaje: psycopg2.connect — zwraca konkretną atrapę FakeConnection.
     Co sprawdzam: wynik is ta_sama_atrapa (nie None).
     """
-    # TODO: przygotuj atrapa = FakeConnection()
-    # TODO: przygotuj zamiennik connect zwracający atrapa
-    # TODO: podmień "psycopg2_sqlalchemy.psycopg2.connect"
-    # TODO: wywołaj zadanie_07_polacz_bezpiecznie(
-    #           "localhost", "sklep", "anna", "tajne")
-    # TODO: sprawdź wynik is atrapa
-    pass
+    atrapa = FakeConnection()
+    def podmieniony_connect(
+            host=None, dbname=None, user=None, password=None
+    ):
+        return atrapa
+    monkeypatch.setattr("psycopg2_sqlalchemy.psycopg2.connect", podmieniony_connect)
+    wynik = zadanie_07_polacz_bezpiecznie(
+        "localhost", "sklep", "anna", "tajne"
+    )
+    assert wynik is atrapa
 
 
 def test_zadanie_07_blad_bazy_zwraca_none(
@@ -222,13 +224,13 @@ def test_zadanie_07_blad_bazy_zwraca_none(
     (dziecko psycopg2.Error), jak przy wyłączonym serwerze.
     Co sprawdzam: wynik is None (wyjątek złapany w funkcji).
     """
-    # TODO: przygotuj zamiennik, który zamiast return robi:
-    #       raise psycopg2.OperationalError("serwer nie odpowiada")
-    # TODO: podmień "psycopg2_sqlalchemy.psycopg2.connect"
-    # TODO: wywołaj zadanie_07_polacz_bezpiecznie(
-    #           "localhost", "sklep", "anna", "tajne")
-    # TODO: sprawdź wynik is None
-    pass
+    def podmieniony_connect(
+            host=None, dbname=None, user=None, password=None
+    ):
+        raise psycopg2.OperationalError("serwer nie odpowiada")
+    monkeypatch.setattr("psycopg2_sqlalchemy.psycopg2.connect", podmieniony_connect)
+    wynik = zadanie_07_polacz_bezpiecznie("localhost", "sklep", "anna", "tajne")
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -240,11 +242,10 @@ def test_zadanie_08_zwraca_liczbe(
     z bazy).
     Co sprawdzam: wynik == 7 i isinstance(wynik, int) is True.
     """
-    # TODO: przygotuj polaczenie = FakeConnection([(7,)])
-    # TODO: wywołaj zadanie_08_policz_produkty(polaczenie)
-    # TODO: sprawdź wynik == 7
-    # TODO: sprawdź isinstance(wynik, int) is True
-    pass
+    polaczenie = FakeConnection([(7,)])
+    wynik = zadanie_08_policz_produkty(polaczenie)
+    assert wynik == 7
+    assert isinstance(wynik, int) is True
 
 
 def test_zadanie_08_wysyla_count(
@@ -253,38 +254,35 @@ def test_zadanie_08_wysyla_count(
     Co udaje: połączenie — FakeConnection z wierszem (0,).
     Co sprawdzam: zapisany SQL zawiera "COUNT(*)".
     """
-    # TODO: przygotuj polaczenie = FakeConnection([(0,)])
-    # TODO: wywołaj zadanie_08_policz_produkty(polaczenie)
-    # TODO: odbierz (sql, parametry) = polaczenie.kursor.wykonane[0]
-    # TODO: sprawdź "COUNT(*)" in sql
-    pass
+    polaczenie = FakeConnection([(0,)])
+    zadanie_08_policz_produkty(polaczenie)
+    (sql, _) = polaczenie.kursor.wykonane[0]
+    assert "COUNT(*)" in sql
 
 
 # --- zadanie_09 ---
 
-def test_zadanie_09_zwraca_engine(tmp_path) -> None:
+def test_zadanie_09_zwraca_engine(tmp_path: Path) -> None:
     """Co testuje: czy funkcja buduje prawdziwy silnik SQLAlchemy.
     Co udaje: nic — sqlite w pliku tymczasowym to prawdziwa baza.
     Co sprawdzam: isinstance(wynik, Engine) is True.
     """
-    # TODO: przygotuj adres = f"sqlite:///{tmp_path / 'test.db'}"
-    # TODO: wywołaj zadanie_09_utworz_silnik(adres)
-    # TODO: sprawdź isinstance(wynik, Engine) is True
-    pass
+    adres = f"sqlite:///{tmp_path / 'test.db'}"
+    wynik = zadanie_09_utworz_silnik(adres)
+    assert isinstance(wynik, Engine) is True
 
 
-def test_zadanie_09_silnik_dziala_z_pandas(tmp_path) -> None:
+def test_zadanie_09_silnik_dziala_z_pandas(tmp_path: Path) -> None:
     """Co testuje: czy zwrócony silnik nadaje się do pracy z pandas.
     Co udaje: nic — prawdziwy sqlite w pliku tymczasowym.
     Co sprawdzam: to_sql + read_sql na tym silniku dają z powrotem 2 wiersze.
     """
-    # TODO: przygotuj adres = f"sqlite:///{tmp_path / 'test.db'}"
-    # TODO: wywołaj zadanie_09_utworz_silnik(adres) i zapisz jako silnik
-    # TODO: przygotuj df = pd.DataFrame({"x": [1, 2]})
-    # TODO: zapisz df.to_sql("proba", silnik, index=False)
-    # TODO: wczytaj z powrotem pd.read_sql("SELECT * FROM proba", silnik)
-    # TODO: sprawdź len(wczytany) == 2
-    pass
+    adres = f"sqlite:///{tmp_path / 'test.db'}"
+    silnik = zadanie_09_utworz_silnik(adres)
+    df = pd.DataFrame({"x": [1, 2]})
+    df.to_sql("proba", silnik, index=False)
+    wczytany = pd.read_sql("SELECT * FROM proba", silnik)
+    assert len(wczytany) == 2
 
 
 # --- zadanie_10 ---
@@ -296,15 +294,14 @@ def test_zadanie_10_tabela_powstaje_w_bazie(
     Co udaje: nic — fixture silnik_sqlite to prawdziwa baza w pliku tmp.
     Co sprawdzam: read_sql z tej tabeli zwraca 3 wiersze i kolumnę "miasto".
     """
-    # TODO: przygotuj df = pd.DataFrame({
-    #           "miasto": ["Warszawa", "Krakow", "Warszawa"],
-    #           "sprzedaz": [100, 200, 300],
-    #       })
-    # TODO: wywołaj zadanie_10_df_do_bazy(df, "sprzedaz", silnik_sqlite)
-    # TODO: wczytaj pd.read_sql("SELECT * FROM sprzedaz", silnik_sqlite)
-    # TODO: sprawdź len(wczytany) == 3
-    # TODO: sprawdź "miasto" in wczytany.columns
-    pass
+    df = pd.DataFrame({
+        "miasto": ["Warszawa", "Krakow", "Warszawa"],
+        "sprzedaz": [100, 200, 300],
+    })
+    zadanie_10_df_do_bazy(df, "sprzedaz", silnik_sqlite)
+    wczytany = pd.read_sql("SELECT * FROM sprzedaz", silnik_sqlite)
+    assert len(wczytany) == 3
+    assert "miasto" in wczytany.columns
 
 
 def test_zadanie_10_nadpisuje_istniejaca_tabele(
@@ -315,15 +312,12 @@ def test_zadanie_10_nadpisuje_istniejaca_tabele(
     Co sprawdzam: po dwóch zapisach w tabeli są dane z DRUGIEGO zapisu
     (1 wiersz, nie 3+1).
     """
-    # TODO: przygotuj df_stary = pd.DataFrame({"miasto": ["A", "B", "C"],
-    #       "sprzedaz": [1, 2, 3]})
-    # TODO: przygotuj df_nowy = pd.DataFrame({"miasto": ["Gdansk"],
-    #       "sprzedaz": [999]})
-    # TODO: wywołaj zadanie_10_df_do_bazy dwa razy: najpierw z df_stary,
-    #       potem z df_nowy (ta sama nazwa tabeli "sprzedaz")
-    # TODO: wczytaj tabelę przez read_sql
-    # TODO: sprawdź len(wczytany) == 1
-    pass
+    df_stary = pd.DataFrame({"miasto": ["A", "B", "C"], "sprzedaz": [1, 2, 3]})
+    df_nowy = pd.DataFrame({"miasto": ["Gdansk"], "sprzedaz": [999]})
+    zadanie_10_df_do_bazy(df_stary, "sprzedaz", silnik_sqlite)
+    zadanie_10_df_do_bazy(df_nowy, "sprzedaz", silnik_sqlite)
+    wczytany = pd.read_sql("SELECT * FROM sprzedaz", silnik_sqlite)
+    assert len(wczytany) == 1
 
 
 # --- zadanie_11 ---
@@ -333,14 +327,13 @@ def test_zadanie_11_zwraca_dataframe(silnik_sqlite: Engine) -> None:
     Co udaje: nic — najpierw wkładam dane do prawdziwej bazy przez to_sql.
     Co sprawdzam: isinstance(wynik, pd.DataFrame) i len(wynik) == 2.
     """
-    # TODO: przygotuj dane w bazie: pd.DataFrame({"nazwa": ["Mysz",
-    #       "Monitor"], "cena": [49, 899]}).to_sql("produkty",
-    #       silnik_sqlite, index=False)
-    # TODO: wywołaj zadanie_11_czytaj_do_df(
-    #           "SELECT * FROM produkty", silnik_sqlite)
-    # TODO: sprawdź isinstance(wynik, pd.DataFrame) is True
-    # TODO: sprawdź len(wynik) == 2
-    pass
+    (pd.DataFrame({
+        "nazwa": ["Mysz", "Monitor"],
+         "cena": [49, 899]
+    }).to_sql("produkty", silnik_sqlite, index=False))
+    wynik = zadanie_11_czytaj_do_df("SELECT * FROM produkty", silnik_sqlite)
+    assert isinstance(wynik, pd.DataFrame) is True
+    assert len(wynik) == 2
 
 
 def test_zadanie_11_dziala_z_where(silnik_sqlite: Engine) -> None:
@@ -348,12 +341,15 @@ def test_zadanie_11_dziala_z_where(silnik_sqlite: Engine) -> None:
     Co udaje: nic — dane w prawdziwej bazie sqlite.
     Co sprawdzam: zapytanie z WHERE cena > 100 zwraca 1 wiersz (Monitor).
     """
-    # TODO: przygotuj dane jak w teście wyżej (Mysz/49, Monitor/899)
-    # TODO: wywołaj zadanie_11_czytaj_do_df(
-    #           "SELECT * FROM produkty WHERE cena > 100", silnik_sqlite)
-    # TODO: sprawdź len(wynik) == 1
-    # TODO: sprawdź wynik["nazwa"].tolist() == ["Monitor"]
-    pass
+    pd.DataFrame({
+        "nazwa": ["Mysz", "Monitor"],
+         "cena": [49, 899]
+        }).to_sql("produkty", silnik_sqlite, index=False)
+    wynik = zadanie_11_czytaj_do_df(
+        "SELECT * FROM produkty WHERE cena > 100", silnik_sqlite
+    )
+    assert len(wynik) == 1
+    assert wynik["nazwa"].tolist() == ["Monitor"]
 
 
 # --- zadanie_12 ---
@@ -365,15 +361,14 @@ def test_zadanie_12_raport_w_bazie(silnik_sqlite: Engine) -> None:
     Co sprawdzam: tabela raport ma 2 wiersze (Krakow 200, Warszawa 400 —
     groupby sortuje alfabetycznie).
     """
-    # TODO: przygotuj df = pd.DataFrame({
-    #           "miasto": ["Warszawa", "Krakow", "Warszawa"],
-    #           "sprzedaz": [100, 200, 300],
-    #       })
-    # TODO: wywołaj zadanie_12_raport_do_bazy(df, silnik_sqlite)
-    # TODO: wczytaj pd.read_sql("SELECT * FROM raport", silnik_sqlite)
-    # TODO: sprawdź len(wczytany) == 2
-    # TODO: sprawdź wczytany["sprzedaz"].tolist() == [200, 400]
-    pass
+    df = pd.DataFrame({
+              "miasto": ["Warszawa", "Krakow", "Warszawa"],
+              "sprzedaz": [100, 200, 300],
+    })
+    zadanie_12_raport_do_bazy(df, silnik_sqlite)
+    wczytany = pd.read_sql("SELECT * FROM raport", silnik_sqlite)
+    assert len(wczytany) == 2
+    assert wczytany["sprzedaz"].tolist() == [200, 400]
 
 
 def test_zadanie_12_zwraca_liczbe_wierszy_raportu(
@@ -383,7 +378,9 @@ def test_zadanie_12_zwraca_liczbe_wierszy_raportu(
     Co udaje: nic — prawdziwa baza sqlite z fixture.
     Co sprawdzam: wynik == 2 dla danych z dwoma miastami.
     """
-    # TODO: przygotuj df jak w teście wyżej (3 wiersze, 2 miasta)
-    # TODO: wywołaj zadanie_12_raport_do_bazy(df, silnik_sqlite) i zapisz wynik
-    # TODO: sprawdź wynik == 2
-    pass
+    df = pd.DataFrame({
+              "miasto": ["Warszawa", "Krakow", "Warszawa"],
+              "sprzedaz": [100, 200, 300],
+    })
+    wynik = zadanie_12_raport_do_bazy(df, silnik_sqlite)
+    assert wynik == 2
