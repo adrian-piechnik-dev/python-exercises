@@ -301,7 +301,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 13. pytest_fixtures_parametrize — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 14. sql_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 15. psycopg2_sqlalchemy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-16. fastapi_pydantic — ✅ wygenerowany
+16. fastapi_pydantic — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 17. selenium_podstawy — ✅ wygenerowany
 18. selenium_alerty_screenshoty — ✅ wygenerowany
 19. llm_api_klient — ✅ wygenerowany

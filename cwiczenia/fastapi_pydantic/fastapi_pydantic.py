@@ -1,24 +1,8 @@
 import json
+from typing import Any
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-
-# --- SPIS ZADAŃ ---
-# Każde zadanie buduje i ZWRACA własną mini-aplikację FastAPI
-# (endpointy definiujesz wewnątrz funkcji zadania — def w def).
-#
-# zadanie_01 — aplikacja z jednym endpointem powitalnym (GET /)
-# zadanie_02 — aplikacja z dwoma endpointami (GET / i GET /o-nas)
-# zadanie_03 — parametr ścieżki z walidacją int (GET /uzytkownicy/{id})
-# zadanie_04 — obliczenie na parametrze ścieżki (GET /kwadrat/{liczba})
-# zadanie_05 — model Pydantic w akcji: utwórz obiekt Produkt z walidacją
-# zadanie_06 — POST z modelem w treści zapytania (422 przy złych danych)
-# zadanie_07 — POST z modelem Zamowienie i obliczeniem odpowiedzi
-# zadanie_08 — response_model wycina nadmiarowe pola odpowiedzi
-# zadanie_09 — POST-echo: response_model na odpowiedzi z modelu
-# zadanie_10 — GET czytający dane z pliku JSON (zazębienie: temat 7)
-# zadanie_11 — POST dopisujący produkt do pliku JSON
-# zadanie_12 — pełne API: GET lista + POST dodawanie na wspólnym pliku
 
 
 class Produkt(BaseModel):
@@ -31,10 +15,8 @@ class Produkt(BaseModel):
     Returns:
         Produkt: obiekt z polami nazwa i cena po walidacji.
     """
-
-    # TODO: zadeklaruj pole nazwa typu str (składnia: nazwa_pola: typ)
-    # TODO: zadeklaruj pole cena typu float
-    pass
+    nazwa: str
+    cena: float
 
 
 class Zamowienie(BaseModel):
@@ -48,11 +30,9 @@ class Zamowienie(BaseModel):
     Returns:
         Zamowienie: obiekt zamówienia po walidacji.
     """
-
-    # TODO: zadeklaruj pole nazwa typu str
-    # TODO: zadeklaruj pole ilosc typu int
-    # TODO: zadeklaruj pole cena_jednostkowa typu float
-    pass
+    nazwa: str
+    ilosc: int
+    cena_jednostkowa: float
 
 
 def zadanie_01_aplikacja_powitalna() -> FastAPI:
@@ -65,13 +45,11 @@ def zadanie_01_aplikacja_powitalna() -> FastAPI:
         FastAPI: aplikacja, której GET / odpowiada
             {"wiadomosc": "Witaj w API"}.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint (def w def!):
-    #       @app.get("/")
-    #       def powitanie() -> dict:
-    #           return {"wiadomosc": "Witaj w API"}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/")
+    def powitanie() -> dict:
+        return {"wiadomosc": "Witaj w API"}
+    return app
 
 
 def zadanie_02_dwa_endpointy() -> FastAPI:
@@ -85,14 +63,14 @@ def zadanie_02_dwa_endpointy() -> FastAPI:
             {"wiadomosc": "Witaj w API"}, a GET /o-nas odpowiada
             {"nazwa": "Sklep Python", "wersja": 1}.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj pierwszy endpoint GET "/" zwracający
-    #       {"wiadomosc": "Witaj w API"}
-    # TODO: zdefiniuj drugi endpoint GET "/o-nas" zwracający
-    #       {"nazwa": "Sklep Python", "wersja": 1}
-    #       (druga funkcja z dekoratorem, inna nazwa funkcji)
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/")
+    def powitanie() -> dict:
+        return {"wiadomosc": "Witaj w API"}
+    @app.get("/o-nas")
+    def o_nas() -> dict:
+        return {"nazwa": "Sklep Python", "wersja": 1}
+    return app
 
 
 def zadanie_03_parametr_sciezki() -> FastAPI:
@@ -106,12 +84,11 @@ def zadanie_03_parametr_sciezki() -> FastAPI:
             odpowiada {"id": <int z adresu>}; tekst zamiast liczby
             w adresie daje automatyczne 422.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.get("/uzytkownicy/{id_uzytkownika}")
-    #       z funkcją przyjmującą id_uzytkownika: int (type hint = walidacja!)
-    #       i zwracającą {"id": id_uzytkownika}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/uzytkownicy/{id_uzytkownika}")
+    def pobierz_uzytkownika(id_uzytkownika: int) -> dict:
+        return {"id": id_uzytkownika}
+    return app
 
 
 def zadanie_04_kwadrat_liczby() -> FastAPI:
@@ -124,12 +101,11 @@ def zadanie_04_kwadrat_liczby() -> FastAPI:
         FastAPI: aplikacja, której GET /kwadrat/{liczba} odpowiada
             {"wynik": liczba * liczba}; parametr walidowany jako int.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.get("/kwadrat/{liczba}")
-    #       z funkcją przyjmującą liczba: int
-    #       i zwracającą {"wynik": liczba * liczba}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/kwadrat/{liczba}")
+    def kwadrat(liczba: int) -> dict:
+        return {"wynik": liczba * liczba}
+    return app
 
 
 def zadanie_05_utworz_produkt(nazwa: str, cena: object) -> Produkt:
@@ -145,9 +121,7 @@ def zadanie_05_utworz_produkt(nazwa: str, cena: object) -> Produkt:
             pydantic.ValidationError, gdy cena nie da się skonwertować
             na float.
     """
-    # TODO: zwróć Produkt(nazwa=nazwa, cena=cena)
-    #       (walidację robi Pydantic — nie pisz żadnych ifów)
-    pass
+    return Produkt(nazwa=nazwa, cena=cena)
 
 
 def zadanie_06_przyjmij_produkt() -> FastAPI:
@@ -161,12 +135,11 @@ def zadanie_06_przyjmij_produkt() -> FastAPI:
             JSON pasujący do modelu Produkt i odpowiada
             {"przyjeto": <nazwa produktu>}; złe dane dają 422.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.post("/produkty")
-    #       z funkcją przyjmującą produkt: Produkt (model = treść zapytania)
-    #       i zwracającą {"przyjeto": produkt.nazwa}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.post("/produkty")
+    def dodaj_produkt(produkt: Produkt) -> dict:
+        return {"przyjeto": produkt.nazwa}
+    return app
 
 
 def zadanie_07_przyjmij_zamowienie() -> FastAPI:
@@ -180,13 +153,11 @@ def zadanie_07_przyjmij_zamowienie() -> FastAPI:
             Zamowienie i odpowiada
             {"do_zaplaty": ilosc * cena_jednostkowa}.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.post("/zamowienia")
-    #       z funkcją przyjmującą zamowienie: Zamowienie
-    #       i zwracającą {"do_zaplaty":
-    #       zamowienie.ilosc * zamowienie.cena_jednostkowa}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.post("/zamowienia")
+    def zloz_zamowienie(zamowienie: Zamowienie) -> dict:
+        return {"do_zaplaty": zamowienie.ilosc * zamowienie.cena_jednostkowa}
+    return app
 
 
 def zadanie_08_response_model() -> FastAPI:
@@ -200,13 +171,11 @@ def zadanie_08_response_model() -> FastAPI:
             wyłącznie polami modelu Produkt (nazwa, cena), mimo że
             endpoint zwraca też pole "tajny_kod".
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.get("/produkty/polecany",
-    #       response_model=Produkt) z funkcją zwracającą słownik
-    #       {"nazwa": "Klawiatura", "cena": 99.0, "tajny_kod": "X99"}
-    #       — response_model przytnie odpowiedź do pól modelu
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/produkty/polecany", response_model=Produkt)
+    def polecany() -> dict:
+        return {"nazwa": "Klawiatura", "cena": 99.0, "tajny_kod": "X99"}
+    return app
 
 
 def zadanie_09_echo_produktu() -> FastAPI:
@@ -219,12 +188,11 @@ def zadanie_09_echo_produktu() -> FastAPI:
         FastAPI: aplikacja, której POST /produkty/echo przyjmuje model
             Produkt i odsyła go z powrotem (response_model=Produkt).
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.post("/produkty/echo",
-    #       response_model=Produkt) z funkcją przyjmującą produkt: Produkt
-    #       i zwracającą produkt (cały obiekt — FastAPI sam go zserializuje)
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.post("/produkty/echo", response_model=Produkt)
+    def produkt_echo(produkt: Produkt) -> Produkt:
+        return produkt
+    return app
 
 
 def zadanie_10_api_konfiguracji(sciezka: str) -> FastAPI:
@@ -237,12 +205,12 @@ def zadanie_10_api_konfiguracji(sciezka: str) -> FastAPI:
         FastAPI: aplikacja, której GET /konfiguracja odpowiada
             zawartością pliku (czytaną przy każdym zapytaniu).
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.get("/konfiguracja") z funkcją, która:
-    #       - otwiera plik: open(sciezka, "r", encoding="utf-8") w bloku with
-    #       - zwraca json.load(f) (wzorzec z tematu 7)
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/konfiguracja")
+    def konfiguracja() -> dict[str, Any]:
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return app
 
 
 def zadanie_11_api_dodawania(sciezka: str) -> FastAPI:
@@ -256,15 +224,16 @@ def zadanie_11_api_dodawania(sciezka: str) -> FastAPI:
             produkt na koniec listy w pliku i odpowiada
             {"liczba": <nowa długość listy>}.
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint @app.post("/produkty") z funkcją
-    #       przyjmującą produkt: Produkt, która:
-    #       - wczytuje listę z pliku (with + json.load — temat 7)
-    #       - dopisuje produkt.model_dump() przez .append
-    #       - zapisuje listę z powrotem (with + json.dump)
-    #       - zwraca {"liczba": len(listy)}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.post("/produkty")
+    def dodaj_produkt(produkt: Produkt) -> dict:
+        with open(sciezka, "r", encoding="utf-8") as old:
+            produkty = json.load(old)
+        produkty.append(produkt.model_dump())
+        with open(sciezka, "w", encoding="utf-8") as new:
+            json.dump(produkty, new)
+        return {"liczba": len(produkty)}
+    return app
 
 
 def zadanie_12_pelne_api(sciezka: str) -> FastAPI:
@@ -278,11 +247,17 @@ def zadanie_12_pelne_api(sciezka: str) -> FastAPI:
             i POST /produkty (walidacja modelem Produkt, dopisanie
             do pliku, odpowiedź {"liczba": <nowa długość>}).
     """
-    # TODO: utwórz app = FastAPI()
-    # TODO: zdefiniuj endpoint GET "/produkty" zwracający listę
-    #       wczytaną z pliku (with + json.load)
-    # TODO: zdefiniuj endpoint POST "/produkty" jak w zadaniu 11:
-    #       wczytaj listę, dopisz produkt.model_dump(), zapisz,
-    #       zwróć {"liczba": len(listy)}
-    # TODO: return app
-    pass
+    app = FastAPI()
+    @app.get("/produkty")
+    def wczytane_produkty() -> list:
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return json.load(f)
+    @app.post("/produkty")
+    def dodaj_produkt(produkt: Produkt) -> dict:
+        with open(sciezka, "r", encoding="utf-8") as old:
+            produkty = json.load(old)
+        produkty.append(produkt.model_dump())
+        with open(sciezka, "w", encoding="utf-8") as new:
+            json.dump(produkty, new)
+        return {"liczba": len(produkty)}
+    return app

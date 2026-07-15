@@ -22,15 +22,14 @@ def plik_produktow(tmp_path: Path) -> Path:
         Path: ścieżka do pliku JSON z listą:
             Klawiatura/99.0, Mysz/49.0, Monitor/899.0.
     """
-    # TODO: utwórz p = tmp_path / "produkty.json"
-    # TODO: zdefiniuj liste = [
-    #           {"nazwa": "Klawiatura", "cena": 99.0},
-    #           {"nazwa": "Mysz", "cena": 49.0},
-    #           {"nazwa": "Monitor", "cena": 899.0},
-    #       ]
-    # TODO: zapisz: p.write_text(json.dumps(liste), encoding="utf-8")
-    # TODO: return p
-    pass
+    p = tmp_path / "produkty.json"
+    lista = [
+        {"nazwa": "Klawiatura", "cena": 99.0},
+        {"nazwa": "Mysz", "cena": 49.0},
+        {"nazwa": "Monitor", "cena": 899.0},
+    ]
+    p.write_text(json.dumps(lista), encoding="utf-8")
+    return p
 
 
 @pytest.fixture
@@ -44,6 +43,5 @@ def klient_api(plik_produktow: Path) -> TestClient:
     Returns:
         TestClient: klient aplikacji zbudowanej na pliku produktów.
     """
-    # TODO: zbuduj aplikację: app = zadanie_12_pelne_api(str(plik_produktow))
-    # TODO: return TestClient(app)
-    pass
+    app = zadanie_12_pelne_api(str(plik_produktow))
+    return TestClient(app)
