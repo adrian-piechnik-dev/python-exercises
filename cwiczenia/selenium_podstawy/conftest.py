@@ -26,7 +26,9 @@ class FakeElement:
         # TODO: zapisz tekst w atrybucie self.text
         # TODO: utwórz pustą listę self.wpisane (zapisy send_keys)
         # TODO: utwórz licznik self.klikniecia = 0
-        pass
+        self.text = tekst
+        self.wpisane = []
+        self.klikniecia = 0
 
     def send_keys(self, tekst: str) -> None:
         """Zapisuje wpisany tekst zamiast stukać w klawiaturę.

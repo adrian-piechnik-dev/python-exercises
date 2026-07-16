@@ -11,24 +11,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 logger = logging.getLogger(__name__)
 
-# --- SPIS ZADAŃ ---
-# Funkcje dostają drivera jako argument (testy podstawiają atrapę);
-# tylko zadania 2 i 12 same uruchamiają przeglądarkę.
-#
-# zadanie_01 — zbuduj opcje Chrome (headless + window-size)
-# zadanie_02 — uruchom przeglądarkę (Service + webdriver.Chrome)
-# zadanie_03 — otwórz stronę i zwróć jej tytuł (get + title)
-# zadanie_04 — pobierz tekst elementu po id (find_element + By.ID)
-# zadanie_05 — zbierz teksty elementów po klasie (find_elements)
-# zadanie_06 — wpisz tekst w pole formularza (send_keys)
-# zadanie_07 — kliknij element wskazany selektorem CSS (click)
-# zadanie_08 — scenariusz logowania (dwa pola + przycisk)
-# zadanie_09 — poczekaj na element (WebDriverWait + EC)
-# zadanie_10 — poczekaj bezpiecznie (TimeoutException → None,
-#              zazębienie: try/except z tematu 4)
-# zadanie_11 — otwórz stronę z wpisami do dziennika (logging)
-# zadanie_12 — pełny scenariusz z gwarantowanym quit (try/finally)
-
 
 def zadanie_01_zbuduj_opcje(bezglowa: bool) -> Options:
     """Buduje opcje Chrome z rozmiarem okna i opcjonalnym trybem headless.
@@ -40,11 +22,11 @@ def zadanie_01_zbuduj_opcje(bezglowa: bool) -> Options:
         Options: opcje z ustawionym --window-size=1920,1080 oraz
             --headless=new, gdy bezglowa jest True.
     """
-    # TODO: utwórz opcje = Options()
-    # TODO: jeśli bezglowa is True — opcje.add_argument("--headless=new")
-    # TODO: dodaj zawsze: opcje.add_argument("--window-size=1920,1080")
-    # TODO: return opcje
-    pass
+    opcje = Options()
+    if bezglowa is True:
+        opcje.add_argument("--headless=new")
+    opcje.add_argument("--window-size=1920,1080")
+    return opcje
 
 
 def zadanie_02_uruchom_przegladarke(
@@ -61,7 +43,8 @@ def zadanie_02_uruchom_przegladarke(
     """
     # TODO: utwórz serwis = Service(sciezka_drivera)
     # TODO: zwróć webdriver.Chrome(service=serwis, options=opcje)
-    pass
+    serwis = Service(sciezka_drivera)
+    return webdriver.Chrome(service=serwis, options=opcje)
 
 
 def zadanie_03_otworz_strone(driver: Any, url: str) -> str:

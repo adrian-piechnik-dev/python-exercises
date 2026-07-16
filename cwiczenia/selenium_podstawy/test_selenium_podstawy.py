@@ -1,4 +1,5 @@
 import logging
+from wsgiref.validate import assert_
 
 import pytest
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -28,10 +29,9 @@ def test_zadanie_01_headless_dodaje_argumenty() -> None:
     Co sprawdzam: "--headless=new" i "--window-size=1920,1080"
     są w wynik.arguments.
     """
-    # TODO: wywołaj zadanie_01_zbuduj_opcje(True)
-    # TODO: sprawdź "--headless=new" in wynik.arguments
-    # TODO: sprawdź "--window-size=1920,1080" in wynik.arguments
-    pass
+    wynik = zadanie_01_zbuduj_opcje(True)
+    assert "--headless=new" in wynik.arguments
+    assert "--window-size=1920,1080" in wynik.arguments
 
 
 def test_zadanie_01_bez_headless_tylko_rozmiar() -> None:
@@ -39,10 +39,9 @@ def test_zadanie_01_bez_headless_tylko_rozmiar() -> None:
     Co udaje: nic — Options bez przeglądarki.
     Co sprawdzam: "--headless=new" NIE występuje, a window-size tak.
     """
-    # TODO: wywołaj zadanie_01_zbuduj_opcje(False)
-    # TODO: sprawdź "--headless=new" not in wynik.arguments
-    # TODO: sprawdź "--window-size=1920,1080" in wynik.arguments
-    pass
+    wynik = zadanie_01_zbuduj_opcje(False)
+    assert "--headless=new" not in wynik.arguments
+    assert "--window-size=1920,1080" in wynik.arguments
 
 
 # --- zadanie_02 ---
@@ -55,22 +54,16 @@ def test_zadanie_02_przekazuje_sciezke_do_service(
     zamiast odpalać przeglądarkę.
     Co sprawdzam: Service dostał "C:/sterowniki/chromedriver.exe".
     """
-    # TODO: przygotuj pustą listę zapamietane_sciezki = []
-    # TODO: przygotuj zamiennik:
-    #       def podmieniony_service(sciezka):
-    #           zapamietane_sciezki.append(sciezka)
-    #           return "ATRAPA_SERWISU"
-    # TODO: podmień: monkeypatch.setattr(
-    #           "selenium_podstawy.Service", podmieniony_service)
-    # TODO: przygotuj zamiennik Chrome:
-    #       def podmieniony_chrome(service=None, options=None):
-    #           return FakeDriver()
-    # TODO: podmień: monkeypatch.setattr(
-    #           "selenium_podstawy.webdriver.Chrome", podmieniony_chrome)
-    # TODO: wywołaj zadanie_02_uruchom_przegladarke(
-    #           "C:/sterowniki/chromedriver.exe", None)
-    # TODO: sprawdź zapamietane_sciezki[0] == "C:/sterowniki/chromedriver.exe"
-    pass
+    zapamietane_sciezki = []
+    def podmieniony_service(sciezka):
+        zapamietane_sciezki.append(sciezka)
+        return "ATRAPA_SERWISU"
+    monkeypatch.setattr("selenium_podstawy.Service", podmieniony_service)
+    def podmieniony_chrome(service=None, options=None):
+        return FakeDriver()
+    monkeypatch.setattr("selenium_podstawy.webdriver.Chrome", podmieniony_chrome)
+    zadanie_02_uruchom_przegladarke("C:/sterowniki/chromedriver.exe", None)
+    assert zapamietane_sciezki[0] == "C:/sterowniki/chromedriver.exe"
 
 
 def test_zadanie_02_zwraca_drivera(
@@ -80,14 +73,15 @@ def test_zadanie_02_zwraca_drivera(
     Co udaje: Service i webdriver.Chrome — Chrome zwraca konkretną atrapę.
     Co sprawdzam: wynik is ta_sama_atrapa.
     """
-    # TODO: przygotuj atrapa = FakeDriver()
-    # TODO: podmień "selenium_podstawy.Service" na zamiennik
-    #       zwracający "ATRAPA_SERWISU"
-    # TODO: podmień "selenium_podstawy.webdriver.Chrome" na zamiennik
-    #       zwracający atrapa
-    # TODO: wywołaj zadanie_02_uruchom_przegladarke("C:/x/driver.exe", None)
-    # TODO: sprawdź wynik is atrapa
-    pass
+    atrapa = FakeDriver()
+    def podmieniony_service(sciezka):
+        return "ATRAPA_SERWISU"
+    monkeypatch.setattr("selenium_podstawy.Service", podmieniony_service)
+    def podmieniony_chrome(service=None, options=None):
+        return atrapa
+    monkeypatch.setattr("selenium_podstawy.webdriver.Chrome", podmieniony_chrome)
+    wynik = zadanie_02_uruchom_przegladarke("C:/x/driver.exe", None)
+    assert wynik is atrapa
 
 
 # --- zadanie_03 ---
