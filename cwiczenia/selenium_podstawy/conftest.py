@@ -23,9 +23,6 @@ class FakeElement:
         Returns:
             None
         """
-        # TODO: zapisz tekst w atrybucie self.text
-        # TODO: utwórz pustą listę self.wpisane (zapisy send_keys)
-        # TODO: utwórz licznik self.klikniecia = 0
         self.text = tekst
         self.wpisane = []
         self.klikniecia = 0
@@ -39,8 +36,7 @@ class FakeElement:
         Returns:
             None
         """
-        # TODO: dopisz tekst do self.wpisane
-        pass
+        self.wpisane.append(tekst)
 
     def click(self) -> None:
         """Zlicza kliknięcia zamiast klikać naprawdę.
@@ -51,8 +47,7 @@ class FakeElement:
         Returns:
             None
         """
-        # TODO: zwiększ self.klikniecia o 1
-        pass
+        self.klikniecia += 1
 
 
 class FakeDriver:
@@ -85,13 +80,15 @@ class FakeDriver:
         Returns:
             None
         """
-        # TODO: zapisz self.elementy = elementy if elementy is not None else {}
-        # TODO: zapisz self.listy_elementow analogicznie (pusty dict gdy None)
-        # TODO: zapisz self.title = tytul
-        # TODO: zapisz self.blad_przy_get = blad_przy_get
-        # TODO: utwórz pustą listę self.odwiedzone (zapisy get)
-        # TODO: utwórz flagę self.zamknieto = False (ustawi ją quit)
-        pass
+        self.elementy = elementy if elementy is not None else {}
+        self.listy_elementow = (
+            listy_elementow if listy_elementow is not None else {}
+        )
+        self.title = tytul
+        self.blad_przy_get = blad_przy_get
+        self.odwiedzone = []
+        self.zamknieto = False
+
 
     def get(self, url: str) -> None:
         """Zapisuje odwiedzany adres; przy fladze blad_przy_get udaje awarię.
@@ -102,10 +99,10 @@ class FakeDriver:
         Returns:
             None
         """
-        # TODO: jeśli self.blad_przy_get is True —
-        #       raise RuntimeError("strona nie odpowiada")
-        # TODO: dopisz url do self.odwiedzone
-        pass
+        if self.blad_przy_get is True:
+            raise RuntimeError("strona nie odpowiada")
+        self.odwiedzone.append(url)
+
 
     def find_element(self, by: str, wartosc: str) -> FakeElement:
         """Zwraca zapamiętany element lub rzuca NoSuchElementException.
@@ -117,11 +114,11 @@ class FakeDriver:
         Returns:
             FakeElement: element przypisany do wartości lokatora.
         """
-        # TODO: jeśli wartosc jest w self.elementy — zwróć self.elementy[wartosc]
-        # TODO: w przeciwnym razie — raise NoSuchElementException(wartosc)
-        #       (dokładnie jak prawdziwy driver; dzięki temu WebDriverWait
-        #       działa na atrapie!)
-        pass
+        if wartosc in self.elementy:
+            return self.elementy[wartosc]
+        else:
+            raise NoSuchElementException(wartosc)
+
 
     def find_elements(self, by: str, wartosc: str) -> list[FakeElement]:
         """Zwraca zapamiętaną listę elementów lub pustą listę.
@@ -133,9 +130,8 @@ class FakeDriver:
         Returns:
             list[FakeElement]: lista elementów; pusta gdy lokator nieznany.
         """
-        # TODO: zwróć self.listy_elementow.get(wartosc, [])
-        #       (find_elements nie rzuca — pusta lista, jak w prawdziwym)
-        pass
+        return self.listy_elementow.get(wartosc, [])
+
 
     def quit(self) -> None:
         """Ustawia flagę zamknięcia zamiast gasić przeglądarkę.
@@ -146,5 +142,4 @@ class FakeDriver:
         Returns:
             None
         """
-        # TODO: ustaw self.zamknieto = True
-        pass
+        self.zamknieto = True

@@ -1,5 +1,4 @@
 import logging
-from wsgiref.validate import assert_
 
 import pytest
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -91,11 +90,10 @@ def test_zadanie_03_odwiedza_adres_i_zwraca_tytul() -> None:
     Co udaje: przeglądarkę — FakeDriver z tytułem "Sklep Python".
     Co sprawdzam: wynik == "Sklep Python" i adres w driver.odwiedzone.
     """
-    # TODO: przygotuj driver = FakeDriver(tytul="Sklep Python")
-    # TODO: wywołaj zadanie_03_otworz_strone(driver, "https://sklep.pl")
-    # TODO: sprawdź wynik == "Sklep Python"
-    # TODO: sprawdź driver.odwiedzone == ["https://sklep.pl"]
-    pass
+    driver = FakeDriver(tytul="Sklep Python")
+    wynik = zadanie_03_otworz_strone(driver, "https://sklep.pl")
+    assert driver.odwiedzone == ["https://sklep.pl"]
+    assert wynik == "Sklep Python"
 
 
 def test_zadanie_03_get_przed_odczytem_tytulu() -> None:
@@ -103,10 +101,9 @@ def test_zadanie_03_get_przed_odczytem_tytulu() -> None:
     Co udaje: przeglądarkę — FakeDriver.
     Co sprawdzam: po wywołaniu lista odwiedzone ma dokładnie 1 wpis.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_03_otworz_strone(driver, "https://przyklad.pl")
-    # TODO: sprawdź len(driver.odwiedzone) == 1
-    pass
+    driver = FakeDriver()
+    zadanie_03_otworz_strone(driver,"https://przyklad.pl" )
+    assert len(driver.odwiedzone) == 1
 
 
 # --- zadanie_04 ---
@@ -116,11 +113,11 @@ def test_zadanie_04_zwraca_tekst_elementu() -> None:
     Co udaje: przeglądarkę — FakeDriver z elementem "cena" o tekście "99 zl".
     Co sprawdzam: wynik == "99 zl".
     """
-    # TODO: przygotuj driver = FakeDriver(
-    #           elementy={"cena": FakeElement(tekst="99 zl")})
-    # TODO: wywołaj zadanie_04_tekst_elementu(driver, "cena")
-    # TODO: sprawdź wynik == "99 zl"
-    pass
+    driver = FakeDriver(
+        elementy= {"cena": FakeElement(tekst="99 zl")}
+    )
+    wynik = zadanie_04_tekst_elementu(driver, "cena")
+    assert wynik == "99 zl"
 
 
 def test_zadanie_04_brak_elementu_rzuca_wyjatek() -> None:
@@ -129,11 +126,9 @@ def test_zadanie_04_brak_elementu_rzuca_wyjatek() -> None:
     Co udaje: przeglądarkę — FakeDriver bez elementów.
     Co sprawdzam: wywołanie rzuca NoSuchElementException (pytest.raises).
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: w bloku with pytest.raises(NoSuchElementException):
-    #       wywołaj zadanie_04_tekst_elementu(driver, "cena")
-    #       (NoSuchElementException jest już zaimportowany u góry pliku)
-    pass
+    driver = FakeDriver()
+    with pytest.raises(NoSuchElementException):
+        zadanie_04_tekst_elementu(driver, "cena")
 
 
 # --- zadanie_05 ---
@@ -143,12 +138,12 @@ def test_zadanie_05_zbiera_teksty_z_listy() -> None:
     Co udaje: przeglądarkę — FakeDriver z listą 2 elementów klasy "produkt".
     Co sprawdzam: wynik == ["Klawiatura", "Mysz"].
     """
-    # TODO: przygotuj driver = FakeDriver(listy_elementow={
-    #           "produkt": [FakeElement(tekst="Klawiatura"),
-    #                       FakeElement(tekst="Mysz")]})
-    # TODO: wywołaj zadanie_05_teksty_po_klasie(driver, "produkt")
-    # TODO: sprawdź wynik == ["Klawiatura", "Mysz"]
-    pass
+    driver = FakeDriver(
+        listy_elementow={
+            "produkt": [FakeElement(tekst="Klawiatura"),
+                        FakeElement(tekst="Mysz")]})
+    wynik = zadanie_05_teksty_po_klasie(driver, "produkt")
+    assert wynik == ["Klawiatura", "Mysz"]
 
 
 def test_zadanie_05_brak_elementow_pusta_lista() -> None:
@@ -157,10 +152,9 @@ def test_zadanie_05_brak_elementow_pusta_lista() -> None:
     Co udaje: przeglądarkę — FakeDriver bez list elementów.
     Co sprawdzam: wynik == [].
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_05_teksty_po_klasie(driver, "promocja")
-    # TODO: sprawdź wynik == []
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_05_teksty_po_klasie(driver, "promocja")
+    assert wynik == []
 
 
 # --- zadanie_06 ---
@@ -170,11 +164,10 @@ def test_zadanie_06_wpisuje_tekst_w_pole() -> None:
     Co udaje: przeglądarkę — FakeDriver z polem o id "szukaj".
     Co sprawdzam: pole.wpisane == ["laptop"].
     """
-    # TODO: przygotuj pole = FakeElement()
-    # TODO: przygotuj driver = FakeDriver(elementy={"szukaj": pole})
-    # TODO: wywołaj zadanie_06_wpisz_tekst(driver, "szukaj", "laptop")
-    # TODO: sprawdź pole.wpisane == ["laptop"]
-    pass
+    pole = FakeElement()
+    driver = FakeDriver(elementy={"szukaj": pole})
+    zadanie_06_wpisz_tekst(driver, "szukaj", "laptop")
+    assert pole.wpisane == ["laptop"]
 
 
 def test_zadanie_06_nie_klika_pola() -> None:
@@ -182,11 +175,10 @@ def test_zadanie_06_nie_klika_pola() -> None:
     Co udaje: przeglądarkę — FakeDriver z polem.
     Co sprawdzam: pole.klikniecia == 0 po wywołaniu.
     """
-    # TODO: przygotuj pole = FakeElement()
-    # TODO: przygotuj driver = FakeDriver(elementy={"szukaj": pole})
-    # TODO: wywołaj zadanie_06_wpisz_tekst(driver, "szukaj", "laptop")
-    # TODO: sprawdź pole.klikniecia == 0
-    pass
+    pole = FakeElement()
+    driver = FakeDriver(elementy={"szukaj": pole})
+    zadanie_06_wpisz_tekst(driver, "szukaj", "laptop")
+    assert pole.klikniecia == 0
 
 
 # --- zadanie_07 ---
@@ -197,12 +189,10 @@ def test_zadanie_07_klika_element() -> None:
     "button.zatwierdz".
     Co sprawdzam: przycisk.klikniecia == 1.
     """
-    # TODO: przygotuj przycisk = FakeElement()
-    # TODO: przygotuj driver = FakeDriver(
-    #           elementy={"button.zatwierdz": przycisk})
-    # TODO: wywołaj zadanie_07_kliknij(driver, "button.zatwierdz")
-    # TODO: sprawdź przycisk.klikniecia == 1
-    pass
+    przycisk = FakeElement()
+    driver = FakeDriver(elementy={"button.zatwierdz": przycisk})
+    zadanie_07_kliknij(driver, "button.zatwierdz")
+    assert przycisk.klikniecia == 1
 
 
 def test_zadanie_07_klika_dokladnie_raz() -> None:
@@ -210,11 +200,10 @@ def test_zadanie_07_klika_dokladnie_raz() -> None:
     Co udaje: przeglądarkę — FakeDriver z przyciskiem.
     Co sprawdzam: po jednym wywołaniu klikniecia == 1 (nie 2).
     """
-    # TODO: przygotuj przycisk = FakeElement()
-    # TODO: przygotuj driver = FakeDriver(elementy={"a.link": przycisk})
-    # TODO: wywołaj zadanie_07_kliknij(driver, "a.link") JEDEN raz
-    # TODO: sprawdź przycisk.klikniecia == 1
-    pass
+    przycisk = FakeElement()
+    driver = FakeDriver(elementy={"a.link": przycisk})
+    zadanie_07_kliknij(driver, "a.link")
+    assert przycisk.klikniecia == 1
 
 
 # --- zadanie_08 ---
@@ -226,15 +215,14 @@ def test_zadanie_08_wypelnia_oba_pola() -> None:
     Co sprawdzam: pole_login.wpisane == ["anna"]
     i pole_haslo.wpisane == ["tajne123"].
     """
-    # TODO: przygotuj pole_login = FakeElement(), pole_haslo = FakeElement(),
-    #       przycisk = FakeElement()
-    # TODO: przygotuj driver = FakeDriver(elementy={
-    #           "login": pole_login, "haslo": pole_haslo,
-    #           "zaloguj": przycisk})
-    # TODO: wywołaj zadanie_08_zaloguj(driver, "anna", "tajne123")
-    # TODO: sprawdź pole_login.wpisane == ["anna"]
-    # TODO: sprawdź pole_haslo.wpisane == ["tajne123"]
-    pass
+    pole_login = FakeElement()
+    pole_haslo = FakeElement()
+    przycisk = FakeElement()
+    driver = FakeDriver(elementy={"login": pole_login, "haslo": pole_haslo,
+                                  "zaloguj": przycisk})
+    zadanie_08_zaloguj(driver, "anna", "tajne123")
+    assert pole_login.wpisane == ["anna"]
+    assert pole_haslo.wpisane == ["tajne123"]
 
 
 def test_zadanie_08_klika_przycisk_logowania() -> None:
@@ -242,10 +230,13 @@ def test_zadanie_08_klika_przycisk_logowania() -> None:
     Co udaje: przeglądarkę — FakeDriver jak w teście wyżej.
     Co sprawdzam: przycisk.klikniecia == 1.
     """
-    # TODO: przygotuj trzy FakeElementy i FakeDriver jak w teście wyżej
-    # TODO: wywołaj zadanie_08_zaloguj(driver, "anna", "tajne123")
-    # TODO: sprawdź przycisk.klikniecia == 1
-    pass
+    pole_login = FakeElement()
+    pole_haslo = FakeElement()
+    przycisk = FakeElement()
+    driver = FakeDriver(elementy={"login": pole_login, "haslo": pole_haslo,
+                                  "zaloguj": przycisk})
+    zadanie_08_zaloguj(driver, "anna", "tajne123")
+    assert przycisk.klikniecia == 1
 
 
 # --- zadanie_09 ---
@@ -256,11 +247,10 @@ def test_zadanie_09_zwraca_obecny_element() -> None:
     WebDriverWait jest PRAWDZIWY (działa na atrapie!).
     Co sprawdzam: wynik is przygotowany_element.
     """
-    # TODO: przygotuj element = FakeElement(tekst="10 wynikow")
-    # TODO: przygotuj driver = FakeDriver(elementy={"wyniki": element})
-    # TODO: wywołaj zadanie_09_poczekaj_na_element(driver, "wyniki", 2)
-    # TODO: sprawdź wynik is element
-    pass
+    element = FakeElement(tekst="10 wynikow")
+    driver = FakeDriver(elementy={"wyniki": element})
+    wynik = zadanie_09_poczekaj_na_element(driver, "wyniki", 2)
+    assert wynik is element
 
 
 def test_zadanie_09_brak_elementu_konczy_sie_timeoutem() -> None:
@@ -269,11 +259,9 @@ def test_zadanie_09_brak_elementu_konczy_sie_timeoutem() -> None:
     (find_element rzuca NoSuchElementException, wait ponawia aż limit).
     Co sprawdzam: wywołanie z limitem 1 s rzuca TimeoutException.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: w bloku with pytest.raises(TimeoutException):
-    #       wywołaj zadanie_09_poczekaj_na_element(driver, "wyniki", 1)
-    #       (limit 1 sekunda — test chwilę potrwa, tak ma być)
-    pass
+    driver = FakeDriver()
+    with pytest.raises(TimeoutException):
+        zadanie_09_poczekaj_na_element(driver, "wynik", 1)
 
 
 # --- zadanie_10 ---
@@ -283,11 +271,9 @@ def test_zadanie_10_zwraca_tekst_gdy_element_jest() -> None:
     Co udaje: przeglądarkę — FakeDriver z elementem "komunikat".
     Co sprawdzam: wynik == "Zapisano".
     """
-    # TODO: przygotuj driver = FakeDriver(
-    #           elementy={"komunikat": FakeElement(tekst="Zapisano")})
-    # TODO: wywołaj zadanie_10_poczekaj_bezpiecznie(driver, "komunikat", 2)
-    # TODO: sprawdź wynik == "Zapisano"
-    pass
+    driver = FakeDriver(elementy={"komunikat": FakeElement(tekst="Zapisano")})
+    wynik = zadanie_10_poczekaj_bezpiecznie(driver, "komunikat", 2)
+    assert wynik == "Zapisano"
 
 
 def test_zadanie_10_timeout_zwraca_none() -> None:
@@ -295,10 +281,9 @@ def test_zadanie_10_timeout_zwraca_none() -> None:
     Co udaje: przeglądarkę — FakeDriver bez elementu.
     Co sprawdzam: wynik is None (wyjątek złapany W funkcji, nie w teście).
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_10_poczekaj_bezpiecznie(driver, "komunikat", 1)
-    # TODO: sprawdź wynik is None
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_10_poczekaj_bezpiecznie(driver, "komunikat", 1)
+    assert wynik is None
 
 
 # --- zadanie_11 ---
@@ -310,11 +295,10 @@ def test_zadanie_11_loguje_adres_strony(
     Co udaje: przeglądarkę — FakeDriver; dziennik podsłuchuje caplog.
     Co sprawdzam: "https://sklep.pl" występuje w caplog.text.
     """
-    # TODO: włącz podsłuch: caplog.set_level(logging.INFO)
-    # TODO: przygotuj driver = FakeDriver(tytul="Sklep")
-    # TODO: wywołaj zadanie_11_otworz_z_dziennikiem(driver, "https://sklep.pl")
-    # TODO: sprawdź "https://sklep.pl" in caplog.text
-    pass
+    caplog.set_level(logging.INFO)
+    driver = FakeDriver(tytul="Sklep")
+    zadanie_11_otworz_z_dziennikiem(driver, "https://sklep.pl")
+    assert "https://sklep.pl" in caplog.text
 
 
 def test_zadanie_11_zwraca_tytul_i_loguje_go(
@@ -324,12 +308,11 @@ def test_zadanie_11_zwraca_tytul_i_loguje_go(
     Co udaje: przeglądarkę — FakeDriver z tytułem "Sklep Python".
     Co sprawdzam: wynik == "Sklep Python" i tytuł w caplog.text.
     """
-    # TODO: włącz podsłuch: caplog.set_level(logging.INFO)
-    # TODO: przygotuj driver = FakeDriver(tytul="Sklep Python")
-    # TODO: wywołaj zadanie_11_otworz_z_dziennikiem(driver, "https://sklep.pl")
-    # TODO: sprawdź wynik == "Sklep Python"
-    # TODO: sprawdź "Sklep Python" in caplog.text
-    pass
+    caplog.set_level(logging.INFO)
+    driver = FakeDriver(tytul="Sklep Python")
+    wynik = zadanie_11_otworz_z_dziennikiem(driver, "https://sklep.pl")
+    assert  wynik == "Sklep Python"
+    assert "Sklep Python" in caplog.text
 
 
 # --- zadanie_12 ---
@@ -341,16 +324,16 @@ def test_zadanie_12_zamyka_przegladarke_po_sukcesie(
     Co udaje: Service i webdriver.Chrome — Chrome zwraca FakeDriver.
     Co sprawdzam: wynik to tytuł atrapy, a driver.zamknieto is True.
     """
-    # TODO: przygotuj atrapa = FakeDriver(tytul="Sklep Python")
-    # TODO: podmień "selenium_podstawy.Service" na zamiennik zwracający
-    #       "ATRAPA_SERWISU"
-    # TODO: podmień "selenium_podstawy.webdriver.Chrome" na zamiennik
-    #       (service=None, options=None) zwracający atrapa
-    # TODO: wywołaj zadanie_12_scenariusz_z_finally(
-    #           "C:/x/driver.exe", None, "https://sklep.pl")
-    # TODO: sprawdź wynik == "Sklep Python"
-    # TODO: sprawdź atrapa.zamknieto is True
-    pass
+    atrapa = FakeDriver(tytul="Sklep Python")
+    def podmieniony_service(sciezka=None):
+        return "ATRAPA_SERWISU"
+    monkeypatch.setattr("selenium_podstawy.Service", podmieniony_service)
+    def podmieniony_webdriver(service=None, options=None):
+        return atrapa
+    monkeypatch.setattr("selenium_podstawy.webdriver.Chrome", podmieniony_webdriver)
+    wynik = zadanie_12_scenariusz_z_finally("C:/x/driver.exe", None, "https://sklep.pl")
+    assert wynik == "Sklep Python"
+    assert atrapa.zamknieto is True
 
 
 def test_zadanie_12_zamyka_przegladarke_mimo_bledu(
@@ -362,11 +345,13 @@ def test_zadanie_12_zamyka_przegladarke_mimo_bledu(
     Co sprawdzam: wyjątek wylatuje z funkcji (pytest.raises), ALE
     atrapa.zamknieto is True — quit zadziałał mimo błędu.
     """
-    # TODO: przygotuj atrapa = FakeDriver(blad_przy_get=True)
-    # TODO: podmień Service i webdriver.Chrome jak w teście wyżej
-    #       (Chrome zwraca atrapa)
-    # TODO: w bloku with pytest.raises(RuntimeError):
-    #       wywołaj zadanie_12_scenariusz_z_finally(
-    #           "C:/x/driver.exe", None, "https://sklep.pl")
-    # TODO: PO bloku with sprawdź atrapa.zamknieto is True
-    pass
+    atrapa = FakeDriver(blad_przy_get=True)
+    def podmieniony_service(sciezka=None):
+        return "ATRAPA_SERWISU"
+    monkeypatch.setattr("selenium_podstawy.Service", podmieniony_service)
+    def podmieniony_webdriver(service=None, options=None):
+        return atrapa
+    monkeypatch.setattr("selenium_podstawy.webdriver.Chrome",podmieniony_webdriver)
+    with pytest.raises(RuntimeError):
+        zadanie_12_scenariusz_z_finally("C:/x/driver.exe", None, "https://sklep.pl")
+    assert atrapa.zamknieto is True
