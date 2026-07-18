@@ -303,7 +303,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 15. psycopg2_sqlalchemy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 16. fastapi_pydantic — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 17. selenium_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-18. selenium_alerty_screenshoty — ✅ wygenerowany
+18. selenium_alerty_screenshoty — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 19. llm_api_klient — ✅ wygenerowany
 20. llm_structured_extraction — ✅ wygenerowany
 

@@ -26,12 +26,11 @@ def test_zadanie_01_tworzy_plik_zrzutu(tmp_path: Path) -> None:
     dysk — tmp_path.
     Co sprawdzam: wynik is True i sciezka.exists() is True.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: przygotuj sciezka = tmp_path / "strona.png"
-    # TODO: wywołaj zadanie_01_zrob_zrzut(driver, sciezka) i zapisz wynik
-    # TODO: sprawdź wynik is True
-    # TODO: sprawdź sciezka.exists() is True
-    pass
+    driver = FakeDriver()
+    sciezka = tmp_path / "strona.png"
+    wynik = zadanie_01_zrob_zrzut(driver, sciezka)
+    assert wynik is True
+    assert sciezka.exists() is True
 
 
 def test_zadanie_01_przekazuje_sciezke_jako_string(tmp_path: Path) -> None:
@@ -39,12 +38,11 @@ def test_zadanie_01_przekazuje_sciezke_jako_string(tmp_path: Path) -> None:
     Co udaje: przeglądarkę — FakeDriver notujący ścieżki zrzutów.
     Co sprawdzam: driver.zrzuty[0] to str i równa się str(sciezka).
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: przygotuj sciezka = tmp_path / "strona.png"
-    # TODO: wywołaj zadanie_01_zrob_zrzut(driver, sciezka)
-    # TODO: sprawdź isinstance(driver.zrzuty[0], str) is True
-    # TODO: sprawdź driver.zrzuty[0] == str(sciezka)
-    pass
+    driver = FakeDriver()
+    sciezka = tmp_path / "strona.png"
+    zadanie_01_zrob_zrzut(driver, sciezka)
+    assert isinstance(driver.zrzuty[0], str) is True
+    assert driver.zrzuty[0] == str(sciezka)
 
 
 # --- zadanie_02 ---
@@ -54,11 +52,10 @@ def test_zadanie_02_sklada_sciezke_i_robi_zrzut(tmp_path: Path) -> None:
     Co udaje: przeglądarkę — FakeDriver; dysk — tmp_path jako folder.
     Co sprawdzam: wynik == tmp_path / "raport.png" i plik istnieje.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_02_zrzut_do_folderu(driver, tmp_path, "raport.png")
-    # TODO: sprawdź wynik == tmp_path / "raport.png"
-    # TODO: sprawdź wynik.exists() is True
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_02_zrzut_do_folderu(driver, tmp_path, "raport.png")
+    assert wynik == tmp_path / "raport.png"
+    assert wynik.exists() is True
 
 
 def test_zadanie_02_zwraca_path_nie_string(tmp_path: Path) -> None:
@@ -66,10 +63,9 @@ def test_zadanie_02_zwraca_path_nie_string(tmp_path: Path) -> None:
     Co udaje: przeglądarkę — FakeDriver.
     Co sprawdzam: isinstance(wynik, Path) is True.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_02_zrzut_do_folderu(driver, tmp_path, "foto.png")
-    # TODO: sprawdź isinstance(wynik, Path) is True
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_02_zrzut_do_folderu(driver, tmp_path, "foto.png")
+    assert isinstance(wynik, Path) is True
 
 
 # --- zadanie_03 ---
@@ -79,11 +75,10 @@ def test_zadanie_03_zwraca_uchwyt_alertu() -> None:
     Co udaje: przeglądarkę — FakeDriver z konkretnym FakeAlert.
     Co sprawdzam: wynik is przygotowany_alert.
     """
-    # TODO: przygotuj alert = FakeAlert(tekst="Czy na pewno?")
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_03_przelacz_na_alert(driver)
-    # TODO: sprawdź wynik is alert
-    pass
+    alert = FakeAlert(tekst="Czy na pewno?")
+    driver = FakeDriver(alert=alert)
+    wynik = zadanie_03_przelacz_na_alert(driver)
+    assert wynik is alert
 
 
 def test_zadanie_03_nie_klika_niczego() -> None:
@@ -91,12 +86,11 @@ def test_zadanie_03_nie_klika_niczego() -> None:
     Co udaje: przeglądarkę — FakeDriver z FakeAlert.
     Co sprawdzam: zaakceptowano == 0 i odrzucono == 0 po wywołaniu.
     """
-    # TODO: przygotuj alert = FakeAlert()
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_03_przelacz_na_alert(driver)
-    # TODO: sprawdź alert.zaakceptowano == 0
-    # TODO: sprawdź alert.odrzucono == 0
-    pass
+    alert = FakeAlert()
+    driver = FakeDriver(alert=alert)
+    zadanie_03_przelacz_na_alert(driver)
+    assert alert.zaakceptowano == 0
+    assert alert.odrzucono == 0
 
 
 # --- zadanie_04 ---
@@ -106,11 +100,10 @@ def test_zadanie_04_zwraca_tresc_alertu() -> None:
     Co udaje: przeglądarkę — FakeDriver z alertem o znanej treści.
     Co sprawdzam: wynik == "Usunieto produkt".
     """
-    # TODO: przygotuj alert = FakeAlert(tekst="Usunieto produkt")
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_04_tekst_alertu(driver)
-    # TODO: sprawdź wynik == "Usunieto produkt"
-    pass
+    alert = FakeAlert(tekst="Usunieto produkt")
+    driver = FakeDriver(alert=alert)
+    wynik = zadanie_04_tekst_alertu(driver)
+    assert wynik == "Usunieto produkt"
 
 
 def test_zadanie_04_nie_zamyka_alertu() -> None:
@@ -118,11 +111,10 @@ def test_zadanie_04_nie_zamyka_alertu() -> None:
     Co udaje: przeglądarkę — FakeDriver z FakeAlert.
     Co sprawdzam: alert.zaakceptowano == 0 po odczycie.
     """
-    # TODO: przygotuj alert = FakeAlert(tekst="Komunikat")
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_04_tekst_alertu(driver)
-    # TODO: sprawdź alert.zaakceptowano == 0
-    pass
+    alert = FakeAlert(tekst="Komunikat")
+    driver = FakeDriver(alert=alert)
+    zadanie_04_tekst_alertu(driver)
+    assert alert.zaakceptowano == 0
 
 
 # --- zadanie_05 ---
@@ -132,11 +124,10 @@ def test_zadanie_05_akceptuje_alert() -> None:
     Co udaje: przeglądarkę — FakeDriver z FakeAlert.
     Co sprawdzam: alert.zaakceptowano == 1.
     """
-    # TODO: przygotuj alert = FakeAlert()
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_05_zaakceptuj_alert(driver)
-    # TODO: sprawdź alert.zaakceptowano == 1
-    pass
+    alert = FakeAlert()
+    driver = FakeDriver(alert=alert)
+    zadanie_05_zaakceptuj_alert(driver)
+    assert alert.zaakceptowano == 1
 
 
 def test_zadanie_05_nie_odrzuca() -> None:
@@ -144,11 +135,10 @@ def test_zadanie_05_nie_odrzuca() -> None:
     Co udaje: przeglądarkę — FakeDriver z FakeAlert.
     Co sprawdzam: alert.odrzucono == 0.
     """
-    # TODO: przygotuj alert = FakeAlert()
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_05_zaakceptuj_alert(driver)
-    # TODO: sprawdź alert.odrzucono == 0
-    pass
+    alert = FakeAlert()
+    driver = FakeDriver(alert=alert)
+    zadanie_05_zaakceptuj_alert(driver)
+    assert alert.odrzucono == 0
 
 
 # --- zadanie_06 ---
@@ -158,11 +148,10 @@ def test_zadanie_06_odrzuca_alert() -> None:
     Co udaje: przeglądarkę — FakeDriver z FakeAlert.
     Co sprawdzam: alert.odrzucono == 1.
     """
-    # TODO: przygotuj alert = FakeAlert()
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_06_odrzuc_alert(driver)
-    # TODO: sprawdź alert.odrzucono == 1
-    pass
+    alert = FakeAlert()
+    driver = FakeDriver(alert=alert)
+    zadanie_06_odrzuc_alert(driver)
+    assert alert.odrzucono == 1
 
 
 def test_zadanie_06_nie_akceptuje() -> None:
@@ -170,11 +159,10 @@ def test_zadanie_06_nie_akceptuje() -> None:
     Co udaje: przeglądarkę — FakeDriver z FakeAlert.
     Co sprawdzam: alert.zaakceptowano == 0.
     """
-    # TODO: przygotuj alert = FakeAlert()
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_06_odrzuc_alert(driver)
-    # TODO: sprawdź alert.zaakceptowano == 0
-    pass
+    alert = FakeAlert()
+    driver = FakeDriver(alert=alert)
+    zadanie_06_odrzuc_alert(driver)
+    assert alert.zaakceptowano == 0
 
 
 # --- zadanie_07 ---
@@ -184,11 +172,9 @@ def test_zadanie_07_zwraca_tresc_gdy_alert_jest() -> None:
     Co udaje: przeglądarkę — FakeDriver z alertem "Zapisano zmiany".
     Co sprawdzam: wynik == "Zapisano zmiany".
     """
-    # TODO: przygotuj driver = FakeDriver(
-    #           alert=FakeAlert(tekst="Zapisano zmiany"))
-    # TODO: wywołaj zadanie_07_alert_bezpiecznie(driver)
-    # TODO: sprawdź wynik == "Zapisano zmiany"
-    pass
+    driver = FakeDriver(alert=FakeAlert(tekst="Zapisano zmiany"))
+    wynik = zadanie_07_alert_bezpiecznie(driver)
+    assert wynik == "Zapisano zmiany"
 
 
 def test_zadanie_07_brak_alertu_zwraca_none() -> None:
@@ -197,10 +183,9 @@ def test_zadanie_07_brak_alertu_zwraca_none() -> None:
     Co udaje: przeglądarkę — FakeDriver BEZ alertu (property rzuca wyjątek).
     Co sprawdzam: wynik is None.
     """
-    # TODO: przygotuj driver = FakeDriver()  (bez alertu)
-    # TODO: wywołaj zadanie_07_alert_bezpiecznie(driver)
-    # TODO: sprawdź wynik is None
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_07_alert_bezpiecznie(driver)
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -211,11 +196,10 @@ def test_zadanie_08_zwraca_obecny_alert() -> None:
     PRAWDZIWY (alert_is_present działa na atrapie dzięki property).
     Co sprawdzam: wynik is przygotowany_alert.
     """
-    # TODO: przygotuj alert = FakeAlert(tekst="Gotowe")
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_08_poczekaj_na_alert(driver, 2)
-    # TODO: sprawdź wynik is alert
-    pass
+    alert = FakeAlert(tekst="Gotowe")
+    driver = FakeDriver(alert=alert)
+    wynik = zadanie_08_poczekaj_na_alert(driver, 2)
+    assert wynik is alert
 
 
 def test_zadanie_08_brak_alertu_konczy_sie_timeoutem() -> None:
@@ -224,11 +208,9 @@ def test_zadanie_08_brak_alertu_konczy_sie_timeoutem() -> None:
     NoAlertPresentException, warunek czeka aż limit).
     Co sprawdzam: wywołanie z limitem 1 s rzuca TimeoutException.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: w bloku with pytest.raises(TimeoutException):
-    #       wywołaj zadanie_08_poczekaj_na_alert(driver, 1)
-    #       (limit 1 sekunda — test chwilę potrwa, tak ma być)
-    pass
+    driver = FakeDriver()
+    with pytest.raises(TimeoutException):
+        zadanie_08_poczekaj_na_alert(driver, 1)
 
 
 # --- zadanie_09 ---
@@ -238,12 +220,11 @@ def test_zadanie_09_czyta_i_akceptuje() -> None:
     Co udaje: przeglądarkę — FakeDriver z alertem "Czy usunac konto?".
     Co sprawdzam: wynik == "Czy usunac konto?" i zaakceptowano == 1.
     """
-    # TODO: przygotuj alert = FakeAlert(tekst="Czy usunac konto?")
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_09_potwierdz_z_czekaniem(driver, 2)
-    # TODO: sprawdź wynik == "Czy usunac konto?"
-    # TODO: sprawdź alert.zaakceptowano == 1
-    pass
+    alert = FakeAlert(tekst="Czy usunac konto?")
+    driver = FakeDriver(alert=alert)
+    wynik = zadanie_09_potwierdz_z_czekaniem(driver, 2)
+    assert wynik == "Czy usunac konto?"
+    assert alert.zaakceptowano == 1
 
 
 def test_zadanie_09_timeout_zwraca_none() -> None:
@@ -251,10 +232,9 @@ def test_zadanie_09_timeout_zwraca_none() -> None:
     Co udaje: przeglądarkę — FakeDriver bez alertu.
     Co sprawdzam: wynik is None (wyjątek złapany W funkcji).
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_09_potwierdz_z_czekaniem(driver, 1)
-    # TODO: sprawdź wynik is None
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_09_potwierdz_z_czekaniem(driver, 1)
+    assert wynik is None
 
 
 # --- zadanie_10 ---
@@ -265,13 +245,12 @@ def test_zadanie_10_akceptuje_i_robi_zrzut(tmp_path: Path) -> None:
     Co sprawdzam: wynik == tmp_path / "po_alercie.png", plik istnieje,
     zaakceptowano == 1.
     """
-    # TODO: przygotuj alert = FakeAlert(tekst="Zapisano")
-    # TODO: przygotuj driver = FakeDriver(alert=alert)
-    # TODO: wywołaj zadanie_10_potwierdz_i_udokumentuj(driver, tmp_path, 2)
-    # TODO: sprawdź wynik == tmp_path / "po_alercie.png"
-    # TODO: sprawdź wynik.exists() is True
-    # TODO: sprawdź alert.zaakceptowano == 1
-    pass
+    alert = FakeAlert(tekst="Zapisano")
+    driver = FakeDriver(alert=alert)
+    wynik = zadanie_10_potwierdz_i_udokumentuj(driver, tmp_path, 2)
+    assert wynik == tmp_path / "po_alercie.png"
+    assert wynik.exists() is True
+    assert alert.zaakceptowano == 1
 
 
 def test_zadanie_10_bez_alertu_none_i_brak_zrzutu(tmp_path: Path) -> None:
@@ -280,8 +259,7 @@ def test_zadanie_10_bez_alertu_none_i_brak_zrzutu(tmp_path: Path) -> None:
     Co sprawdzam: wynik is None i (tmp_path / "po_alercie.png").exists()
     is False.
     """
-    # TODO: przygotuj driver = FakeDriver()
-    # TODO: wywołaj zadanie_10_potwierdz_i_udokumentuj(driver, tmp_path, 1)
-    # TODO: sprawdź wynik is None
-    # TODO: sprawdź (tmp_path / "po_alercie.png").exists() is False
-    pass
+    driver = FakeDriver()
+    wynik = zadanie_10_potwierdz_i_udokumentuj(driver, tmp_path, 1)
+    assert wynik is None
+    assert (tmp_path / "po_alercie.png").exists() is False

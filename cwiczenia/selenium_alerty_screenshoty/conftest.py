@@ -24,10 +24,9 @@ class FakeAlert:
         Returns:
             None
         """
-        # TODO: zapisz tekst w atrybucie self.text
-        # TODO: utwórz licznik self.zaakceptowano = 0
-        # TODO: utwórz licznik self.odrzucono = 0
-        pass
+        self.text = tekst
+        self.zaakceptowano = 0
+        self.odrzucono = 0
 
     def accept(self) -> None:
         """Zlicza potwierdzenia zamiast klikać OK.
@@ -38,8 +37,7 @@ class FakeAlert:
         Returns:
             None
         """
-        # TODO: zwiększ self.zaakceptowano o 1
-        pass
+        self.zaakceptowano += 1
 
     def dismiss(self) -> None:
         """Zlicza odrzucenia zamiast klikać Anuluj.
@@ -50,8 +48,7 @@ class FakeAlert:
         Returns:
             None
         """
-        # TODO: zwiększ self.odrzucono o 1
-        pass
+        self.odrzucono += 1
 
 
 class FakeSwitchTo:
@@ -70,9 +67,7 @@ class FakeSwitchTo:
         Returns:
             None
         """
-        # TODO: zapisz alert w atrybucie self._alert
-        #       (podkreślenie — schowany; na zewnątrz wystawia go property)
-        pass
+        self._alert = alert
 
     @property
     def alert(self) -> FakeAlert:
@@ -84,10 +79,9 @@ class FakeSwitchTo:
         Returns:
             FakeAlert: atrapa alertu, gdy jest ustawiona.
         """
-        # TODO: jeśli self._alert is None —
-        #       raise NoAlertPresentException("brak alertu")
-        # TODO: w przeciwnym razie zwróć self._alert
-        pass
+        if self._alert is None:
+            raise NoAlertPresentException("brak alertu")
+        return self._alert
 
 
 class FakeDriver:
@@ -107,9 +101,8 @@ class FakeDriver:
         Returns:
             None
         """
-        # TODO: utwórz self.switch_to = FakeSwitchTo(alert)
-        # TODO: utwórz pustą listę self.zrzuty (zapisy save_screenshot)
-        pass
+        self.switch_to = FakeSwitchTo(alert)
+        self.zrzuty = []
 
     def save_screenshot(self, sciezka: str) -> bool:
         """Notuje ścieżkę zrzutu i tworzy podrobiony plik PNG.
@@ -121,9 +114,6 @@ class FakeDriver:
         Returns:
             bool: True — jak prawdziwy driver przy udanym zapisie.
         """
-        # TODO: dopisz sciezka do self.zrzuty
-        # TODO: utwórz podrobiony plik:
-        #       Path(sciezka).write_bytes(b"FAKE-PNG")
-        #       (dzięki temu testy sprawdzą istnienie pliku przez .exists())
-        # TODO: return True
-        pass
+        self.zrzuty.append(sciezka)
+        Path(sciezka).write_bytes(b"FAKE-PNG")
+        return True
