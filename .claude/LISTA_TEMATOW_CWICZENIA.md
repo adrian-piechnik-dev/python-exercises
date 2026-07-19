@@ -304,7 +304,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 16. fastapi_pydantic — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 17. selenium_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 18. selenium_alerty_screenshoty — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-19. llm_api_klient — ✅ wygenerowany
+19. llm_api_klient — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 20. llm_structured_extraction — ✅ wygenerowany
 
 Po temacie 20 (odblokowane po ✅ sprawdzony na 20):

@@ -78,7 +78,13 @@ def test_zadanie_03_zwraca_odpowiedz_z_post(
     zwracającą odpowiedz_ok.
     Co sprawdzam: wynik is odpowiedz_ok.
     """
-    def falszywy_post(url=None, headers=None, json=None, timeout=None):
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
         return odpowiedz_ok
     monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
     wynik = zadanie_03_wyslij_zapytanie("https://api.anthropic.com/v1/messages", {}, {})
@@ -94,12 +100,19 @@ def test_zadanie_03_przekazuje_payload_i_timeout(
     Co sprawdzam: zapisane["json"] to przekazany payload, zapisane["timeout"]==30.
     """
     zapisane = {}
-    def falszywy_post(url=None, headers=None, json=None, timeout=None):
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
         zapisane["json"] = json
         zapisane["timeout"] = timeout
         return odpowiedz_ok
     monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
-    zadanie_03_wyslij_zapytanie(url="https://api.anthropic.com/v1/messages", naglowki={}, payload={"model": "claude-sonnet-4-6"})
+    zadanie_03_wyslij_zapytanie(
+        url="https://api.anthropic.com/v1/messages", naglowki={}, payload={"model": "claude-sonnet-4-6"}
+    )
     assert zapisane["json"] == {"model": "claude-sonnet-4-6"}
     assert zapisane["timeout"] == 30
 
@@ -113,9 +126,8 @@ def test_zadanie_04_zwraca_slownik_dla_poprawnej_odpowiedzi(
     Co udaje: obiekt Response — używam atrapy odpowiedz_ok z conftest.
     Co sprawdzam: wynik["content"][0]["text"] == "Czesc, jestem Claude!".
     """
-    # TODO: wywołaj zadanie_04_potwierdz_sukces(odpowiedz_ok)
-    # TODO: sprawdź że wynik["content"][0]["text"] == "Czesc, jestem Claude!"
-    pass
+    wynik = zadanie_04_potwierdz_sukces(odpowiedz_ok)
+    assert wynik["content"][0]["text"] == "Czesc, jestem Claude!"
 
 
 def test_zadanie_04_rzuca_httperror_dla_bledu(
@@ -126,9 +138,8 @@ def test_zadanie_04_rzuca_httperror_dla_bledu(
     w raise_for_status().
     Co sprawdzam: pytest.raises(requests.exceptions.HTTPError).
     """
-    # TODO: w bloku with pytest.raises(requests.exceptions.HTTPError):
-    #   wywołaj zadanie_04_potwierdz_sukces(odpowiedz_blad_http)
-    pass
+    with pytest.raises(requests.exceptions.HTTPError):
+        zadanie_04_potwierdz_sukces(odpowiedz_blad_http)
 
 
 # --- zadanie_05 ---
@@ -138,11 +149,9 @@ def test_zadanie_05_wyciaga_tekst_z_odpowiedzi() -> None:
     Co udaje: nic — używam literału słownika o strukturze odpowiedzi API.
     Co sprawdzam: wynik == "Stolica Polski to Warszawa.".
     """
-    # TODO: przygotuj dane = {"content": [{"type": "text",
-    #   "text": "Stolica Polski to Warszawa."}]}
-    # TODO: wywołaj zadanie_05_wyciagnij_tekst(dane)
-    # TODO: sprawdź że wynik == "Stolica Polski to Warszawa."
-    pass
+    dane = {"content": [{"type": "text", "text": "Stolica Polski to Warszawa."}]}
+    wynik = zadanie_05_wyciagnij_tekst(dane)
+    assert wynik == "Stolica Polski to Warszawa."
 
 
 def test_zadanie_05_rzuca_keyerror_gdy_brak_content() -> None:
@@ -150,9 +159,8 @@ def test_zadanie_05_rzuca_keyerror_gdy_brak_content() -> None:
     Co udaje: nic — używam pustego słownika (tak wygląda zepsuta odpowiedź).
     Co sprawdzam: pytest.raises(KeyError).
     """
-    # TODO: w bloku with pytest.raises(KeyError):
-    #   wywołaj zadanie_05_wyciagnij_tekst({})
-    pass
+    with pytest.raises(KeyError):
+        zadanie_05_wyciagnij_tekst({})
 
 
 # --- zadanie_06 ---
@@ -162,10 +170,9 @@ def test_zadanie_06_zwraca_tekst_dla_poprawnych_danych() -> None:
     Co udaje: nic — używam literału słownika.
     Co sprawdzam: wynik == "Stolica Polski to Warszawa.".
     """
-    # TODO: przygotuj dane jak w teście typowym zadania 05
-    # TODO: wywołaj zadanie_06_wyciagnij_tekst_bezpiecznie(dane)
-    # TODO: sprawdź że wynik == "Stolica Polski to Warszawa."
-    pass
+    dane = {"content": [{"type": "text", "text": "Stolica Polski to Warszawa."}]}
+    wynik = zadanie_06_wyciagnij_tekst_bezpiecznie(dane)
+    assert wynik == "Stolica Polski to Warszawa."
 
 
 def test_zadanie_06_zwraca_none_dla_zepsutej_struktury() -> None:
@@ -173,11 +180,10 @@ def test_zadanie_06_zwraca_none_dla_zepsutej_struktury() -> None:
     Co udaje: nic — używam {} (brak "content") i {"content": []} (pusta lista).
     Co sprawdzam: oba wywołania zwracają None (assert ... is None).
     """
-    # TODO: wywołaj zadanie_06_wyciagnij_tekst_bezpiecznie({})
-    #   i sprawdź (is None) że wynik to None
-    # TODO: wywołaj zadanie_06_wyciagnij_tekst_bezpiecznie({"content": []})
-    #   i sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_06_wyciagnij_tekst_bezpiecznie({})
+    assert wynik is None
+    wynik = zadanie_06_wyciagnij_tekst_bezpiecznie({"content": []})
+    assert wynik is None
 
 
 # --- zadanie_07 ---
@@ -189,10 +195,9 @@ def test_zadanie_07_loguje_nazwe_modelu(
     Co udaje: nic — caplog przechwytuje prawdziwe wpisy logging.
     Co sprawdzam: "claude-sonnet-4-6" in caplog.text.
     """
-    # TODO: ustaw caplog.set_level(logging.INFO)
-    # TODO: wywołaj zadanie_07_loguj_zapytanie("claude-sonnet-4-6", 100)
-    # TODO: sprawdź że "claude-sonnet-4-6" in caplog.text
-    pass
+    caplog.set_level(logging.INFO)
+    zadanie_07_loguj_zapytanie("claude-sonnet-4-6", 100)
+    assert "claude-sonnet-4-6" in caplog.text
 
 
 def test_zadanie_07_zwraca_none() -> None:
@@ -200,10 +205,8 @@ def test_zadanie_07_zwraca_none() -> None:
     Co udaje: nic — wywołuję funkcję z literałami.
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywołaj zadanie_07_loguj_zapytanie("claude-sonnet-4-6", 100)
-    #   i zapisz wynik
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_07_loguj_zapytanie("claude-sonnet-4-6", 100)
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -215,10 +218,9 @@ def test_zadanie_08_loguje_komunikat_bledu(
     Co udaje: nic — caplog przechwytuje prawdziwe wpisy logging.
     Co sprawdzam: "Przekroczono limit czasu" in caplog.text.
     """
-    # TODO: ustaw caplog.set_level(logging.ERROR)
-    # TODO: wywołaj zadanie_08_loguj_blad("Przekroczono limit czasu")
-    # TODO: sprawdź że "Przekroczono limit czasu" in caplog.text
-    pass
+    caplog.set_level(logging.ERROR)
+    zadanie_08_loguj_blad("Przekroczono limit czasu")
+    assert "Przekroczono limit czasu" in caplog.text
 
 
 def test_zadanie_08_loguje_na_poziomie_error(
@@ -228,10 +230,9 @@ def test_zadanie_08_loguje_na_poziomie_error(
     Co udaje: nic — caplog przechwytuje prawdziwe wpisy logging.
     Co sprawdzam: "ERROR" in caplog.text.
     """
-    # TODO: ustaw caplog.set_level(logging.ERROR)
-    # TODO: wywołaj zadanie_08_loguj_blad("cokolwiek")
-    # TODO: sprawdź że "ERROR" in caplog.text
-    pass
+    caplog.set_level(logging.ERROR)
+    zadanie_08_loguj_blad("cokolwiek")
+    assert "ERROR" in caplog.text
 
 
 # --- zadanie_09 ---
@@ -243,10 +244,17 @@ def test_zadanie_09_zwraca_odpowiedz_gdy_brak_bledu(
     Co udaje: requests.post — fałszywka zwraca odpowiedz_ok.
     Co sprawdzam: wynik is odpowiedz_ok.
     """
-    # TODO: napisz falszywy_post zwracający odpowiedz_ok i podmień requests.post
-    # TODO: wywołaj zadanie_09_wyslij_z_obsluga_timeout("https://api.anthropic.com/v1/messages", {}, {})
-    # TODO: sprawdź (is) że wynik to odpowiedz_ok
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    wynik = zadanie_09_wyslij_z_obsluga_timeout("https://api.anthropic.com/v1/messages", {}, {})
+    assert wynik is odpowiedz_ok
 
 
 def test_zadanie_09_rzuca_blad_klienta_przy_timeout(
@@ -256,11 +264,17 @@ def test_zadanie_09_rzuca_blad_klienta_przy_timeout(
     Co udaje: requests.post — fałszywka rzuca requests.exceptions.Timeout.
     Co sprawdzam: pytest.raises(BladKlientaLLM).
     """
-    # TODO: napisz falszywy_post, który rzuca requests.exceptions.Timeout("za dlugo")
-    # TODO: podmień requests.post
-    # TODO: w bloku with pytest.raises(BladKlientaLLM):
-    #   wywołaj zadanie_09_wyslij_z_obsluga_timeout(...)
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> None:
+        raise requests.exceptions.Timeout("za dlugo")
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    with pytest.raises(BladKlientaLLM):
+        zadanie_09_wyslij_z_obsluga_timeout("https://api.anthropic.com/v1/messages", {}, {})
 
 
 # --- zadanie_10 ---
@@ -272,10 +286,17 @@ def test_zadanie_10_zwraca_slownik_dla_sukcesu(
     Co udaje: requests.post — fałszywka zwraca odpowiedz_ok.
     Co sprawdzam: wynik["content"][0]["text"] == "Czesc, jestem Claude!".
     """
-    # TODO: napisz falszywy_post zwracający odpowiedz_ok i podmień requests.post
-    # TODO: wywołaj zadanie_10_wyslij_z_pelna_obsluga(...)
-    # TODO: sprawdź że wynik["content"][0]["text"] == "Czesc, jestem Claude!"
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    wynik = zadanie_10_wyslij_z_pelna_obsluga("https://api.anthropic.com/v1/messages", {}, {})
+    assert wynik["content"][0]["text"] == "Czesc, jestem Claude!"
 
 
 def test_zadanie_10_rzuca_blad_klienta_przy_connectionerror(
@@ -285,10 +306,17 @@ def test_zadanie_10_rzuca_blad_klienta_przy_connectionerror(
     Co udaje: requests.post — fałszywka rzuca requests.exceptions.ConnectionError.
     Co sprawdzam: pytest.raises(BladKlientaLLM).
     """
-    # TODO: napisz falszywy_post rzucający requests.exceptions.ConnectionError("brak sieci")
-    # TODO: podmień requests.post
-    # TODO: w bloku with pytest.raises(BladKlientaLLM): wywołaj funkcję
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> None:
+        raise requests.exceptions.ConnectionError("brak sieci")
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    with pytest.raises(BladKlientaLLM):
+        zadanie_10_wyslij_z_pelna_obsluga("https://api.anthropic.com/v1/messages",{}, {})
 
 
 def test_zadanie_10_rzuca_blad_klienta_przy_bledzie_http(
@@ -299,10 +327,17 @@ def test_zadanie_10_rzuca_blad_klienta_przy_bledzie_http(
     której raise_for_status() rzuca HTTPError.
     Co sprawdzam: pytest.raises(BladKlientaLLM).
     """
-    # TODO: napisz falszywy_post zwracający odpowiedz_blad_http
-    # TODO: podmień requests.post
-    # TODO: w bloku with pytest.raises(BladKlientaLLM): wywołaj funkcję
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
+        return odpowiedz_blad_http
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    with pytest.raises(BladKlientaLLM):
+        zadanie_10_wyslij_z_pelna_obsluga("https://api.anthropic.com/v1/messages", {}, {})
 
 
 # --- zadanie_11 ---
@@ -314,11 +349,19 @@ def test_zadanie_11_zwraca_slownik_odpowiedzi(
     Co udaje: requests.post — fałszywka zwraca odpowiedz_ok.
     Co sprawdzam: wynik["content"][0]["text"] == "Czesc, jestem Claude!".
     """
-    # TODO: napisz falszywy_post zwracający odpowiedz_ok i podmień requests.post
-    # TODO: wywołaj zadanie_11_zapytaj_model("https://api.anthropic.com/v1/messages",
-    #   "sk-test-123", "claude-sonnet-4-6", 100, "Czesc")
-    # TODO: sprawdź że wynik["content"][0]["text"] == "Czesc, jestem Claude!"
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    wynik = zadanie_11_zapytaj_model(
+        "https://api.anthropic.com/v1/messages","sk-test-123", "claude-sonnet-4-6", 100, "Czesc"
+    )
+    assert wynik["content"][0]["text"] == "Czesc, jestem Claude!"
 
 
 def test_zadanie_11_wysyla_naglowki_z_kluczem_api(
@@ -329,14 +372,23 @@ def test_zadanie_11_wysyla_naglowki_z_kluczem_api(
     Co sprawdzam: zapisane["headers"]["x-api-key"]=="sk-test-123"
     i zapisane["json"]["model"]=="claude-sonnet-4-6".
     """
-    # TODO: przygotuj pusty słownik zapisane
-    # TODO: napisz falszywy_post zapisujący headers i json, zwracający odpowiedz_ok
-    # TODO: podmień requests.post
-    # TODO: wywołaj zadanie_11_zapytaj_model(...) z kluczem "sk-test-123"
-    #   i modelem "claude-sonnet-4-6"
-    # TODO: sprawdź że zapisane["headers"]["x-api-key"] == "sk-test-123"
-    # TODO: sprawdź że zapisane["json"]["model"] == "claude-sonnet-4-6"
-    pass
+    zapisane = {}
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
+        zapisane["headers"] = headers
+        zapisane["json"] = json
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    zadanie_11_zapytaj_model(
+        "https://api.anthropic.com/v1/messages","sk-test-123", "claude-sonnet-4-6", 100, "Czesc"
+    )
+    assert zapisane["headers"]["x-api-key"] == "sk-test-123"
+    assert zapisane["json"]["model"] == "claude-sonnet-4-6"
 
 
 # --- zadanie_12 ---
@@ -348,11 +400,19 @@ def test_zadanie_12_zwraca_tekst_odpowiedzi(
     Co udaje: requests.post — fałszywka zwraca odpowiedz_ok.
     Co sprawdzam: wynik == "Czesc, jestem Claude!".
     """
-    # TODO: napisz falszywy_post zwracający odpowiedz_ok i podmień requests.post
-    # TODO: wywołaj zadanie_12_pelny_klient("https://api.anthropic.com/v1/messages",
-    #   "sk-test-123", "claude-sonnet-4-6", 100, "Czesc")
-    # TODO: sprawdź że wynik == "Czesc, jestem Claude!"
-    pass
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> FalszywaOdpowiedz:
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    wynik = zadanie_12_pelny_klient(
+        "https://api.anthropic.com/v1/messages","sk-test-123", "claude-sonnet-4-6", 100, "Czesc"
+    )
+    assert wynik == "Czesc, jestem Claude!"
 
 
 def test_zadanie_12_zwraca_none_i_loguje_blad_przy_timeout(
@@ -363,10 +423,19 @@ def test_zadanie_12_zwraca_none_i_loguje_blad_przy_timeout(
     caplog przechwytuje logi.
     Co sprawdzam: wynik is None i "ERROR" in caplog.text.
     """
-    # TODO: ustaw caplog.set_level(logging.INFO)
-    # TODO: napisz falszywy_post rzucający requests.exceptions.Timeout("za dlugo")
-    # TODO: podmień requests.post
-    # TODO: wywołaj zadanie_12_pelny_klient(...) i zapisz wynik
-    # TODO: sprawdź (is None) że wynik to None
-    # TODO: sprawdź że "ERROR" in caplog.text
-    pass
+    caplog.set_level(logging.INFO)
+
+    def falszywy_post(
+            url: str | None = None,
+            headers: dict | None = None,
+            json: dict | None = None,
+            timeout: int | None = None,
+    ) -> None:
+        raise requests.exceptions.Timeout("za dlugo")
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    wynik = zadanie_12_pelny_klient(
+        "https://api.anthropic.com/v1/messages", "sk-test-123", "claude-sonnet-4-6", 100, "Czesc"
+    )
+    assert wynik is None
+    assert "ERROR" in caplog.text
+

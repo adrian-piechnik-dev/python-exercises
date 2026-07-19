@@ -24,8 +24,6 @@ class FalszywaOdpowiedz:
         Returns:
             None: konstruktor niczego nie zwraca.
         """
-        # TODO: zapisz dane w atrybucie self.dane
-        # TODO: zapisz blad_http w atrybucie self.blad_http
         self.dane = dane
         self.blad_http = blad_http
 
@@ -38,7 +36,6 @@ class FalszywaOdpowiedz:
         Returns:
             dict: dane przekazane przy tworzeniu atrapy.
         """
-        # TODO: zwróć self.dane
         return self.dane
 
     def raise_for_status(self) -> None:
@@ -51,9 +48,6 @@ class FalszywaOdpowiedz:
             None: przy sukcesie nie robi nic; w trybie błędu rzuca
                 requests.exceptions.HTTPError.
         """
-        # TODO: jeśli self.blad_http is True — rzuć
-        #   requests.exceptions.HTTPError("Serwer zwrocil blad")
-        # TODO: w przeciwnym razie nie rób nic (funkcja po prostu się kończy)
         if self.blad_http is True:
             raise requests.exceptions.HTTPError("Serwer zwrocil blad")
 
@@ -69,8 +63,9 @@ def odpowiedz_ok() -> FalszywaOdpowiedz:
         FalszywaOdpowiedz: odpowiedź z danymi
             {"content": [{"type": "text", "text": "Czesc, jestem Claude!"}]}.
     """
-    # TODO: zwróć FalszywaOdpowiedz z danymi opisanymi w Returns
-    return FalszywaOdpowiedz(dane={"content": [{"type": "text", "text": "Czesc, jestem Claude!"}]})
+    return FalszywaOdpowiedz(
+        dane={"content": [{"type": "text", "text": "Czesc, jestem Claude!"}]}
+    )
 
 
 @pytest.fixture
@@ -84,5 +79,4 @@ def odpowiedz_blad_http() -> FalszywaOdpowiedz:
         FalszywaOdpowiedz: odpowiedź z pustym słownikiem danych
             i włączonym trybem błędu HTTP.
     """
-    # TODO: zwróć FalszywaOdpowiedz({}, blad_http=True)
     return FalszywaOdpowiedz({}, blad_http=True)

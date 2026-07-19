@@ -17,7 +17,6 @@ def zadanie_01_zbuduj_naglowki(api_key: str) -> dict:
         dict: trzy nagłówki — "x-api-key" z kluczem, "anthropic-version"
             równe "2023-06-01" i "content-type" równe "application/json".
     """
-    # TODO: zwróć słownik z trzema nagłówkami opisanymi w Returns
     return {
         "x-api-key": api_key,
         "anthropic-version": "2023-06-01",
@@ -72,9 +71,8 @@ def zadanie_04_potwierdz_sukces(odpowiedz: requests.Response) -> dict:
         dict: treść odpowiedzi po odpowiedz.json(); gdy kod to błąd
             (4xx/5xx), funkcja rzuca requests.exceptions.HTTPError.
     """
-    # TODO: wywołaj odpowiedz.raise_for_status()
-    # TODO: zwróć odpowiedz.json()
-    pass
+    odpowiedz.raise_for_status()
+    return odpowiedz.json()
 
 
 def zadanie_05_wyciagnij_tekst(dane: dict) -> str:
@@ -86,8 +84,7 @@ def zadanie_05_wyciagnij_tekst(dane: dict) -> str:
     Returns:
         str: wartość dane["content"][0]["text"].
     """
-    # TODO: zwróć dane["content"][0]["text"]
-    pass
+    return dane["content"][0]["text"]
 
 
 def zadanie_06_wyciagnij_tekst_bezpiecznie(dane: dict) -> str | None:
@@ -101,9 +98,10 @@ def zadanie_06_wyciagnij_tekst_bezpiecznie(dane: dict) -> str | None:
         str | None: tekst pierwszego bloku albo None, gdy struktura
             jest niepoprawna (brak klucza lub pusta lista).
     """
-    # TODO: w bloku try zwróć dane["content"][0]["text"]
-    # TODO: złap (KeyError, IndexError) i zwróć None
-    pass
+    try:
+        return dane["content"][0]["text"]
+    except (KeyError, IndexError):
+        return None
 
 
 def zadanie_07_loguj_zapytanie(model: str, max_tokens: int) -> None:
@@ -116,10 +114,7 @@ def zadanie_07_loguj_zapytanie(model: str, max_tokens: int) -> None:
     Returns:
         None: funkcja tylko loguje, niczego nie zwraca.
     """
-    # TODO: wywołaj logging.info z szablonem
-    #   "Wysylam zapytanie do modelu %s, max_tokens=%s"
-    #   i argumentami model, max_tokens (NIE f-string!)
-    pass
+    logging.info("Wysylam zapytanie do modelu %s, max_tokens=%s", model, max_tokens)
 
 
 def zadanie_08_loguj_blad(komunikat: str) -> None:
@@ -131,9 +126,7 @@ def zadanie_08_loguj_blad(komunikat: str) -> None:
     Returns:
         None: funkcja tylko loguje, niczego nie zwraca.
     """
-    # TODO: wywołaj logging.error z szablonem "Blad klienta LLM: %s"
-    #   i argumentem komunikat
-    pass
+    logging.error("Blad klienta LLM: %s", komunikat)
 
 
 def zadanie_09_wyslij_z_obsluga_timeout(
@@ -150,11 +143,10 @@ def zadanie_09_wyslij_z_obsluga_timeout(
         requests.Response: odpowiedź serwera; przy przekroczeniu czasu
             funkcja rzuca BladKlientaLLM z oryginalną przyczyną (from).
     """
-    # TODO: w bloku try wywołaj requests.post(url, headers=naglowki,
-    #   json=payload, timeout=30) i zwróć wynik
-    # TODO: złap requests.exceptions.Timeout as error i rzuć
-    #   BladKlientaLLM("Przekroczono limit czasu") from error
-    pass
+    try:
+        return requests.post(url, headers=naglowki, json=payload, timeout=30)
+    except requests.exceptions.Timeout as error:
+        raise BladKlientaLLM("Przekroczono limit czasu") from error
 
 
 def zadanie_10_wyslij_z_pelna_obsluga(
@@ -171,16 +163,18 @@ def zadanie_10_wyslij_z_pelna_obsluga(
         dict: treść odpowiedzi po .json(); każdy błąd requests zamienia
             się w BladKlientaLLM z oryginalną przyczyną (from).
     """
-    # TODO: w bloku try:
-    #   - wywołaj requests.post(url, headers=naglowki, json=payload, timeout=30)
-    #   - wywołaj raise_for_status() na odpowiedzi
-    #   - zwróć odpowiedz.json()
-    # TODO: 4 warstwy except, każda: raise BladKlientaLLM("...") from error
-    #   1) requests.exceptions.Timeout — "Przekroczono limit czasu"
-    #   2) requests.exceptions.ConnectionError — "Brak polaczenia z serwerem"
-    #   3) requests.exceptions.HTTPError — "Serwer zwrocil blad HTTP"
-    #   4) requests.exceptions.RequestException — "Blad zadania" (OSTATNI!)
-    pass
+    try:
+        response = requests.post(url, headers=naglowki, json=payload, timeout=30)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.Timeout as error:
+        raise BladKlientaLLM("Przekroczono limit czasu") from error
+    except requests.exceptions.ConnectionError as error:
+        raise BladKlientaLLM("Brak polaczenia z serwerem") from error
+    except requests.exceptions.HTTPError as error:
+        raise BladKlientaLLM("Serwer zwrocil blad HTTP") from error
+    except requests.exceptions.RequestException as error:
+        raise BladKlientaLLM("Blad zadania") from error
 
 
 def zadanie_11_zapytaj_model(
@@ -198,10 +192,9 @@ def zadanie_11_zapytaj_model(
     Returns:
         dict: treść odpowiedzi; błędy requests lecą jako BladKlientaLLM.
     """
-    # TODO: zbuduj nagłówki przez zadanie_01_zbuduj_naglowki(api_key)
-    # TODO: zbuduj payload przez zadanie_02_zbuduj_payload(model, max_tokens, tresc)
-    # TODO: zwróć wynik zadanie_10_wyslij_z_pelna_obsluga(url, naglowki, payload)
-    pass
+    naglowki = zadanie_01_zbuduj_naglowki(api_key)
+    payload = zadanie_02_zbuduj_payload(model, max_tokens, tresc)
+    return zadanie_10_wyslij_z_pelna_obsluga(url, naglowki, payload)
 
 
 def zadanie_12_pelny_klient(
@@ -221,16 +214,15 @@ def zadanie_12_pelny_klient(
             komunikacji (zalogowany przez logging.error) albo odpowiedź
             ma zepsutą strukturę.
     """
-    # TODO: zaloguj wysyłkę przez zadanie_07_loguj_zapytanie(model, max_tokens)
-    # TODO: w bloku try pobierz dane przez zadanie_11_zapytaj_model(...)
-    # TODO: złap BladKlientaLLM as error — zaloguj przez
-    #   zadanie_08_loguj_blad(str(error)) i zwróć None
-    # TODO: po udanym pobraniu zwróć zadanie_06_wyciagnij_tekst_bezpiecznie(dane)
-    pass
+    zadanie_07_loguj_zapytanie(model, max_tokens)
+    try:
+        dane = zadanie_11_zapytaj_model(url, api_key, model, max_tokens, tresc)
+        return zadanie_06_wyciagnij_tekst_bezpiecznie(dane)
+    except BladKlientaLLM as error:
+        zadanie_08_loguj_blad(str(error))
+        return None
 
 
 if __name__ == "__main__":
-    # TODO: skonfiguruj logging.basicConfig(level=logging.INFO)
-    # TODO: wywołaj zadanie_07_loguj_zapytanie("claude-sonnet-4-6", 100),
-    #   żeby zobaczyć wpis INFO w konsoli
-    pass
+    logging.basicConfig(level=logging.INFO)
+    zadanie_07_loguj_zapytanie("claude-sonnet-4-6", 100)
