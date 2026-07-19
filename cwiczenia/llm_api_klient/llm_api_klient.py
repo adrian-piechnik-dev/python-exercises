@@ -1,17 +1,3 @@
-# Spis zadań:
-# 01 — zbuduj nagłówki żądania (x-api-key, anthropic-version, content-type)
-# 02 — zbuduj payload (model, max_tokens, messages)
-# 03 — wyślij zapytanie POST (requests.post z json= i timeout=)
-# 04 — potwierdź sukces odpowiedzi (raise_for_status + .json())
-# 05 — wyciągnij tekst z odpowiedzi (content[0]["text"])
-# 06 — bezpieczne wyciąganie tekstu (try/except KeyError/IndexError → None)
-# 07 — zaloguj wysyłkę zapytania (logging.info z %s)
-# 08 — zaloguj błąd klienta (logging.error z %s)
-# 09 — wyślij z obsługą Timeout (raise BladKlientaLLM from error)
-# 10 — wyślij z pełną 4-warstwową obsługą wyjątków
-# 11 — zazębienie: pełne zapytanie do modelu (nagłówki + payload + wysyłka)
-# 12 — zazębienie: pełny klient z logowaniem (zwraca tekst albo None)
-
 import logging
 
 import requests
@@ -32,7 +18,11 @@ def zadanie_01_zbuduj_naglowki(api_key: str) -> dict:
             równe "2023-06-01" i "content-type" równe "application/json".
     """
     # TODO: zwróć słownik z trzema nagłówkami opisanymi w Returns
-    pass
+    return {
+        "x-api-key": api_key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+    }
 
 
 def zadanie_02_zbuduj_payload(model: str, max_tokens: int, tresc: str) -> dict:
@@ -47,9 +37,13 @@ def zadanie_02_zbuduj_payload(model: str, max_tokens: int, tresc: str) -> dict:
         dict: klucze "model", "max_tokens" oraz "messages" — lista
             z jednym słownikiem {"role": "user", "content": tresc}.
     """
-    # TODO: zwróć słownik z kluczami "model", "max_tokens", "messages"
-    # TODO: "messages" to LISTA z jednym słownikiem o roli "user"
-    pass
+    return {
+        "model": model,
+        "max_tokens": max_tokens,
+        "messages": [
+            {"role": "user", "content": tresc},
+        ]
+    }
 
 
 def zadanie_03_wyslij_zapytanie(
@@ -65,9 +59,7 @@ def zadanie_03_wyslij_zapytanie(
     Returns:
         requests.Response: obiekt odpowiedzi zwrócony przez requests.post.
     """
-    # TODO: wywołaj requests.post(url, headers=naglowki, json=payload, timeout=30)
-    # TODO: zwróć wynik tego wywołania
-    pass
+    return requests.post(url, headers=naglowki, json=payload, timeout=30)
 
 
 def zadanie_04_potwierdz_sukces(odpowiedz: requests.Response) -> dict:

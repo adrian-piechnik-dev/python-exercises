@@ -29,10 +29,9 @@ def test_zadanie_01_naglowki_zawieraja_klucz_i_wersje() -> None:
     Co sprawdzam: wynik["x-api-key"]=="sk-test-123"
     i wynik["anthropic-version"]=="2023-06-01".
     """
-    # TODO: wywołaj zadanie_01_zbuduj_naglowki("sk-test-123")
-    # TODO: sprawdź że wynik["x-api-key"] == "sk-test-123"
-    # TODO: sprawdź że wynik["anthropic-version"] == "2023-06-01"
-    pass
+    wynik = zadanie_01_zbuduj_naglowki("sk-test-123")
+    assert wynik["x-api-key"] == "sk-test-123"
+    assert wynik["anthropic-version"] == "2023-06-01"
 
 
 def test_zadanie_01_naglowki_maja_content_type_i_nic_wiecej() -> None:
@@ -40,10 +39,9 @@ def test_zadanie_01_naglowki_maja_content_type_i_nic_wiecej() -> None:
     Co udaje: nic — używam literału jako klucza.
     Co sprawdzam: wynik["content-type"]=="application/json" i len(wynik)==3.
     """
-    # TODO: wywołaj zadanie_01_zbuduj_naglowki("sk-test-123")
-    # TODO: sprawdź że wynik["content-type"] == "application/json"
-    # TODO: sprawdź że len(wynik) == 3
-    pass
+    wynik = zadanie_01_zbuduj_naglowki("sk-test-123")
+    assert wynik["content-type"] == "application/json"
+    assert len(wynik) == 3
 
 
 # --- zadanie_02 ---
@@ -53,10 +51,9 @@ def test_zadanie_02_payload_ma_model_i_max_tokens() -> None:
     Co udaje: nic — używam literałów.
     Co sprawdzam: wynik["model"]=="claude-sonnet-4-6" i wynik["max_tokens"]==100.
     """
-    # TODO: wywołaj zadanie_02_zbuduj_payload("claude-sonnet-4-6", 100, "Czesc")
-    # TODO: sprawdź że wynik["model"] == "claude-sonnet-4-6"
-    # TODO: sprawdź że wynik["max_tokens"] == 100
-    pass
+    wynik = zadanie_02_zbuduj_payload("claude-sonnet-4-6", 100, "Czesc")
+    assert wynik["model"] == "claude-sonnet-4-6"
+    assert wynik["max_tokens"] == 100
 
 
 def test_zadanie_02_messages_to_lista_z_rola_user() -> None:
@@ -64,12 +61,11 @@ def test_zadanie_02_messages_to_lista_z_rola_user() -> None:
     Co udaje: nic — używam literałów.
     Co sprawdzam: messages[0]["role"]=="user" i messages[0]["content"]==treść.
     """
-    # TODO: wywołaj zadanie_02_zbuduj_payload("claude-sonnet-4-6", 100,
-    #   "Jaka jest stolica Polski?")
-    # TODO: sprawdź że wynik["messages"] jest instancją list i ma 1 element
-    # TODO: sprawdź że wynik["messages"][0]["role"] == "user"
-    # TODO: sprawdź że wynik["messages"][0]["content"] == "Jaka jest stolica Polski?"
-    pass
+    wynik = zadanie_02_zbuduj_payload("claude-sonnet-4-6", 100, "Jaka jest stolica Polski?")
+    assert isinstance(wynik["messages"], list) is True
+    assert len(wynik["messages"]) == 1
+    assert wynik["messages"][0]["role"] == "user"
+    assert wynik["messages"][0]["content"] == "Jaka jest stolica Polski?"
 
 
 # --- zadanie_03 ---
@@ -82,11 +78,11 @@ def test_zadanie_03_zwraca_odpowiedz_z_post(
     zwracającą odpowiedz_ok.
     Co sprawdzam: wynik is odpowiedz_ok.
     """
-    # TODO: napisz falszywy_post(url, headers, json, timeout) zwracający odpowiedz_ok
-    # TODO: podmień requests.post przez monkeypatch.setattr(requests, "post", ...)
-    # TODO: wywołaj zadanie_03_wyslij_zapytanie("https://api.anthropic.com/v1/messages", {}, {})
-    # TODO: sprawdź (assert ... is ...) że wynik to dokładnie odpowiedz_ok
-    pass
+    def falszywy_post(url=None, headers=None, json=None, timeout=None):
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    wynik = zadanie_03_wyslij_zapytanie("https://api.anthropic.com/v1/messages", {}, {})
+    assert wynik is odpowiedz_ok
 
 
 def test_zadanie_03_przekazuje_payload_i_timeout(
@@ -97,14 +93,15 @@ def test_zadanie_03_przekazuje_payload_i_timeout(
     do słownika i zwraca odpowiedz_ok.
     Co sprawdzam: zapisane["json"] to przekazany payload, zapisane["timeout"]==30.
     """
-    # TODO: przygotuj pusty słownik zapisane
-    # TODO: napisz falszywy_post, który zapisuje json i timeout do zapisane
-    #   i zwraca odpowiedz_ok
-    # TODO: podmień requests.post
-    # TODO: wywołaj zadanie_03_wyslij_zapytanie z payloadem {"model": "claude-sonnet-4-6"}
-    # TODO: sprawdź że zapisane["json"] == {"model": "claude-sonnet-4-6"}
-    # TODO: sprawdź że zapisane["timeout"] == 30
-    pass
+    zapisane = {}
+    def falszywy_post(url=None, headers=None, json=None, timeout=None):
+        zapisane["json"] = json
+        zapisane["timeout"] = timeout
+        return odpowiedz_ok
+    monkeypatch.setattr("llm_api_klient.requests.post", falszywy_post)
+    zadanie_03_wyslij_zapytanie(url="https://api.anthropic.com/v1/messages", naglowki={}, payload={"model": "claude-sonnet-4-6"})
+    assert zapisane["json"] == {"model": "claude-sonnet-4-6"}
+    assert zapisane["timeout"] == 30
 
 
 # --- zadanie_04 ---
