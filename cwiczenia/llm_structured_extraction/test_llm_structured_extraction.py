@@ -23,9 +23,8 @@ def test_zadanie_01_prompt_zawiera_tekst_zrodlowy() -> None:
     Co udaje: nic — używam literału "Anna ma 30 lat.".
     Co sprawdzam: "Anna ma 30 lat." in wynik.
     """
-    # TODO: wywołaj zadanie_01_zbuduj_prompt_ekstrakcji("Anna ma 30 lat.")
-    # TODO: sprawdź że "Anna ma 30 lat." in wynik
-    pass
+    wynik = zadanie_01_zbuduj_prompt_ekstrakcji("Anna ma 30 lat.")
+    assert "Anna ma 30 lat." in wynik
 
 
 def test_zadanie_01_prompt_zawiera_literalne_klamry_szablonu() -> None:
@@ -33,10 +32,9 @@ def test_zadanie_01_prompt_zawiera_literalne_klamry_szablonu() -> None:
     Co udaje: nic — używam literału tekstu.
     Co sprawdzam: fragment '{"imie": "..."' oraz '"wiek": 0}' in wynik.
     """
-    # TODO: wywołaj zadanie_01_zbuduj_prompt_ekstrakcji("cokolwiek")
-    # TODO: sprawdź że '{"imie": "..."' in wynik
-    # TODO: sprawdź że '"wiek": 0}' in wynik
-    pass
+    wynik = zadanie_01_zbuduj_prompt_ekstrakcji("cokolwiek")
+    assert '{"imie": "..."' in wynik
+    assert '"wiek": 0}' in wynik
 
 
 # --- zadanie_02 ---
@@ -46,9 +44,8 @@ def test_zadanie_02_szablon_z_dwoch_pol() -> None:
     Co udaje: nic — używam literałów.
     Co sprawdzam: '{"imie": "...", "wiek": "..."}' in wynik.
     """
-    # TODO: wywołaj zadanie_02_zbuduj_prompt_z_polami(["imie", "wiek"], "Anna ma 30 lat.")
-    # TODO: sprawdź że '{"imie": "...", "wiek": "..."}' in wynik
-    pass
+    wynik = zadanie_02_zbuduj_prompt_z_polami(["imie", "wiek"], "Anna ma 30 lat.")
+    assert '{"imie": "...", "wiek": "..."}' in wynik
 
 
 def test_zadanie_02_szablon_z_jednego_pola_i_tekst() -> None:
@@ -56,10 +53,9 @@ def test_zadanie_02_szablon_z_jednego_pola_i_tekst() -> None:
     Co udaje: nic — używam literałów.
     Co sprawdzam: '{"email": "..."}' in wynik oraz tekst źródłowy in wynik.
     """
-    # TODO: wywołaj zadanie_02_zbuduj_prompt_z_polami(["email"], "Napisz do jan@firma.pl")
-    # TODO: sprawdź że '{"email": "..."}' in wynik
-    # TODO: sprawdź że "Napisz do jan@firma.pl" in wynik
-    pass
+    wynik = zadanie_02_zbuduj_prompt_z_polami(["email"], "Napisz do jan@firma.pl")
+    assert '{"email": "..."}' in wynik
+    assert "Napisz do jan@firma.pl" in wynik
 
 
 # --- zadanie_03 ---
@@ -69,9 +65,8 @@ def test_zadanie_03_zdejmuje_prefix_json() -> None:
     Co udaje: nic — używam literału z prefiksem.
     Co sprawdzam: wynik == '{"a": 1}'.
     """
-    # TODO: wywołaj zadanie_03_usun_prefix_markdown('```json{"a": 1}')
-    # TODO: sprawdź że wynik == '{"a": 1}'
-    pass
+    wynik = zadanie_03_usun_prefix_markdown('```json{"a": 1}')
+    assert wynik == '{"a": 1}'
 
 
 def test_zadanie_03_tekst_bez_prefiksu_bez_zmian() -> None:
@@ -79,9 +74,8 @@ def test_zadanie_03_tekst_bez_prefiksu_bez_zmian() -> None:
     Co udaje: nic — używam czystego literału JSON.
     Co sprawdzam: wynik == '{"a": 1}' (bez zmian, bez wyjątku).
     """
-    # TODO: wywołaj zadanie_03_usun_prefix_markdown('{"a": 1}')
-    # TODO: sprawdź że wynik == '{"a": 1}'
-    pass
+    wynik = zadanie_03_usun_prefix_markdown('{"a": 1}')
+    assert wynik == '{"a": 1}'
 
 
 # --- zadanie_04 ---
@@ -91,9 +85,8 @@ def test_zadanie_04_zdejmuje_suffix() -> None:
     Co udaje: nic — używam literału z sufiksem.
     Co sprawdzam: wynik == '{"a": 1}'.
     """
-    # TODO: wywołaj zadanie_04_usun_suffix_markdown('{"a": 1}```')
-    # TODO: sprawdź że wynik == '{"a": 1}'
-    pass
+    wynik = zadanie_04_usun_suffix_markdown('{"a": 1}```')
+    assert wynik == '{"a": 1}'
 
 
 def test_zadanie_04_tekst_bez_sufiksu_bez_zmian() -> None:
@@ -101,9 +94,8 @@ def test_zadanie_04_tekst_bez_sufiksu_bez_zmian() -> None:
     Co udaje: nic — używam czystego literału JSON.
     Co sprawdzam: wynik == '{"a": 1}' (bez zmian, bez wyjątku).
     """
-    # TODO: wywołaj zadanie_04_usun_suffix_markdown('{"a": 1}')
-    # TODO: sprawdź że wynik == '{"a": 1}'
-    pass
+    wynik = zadanie_04_usun_suffix_markdown('{"a": 1}')
+    assert wynik == '{"a": 1}'
 
 
 # --- zadanie_05 ---
@@ -113,9 +105,8 @@ def test_zadanie_05_czysci_pelny_blok_markdown() -> None:
     Co udaje: nic — używam literału '```json\\n{"imie": "Anna"}\\n```'.
     Co sprawdzam: wynik == '{"imie": "Anna"}'.
     """
-    # TODO: wywołaj zadanie_05_wyczysc_odpowiedz('```json\n{"imie": "Anna"}\n```')
-    # TODO: sprawdź że wynik == '{"imie": "Anna"}'
-    pass
+    wynik = zadanie_05_wyczysc_odpowiedz('```json\n{"imie": "Anna"}\n```')
+    assert wynik == '{"imie": "Anna"}'
 
 
 def test_zadanie_05_czysta_odpowiedz_bez_zmian() -> None:
@@ -123,9 +114,8 @@ def test_zadanie_05_czysta_odpowiedz_bez_zmian() -> None:
     Co udaje: nic — używam literału bez markdown.
     Co sprawdzam: wynik == '{"imie": "Anna"}'.
     """
-    # TODO: wywołaj zadanie_05_wyczysc_odpowiedz('{"imie": "Anna"}')
-    # TODO: sprawdź że wynik == '{"imie": "Anna"}'
-    pass
+    wynik = zadanie_05_wyczysc_odpowiedz('{"imie": "Anna"}')
+    assert wynik == '{"imie": "Anna"}'
 
 
 # --- zadanie_06 ---
@@ -135,9 +125,8 @@ def test_zadanie_06_parsuje_poprawny_json() -> None:
     Co udaje: nic — używam literału '{"imie": "Anna", "wiek": 30}'.
     Co sprawdzam: wynik == {"imie": "Anna", "wiek": 30}.
     """
-    # TODO: wywołaj zadanie_06_parsuj_json('{"imie": "Anna", "wiek": 30}')
-    # TODO: sprawdź że wynik == {"imie": "Anna", "wiek": 30}
-    pass
+    wynik = zadanie_06_parsuj_json('{"imie": "Anna", "wiek": 30}')
+    assert wynik == {"imie": "Anna", "wiek": 30}
 
 
 def test_zadanie_06_zwraca_none_dla_nie_jsona() -> None:
@@ -145,9 +134,8 @@ def test_zadanie_06_zwraca_none_dla_nie_jsona() -> None:
     Co udaje: nic — używam literału "to nie jest json".
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywołaj zadanie_06_parsuj_json("to nie jest json")
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_06_parsuj_json("to nie jest json")
+    assert wynik is None
 
 
 # --- zadanie_07 ---
@@ -157,9 +145,8 @@ def test_zadanie_07_parsuje_json_owiniety_w_markdown() -> None:
     Co udaje: nic — używam literału '```json\\n{"wiek": 30}\\n```'.
     Co sprawdzam: wynik == {"wiek": 30}.
     """
-    # TODO: wywołaj zadanie_07_parsuj_odpowiedz_modelu('```json\n{"wiek": 30}\n```')
-    # TODO: sprawdź że wynik == {"wiek": 30}
-    pass
+    wynik = zadanie_07_parsuj_odpowiedz_modelu('```json\n{"wiek": 30}\n```')
+    assert wynik == {"wiek": 30}
 
 
 def test_zadanie_07_zwraca_none_dla_odmowy_modelu() -> None:
@@ -167,9 +154,8 @@ def test_zadanie_07_zwraca_none_dla_odmowy_modelu() -> None:
     Co udaje: nic — używam literału "Nie moge tego zrobic.".
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywołaj zadanie_07_parsuj_odpowiedz_modelu("Nie moge tego zrobic.")
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_07_parsuj_odpowiedz_modelu("Nie moge tego zrobic.")
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -181,9 +167,8 @@ def test_zadanie_08_wyciaga_tekst_z_poprawnej_koperty(
     Co udaje: kopertę API — fixture odpowiedz_api_poprawna z conftest.
     Co sprawdzam: wynik == '```json\\n{"imie": "Anna", "wiek": 30}\\n```'.
     """
-    # TODO: wywołaj zadanie_08_wyciagnij_tekst_z_api(odpowiedz_api_poprawna)
-    # TODO: sprawdź że wynik == '```json\n{"imie": "Anna", "wiek": 30}\n```'
-    pass
+    wynik = zadanie_08_wyciagnij_tekst_z_api(odpowiedz_api_poprawna)
+    assert wynik == '```json\n{"imie": "Anna", "wiek": 30}\n```'
 
 
 def test_zadanie_08_zwraca_none_dla_zepsutej_koperty() -> None:
@@ -191,11 +176,10 @@ def test_zadanie_08_zwraca_none_dla_zepsutej_koperty() -> None:
     Co udaje: nic — używam {} oraz {"content": []}.
     Co sprawdzam: oba wywołania zwracają None (assert ... is None).
     """
-    # TODO: wywołaj zadanie_08_wyciagnij_tekst_z_api({})
-    #   i sprawdź (is None) że wynik to None
-    # TODO: wywołaj zadanie_08_wyciagnij_tekst_z_api({"content": []})
-    #   i sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_08_wyciagnij_tekst_z_api({})
+    assert wynik is None
+    wynik = zadanie_08_wyciagnij_tekst_z_api({"content": []})
+    assert wynik is None
 
 
 # --- zadanie_09 ---
@@ -207,9 +191,8 @@ def test_zadanie_09_pelne_przejscie_obu_warstw(
     Co udaje: kopertę API — fixture odpowiedz_api_poprawna.
     Co sprawdzam: wynik == {"imie": "Anna", "wiek": 30}.
     """
-    # TODO: wywołaj zadanie_09_wyciagnij_dane_z_odpowiedzi(odpowiedz_api_poprawna)
-    # TODO: sprawdź że wynik == {"imie": "Anna", "wiek": 30}
-    pass
+    wynik = zadanie_09_wyciagnij_dane_z_odpowiedzi(odpowiedz_api_poprawna)
+    assert wynik == {"imie": "Anna", "wiek": 30}
 
 
 def test_zadanie_09_zwraca_none_gdy_tresc_nie_jest_jsonem(
@@ -219,9 +202,8 @@ def test_zadanie_09_zwraca_none_gdy_tresc_nie_jest_jsonem(
     Co udaje: kopertę API — fixture odpowiedz_api_zepsuta_tresc.
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywołaj zadanie_09_wyciagnij_dane_z_odpowiedzi(odpowiedz_api_zepsuta_tresc)
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_09_wyciagnij_dane_z_odpowiedzi(odpowiedz_api_zepsuta_tresc)
+    assert wynik is None
 
 
 def test_zadanie_09_zwraca_none_gdy_koperta_zepsuta() -> None:
@@ -229,9 +211,8 @@ def test_zadanie_09_zwraca_none_gdy_koperta_zepsuta() -> None:
     Co udaje: nic — używam pustego słownika jako koperty.
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywołaj zadanie_09_wyciagnij_dane_z_odpowiedzi({})
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    wynik = zadanie_09_wyciagnij_dane_z_odpowiedzi({})
+    assert wynik is None
 
 
 # --- zadanie_10 ---
@@ -242,12 +223,15 @@ def test_zadanie_10_zwraca_koperte_odpowiedzi() -> None:
     return_value.json.return_value.
     Co sprawdzam: wynik == {"content": []}.
     """
-    # TODO: w bloku with patch("requests.post") as atrapa_post:
-    # TODO: ustaw atrapa_post.return_value.json.return_value = {"content": []}
-    # TODO: wywołaj zadanie_10_zapytaj_model("https://api.anthropic.com/v1/messages",
-    #   "sk-test-123", "claude-sonnet-4-6", 100, "Czesc")
-    # TODO: sprawdź że wynik == {"content": []}
-    pass
+    with patch("requests.post") as atrapa_post:
+        atrapa_post.return_value.json.return_value = {"content": []}
+        wynik = zadanie_10_zapytaj_model(
+            "https://api.anthropic.com/v1/messages",
+            "sk-test-123", "claude-sonnet-4-6",
+            100,
+            "Czesc"
+        )
+    assert wynik == {"content": []}
 
 
 def test_zadanie_10_przekazuje_model_i_timeout() -> None:
@@ -256,12 +240,17 @@ def test_zadanie_10_przekazuje_model_i_timeout() -> None:
     Co sprawdzam: call_args.kwargs["json"]["model"]=="claude-sonnet-4-6"
     i call_args.kwargs["timeout"]==30.
     """
-    # TODO: w bloku with patch("requests.post") as atrapa_post:
-    # TODO: ustaw atrapa_post.return_value.json.return_value = {"content": []}
-    # TODO: wywołaj zadanie_10_zapytaj_model(...) z modelem "claude-sonnet-4-6"
-    # TODO: sprawdź że atrapa_post.call_args.kwargs["json"]["model"] == "claude-sonnet-4-6"
-    # TODO: sprawdź że atrapa_post.call_args.kwargs["timeout"] == 30
-    pass
+    with patch("requests.post") as atrapa_post:
+        atrapa_post.return_value.json.return_value = {"content": []}
+        zadanie_10_zapytaj_model(
+            "https://api.anthropic.com/v1/messages",
+            "sk-test-123",
+            "claude-sonnet-4-6",
+            100,
+            "Czesc"
+        )
+    assert atrapa_post.call_args.kwargs["json"]["model"] == "claude-sonnet-4-6"
+    assert atrapa_post.call_args.kwargs["timeout"] == 30
 
 
 # --- zadanie_11 ---
@@ -272,12 +261,16 @@ def test_zadanie_11_zwraca_slownik_danych(odpowiedz_api_poprawna: dict) -> None:
     (llm_structured_extraction), return_value = odpowiedz_api_poprawna.
     Co sprawdzam: wynik == {"imie": "Anna", "wiek": 30}.
     """
-    # TODO: w bloku with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
-    # TODO: ustaw atrapa.return_value = odpowiedz_api_poprawna
-    # TODO: wywołaj zadanie_11_wyekstrahuj_dane("https://api.anthropic.com/v1/messages",
-    #   "sk-test-123", "claude-sonnet-4-6", 100, "Anna ma 30 lat.")
-    # TODO: sprawdź że wynik == {"imie": "Anna", "wiek": 30}
-    pass
+    with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
+        atrapa.return_value = odpowiedz_api_poprawna
+        wynik = zadanie_11_wyekstrahuj_dane(
+            "https://api.anthropic.com/v1/messages",
+            "sk-test-123",
+            "claude-sonnet-4-6",
+            100,
+            "Anna ma 30 lat."
+        )
+    assert wynik == {"imie": "Anna", "wiek": 30}
 
 
 def test_zadanie_11_zwraca_none_gdy_model_odmowil(
@@ -288,11 +281,16 @@ def test_zadanie_11_zwraca_none_gdy_model_odmowil(
     odpowiedz_api_zepsuta_tresc.
     Co sprawdzam: wynik is None.
     """
-    # TODO: w bloku with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
-    # TODO: ustaw atrapa.return_value = odpowiedz_api_zepsuta_tresc
-    # TODO: wywołaj zadanie_11_wyekstrahuj_dane(...)
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
+        atrapa.return_value = odpowiedz_api_zepsuta_tresc
+        wynik = zadanie_11_wyekstrahuj_dane(
+            "https://api.anthropic.com/v1/messages",
+            "sk-test-123",
+            "claude-sonnet-4-6",
+            100,
+            "Anna ma 30 lat."
+        )
+    assert wynik is None
 
 
 # --- zadanie_12 ---
@@ -305,11 +303,16 @@ def test_zadanie_12_zwraca_dane_gdy_wszystkie_pola_obecne(
     odpowiedz_api_poprawna (dane mają pola "imie" i "wiek").
     Co sprawdzam: wynik == {"imie": "Anna", "wiek": 30}.
     """
-    # TODO: w bloku with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
-    # TODO: ustaw atrapa.return_value = odpowiedz_api_poprawna
-    # TODO: wywołaj zadanie_12_wyekstrahuj_pola(..., pola=["imie", "wiek"])
-    # TODO: sprawdź że wynik == {"imie": "Anna", "wiek": 30}
-    pass
+    with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
+        atrapa.return_value = odpowiedz_api_poprawna
+        wynik = zadanie_12_wyekstrahuj_pola(
+            "https://api.anthropic.com/v1/messages",
+            "sk-test-123","claude-sonnet-4-6",
+            100,
+            "Anna ma 30 lat.",
+            ["imie", "wiek"]
+        )
+    assert wynik == {"imie": "Anna", "wiek": 30}
 
 
 def test_zadanie_12_zwraca_none_gdy_brakuje_pola(
@@ -320,8 +323,13 @@ def test_zadanie_12_zwraca_none_gdy_brakuje_pola(
     odpowiedz_api_poprawna (dane NIE mają pola "email").
     Co sprawdzam: wynik is None.
     """
-    # TODO: w bloku with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
-    # TODO: ustaw atrapa.return_value = odpowiedz_api_poprawna
-    # TODO: wywołaj zadanie_12_wyekstrahuj_pola(..., pola=["imie", "email"])
-    # TODO: sprawdź (is None) że wynik to None
-    pass
+    with patch("llm_structured_extraction.zadanie_10_zapytaj_model") as atrapa:
+        atrapa.return_value = odpowiedz_api_poprawna
+        wynik = zadanie_12_wyekstrahuj_pola(
+            "https://api.anthropic.com/v1/messages",
+            "sk-test-123","claude-sonnet-4-6",
+            100,
+            "Anna ma 30 lat.",
+            ["imie", "email"]
+        )
+    assert wynik is None

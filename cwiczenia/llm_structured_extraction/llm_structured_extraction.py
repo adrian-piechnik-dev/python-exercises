@@ -1,17 +1,3 @@
-# Spis zadań:
-# 01 — zbuduj prompt ekstrakcji z szablonem JSON (podwójne klamry w f-stringu)
-# 02 — zbuduj prompt z dynamiczną listą pól (join + potrójna klamra)
-# 03 — usuń prefiks markdown z odpowiedzi (removeprefix)
-# 04 — usuń sufiks markdown z odpowiedzi (removesuffix)
-# 05 — wyczyść pełną odpowiedź modelu (strip + prefiks + sufiks + strip)
-# 06 — sparsuj JSON defensywnie (json.loads + JSONDecodeError → None)
-# 07 — sparsuj odpowiedź modelu (czyszczenie + parsowanie)
-# 08 — warstwa 1: wyciągnij tekst z koperty API (KeyError/IndexError → None)
-# 09 — dwie warstwy: z koperty API do słownika danych
-# 10 — zazębienie: zapytaj model (klient z tematu 19)
-# 11 — zazębienie: pełna ekstrakcja (prompt + klient + dwie warstwy)
-# 12 — zazębienie: ekstrakcja z kontrolą wymaganych pól
-
 import json
 
 import requests
@@ -27,12 +13,10 @@ def zadanie_01_zbuduj_prompt_ekstrakcji(tekst: str) -> str:
         str: prompt zawierający dosłowny szablon
             {"imie": "...", "wiek": 0} oraz doklejony tekst źródłowy.
     """
-    # TODO: zwróć f-string o treści:
-    #   Wyciagnij z tekstu imie i wiek. Zwroc TYLKO JSON w formacie
-    #   {"imie": "...", "wiek": 0}. Tekst: <tutaj tekst>
-    # TODO: literalne klamry szablonu zapisz jako {{ i }},
-    #   a zmienną tekst wstaw przez {tekst}
-    pass
+    return f"""
+    Wyciagnij z tekstu imie i wiek. Zwroc TYLKO JSON w formacie
+    {{"imie": "...", "wiek": 0}}. Tekst: {tekst}
+    """
 
 
 def zadanie_02_zbuduj_prompt_z_polami(pola: list, tekst: str) -> str:
@@ -46,12 +30,8 @@ def zadanie_02_zbuduj_prompt_z_polami(pola: list, tekst: str) -> str:
         str: prompt z szablonem w stylu {"imie": "...", "wiek": "..."}
             zbudowanym z listy pola oraz doklejonym tekstem źródłowym.
     """
-    # TODO: zbuduj środek szablonu:
-    #   srodek = ", ".join(f'"{pole}": "..."' for pole in pola)
-    # TODO: zwróć f-string o treści:
-    #   Zwroc TYLKO JSON w formacie {<srodek>}. Tekst: <tekst>
-    #   (użyj potrójnej klamry: {{{srodek}}} — patrz teoria)
-    pass
+    srodek = ", ".join(f'"{pole}": "..."' for pole in pola)
+    return f'Zwroc TYLKO JSON w formacie {{{srodek}}}. Tekst: {tekst}'
 
 
 def zadanie_03_usun_prefix_markdown(tekst: str) -> str:
@@ -64,8 +44,7 @@ def zadanie_03_usun_prefix_markdown(tekst: str) -> str:
         str: tekst bez prefiksu ```json / ```; gdy prefiksu nie było —
             tekst bez zmian.
     """
-    # TODO: zwróć tekst.removeprefix("```json").removeprefix("```")
-    pass
+    return tekst.removeprefix("```json").removeprefix("```")
 
 
 def zadanie_04_usun_suffix_markdown(tekst: str) -> str:
@@ -77,8 +56,7 @@ def zadanie_04_usun_suffix_markdown(tekst: str) -> str:
     Returns:
         str: tekst bez sufiksu ```; gdy sufiksu nie było — tekst bez zmian.
     """
-    # TODO: zwróć tekst.removesuffix("```")
-    pass
+    return tekst.removesuffix("```")
 
 
 def zadanie_05_wyczysc_odpowiedz(tekst: str) -> str:
@@ -91,11 +69,11 @@ def zadanie_05_wyczysc_odpowiedz(tekst: str) -> str:
     Returns:
         str: czysty tekst gotowy do parsowania jako JSON.
     """
-    # TODO: wykonaj po kolei: tekst.strip(), potem
-    #   zadanie_03_usun_prefix_markdown, potem
-    #   zadanie_04_usun_suffix_markdown, na końcu jeszcze raz .strip()
-    # TODO: zwróć wynik
-    pass
+    return (
+        zadanie_04_usun_suffix_markdown(
+            zadanie_03_usun_prefix_markdown(
+                tekst.strip())).strip()
+    )
 
 
 def zadanie_06_parsuj_json(tekst: str) -> dict | None:
@@ -109,9 +87,10 @@ def zadanie_06_parsuj_json(tekst: str) -> dict | None:
         dict | None: sparsowany słownik albo None, gdy tekst nie jest
             poprawnym JSON-em.
     """
-    # TODO: w bloku try zwróć json.loads(tekst)
-    # TODO: złap json.JSONDecodeError i zwróć None
-    pass
+    try:
+        return json.loads(tekst)
+    except json.JSONDecodeError:
+        return None
 
 
 def zadanie_07_parsuj_odpowiedz_modelu(tekst: str) -> dict | None:
@@ -124,9 +103,8 @@ def zadanie_07_parsuj_odpowiedz_modelu(tekst: str) -> dict | None:
         dict | None: słownik danych albo None, gdy po wyczyszczeniu
             treść nadal nie jest poprawnym JSON-em.
     """
-    # TODO: wyczyść tekst przez zadanie_05_wyczysc_odpowiedz
-    # TODO: zwróć wynik zadanie_06_parsuj_json na wyczyszczonym tekście
-    pass
+    dane = zadanie_05_wyczysc_odpowiedz(tekst)
+    return zadanie_06_parsuj_json(dane)
 
 
 def zadanie_08_wyciagnij_tekst_z_api(dane: dict) -> str | None:
@@ -140,9 +118,10 @@ def zadanie_08_wyciagnij_tekst_z_api(dane: dict) -> str | None:
         str | None: dane["content"][0]["text"] albo None przy zepsutej
             strukturze koperty.
     """
-    # TODO: w bloku try zwróć dane["content"][0]["text"]
-    # TODO: złap (KeyError, IndexError) i zwróć None
-    pass
+    try:
+        return dane["content"][0]["text"]
+    except (KeyError, IndexError):
+        return None
 
 
 def zadanie_09_wyciagnij_dane_z_odpowiedzi(dane: dict) -> dict | None:
@@ -155,10 +134,10 @@ def zadanie_09_wyciagnij_dane_z_odpowiedzi(dane: dict) -> dict | None:
         dict | None: słownik wyekstrahowanych danych albo None, gdy
             zawiodła warstwa 1 (koperta) LUB warstwa 2 (treść nie-JSON).
     """
-    # TODO: pobierz tekst przez zadanie_08_wyciagnij_tekst_z_api
-    # TODO: jeśli tekst is None — zwróć None (warstwa 1 zawiodła)
-    # TODO: zwróć wynik zadanie_07_parsuj_odpowiedz_modelu(tekst)
-    pass
+    tekst = zadanie_08_wyciagnij_tekst_z_api(dane)
+    if tekst is None:
+        return None
+    return zadanie_07_parsuj_odpowiedz_modelu(tekst)
 
 
 def zadanie_10_zapytaj_model(
@@ -177,14 +156,11 @@ def zadanie_10_zapytaj_model(
         dict: odpowiedź serwera po .json(); przy kodzie błędu funkcja
             rzuca requests.exceptions.HTTPError z raise_for_status().
     """
-    # TODO: zbuduj słownik nagłówków: "x-api-key", "anthropic-version"
-    #   ("2023-06-01"), "content-type" ("application/json")
-    # TODO: zbuduj payload: "model", "max_tokens", "messages" —
-    #   lista z jednym słownikiem {"role": "user", "content": tresc}
-    # TODO: wywołaj requests.post(url, headers=..., json=..., timeout=30)
-    # TODO: wywołaj raise_for_status() na odpowiedzi
-    # TODO: zwróć odpowiedz.json()
-    pass
+    naglowki = {"x-api-key": api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
+    payload = {"model": model, "max_tokens": max_tokens, "messages": [{"role": "user", "content": tresc}]}
+    response = requests.post(url, headers=naglowki, json=payload, timeout=30)
+    response.raise_for_status()
+    return response.json()
 
 
 def zadanie_11_wyekstrahuj_dane(
@@ -203,11 +179,9 @@ def zadanie_11_wyekstrahuj_dane(
         dict | None: słownik danych z odpowiedzi modelu albo None,
             gdy odpowiedź ma zepsutą kopertę lub treść nie jest JSON-em.
     """
-    # TODO: zbuduj prompt przez zadanie_01_zbuduj_prompt_ekstrakcji(tekst)
-    # TODO: pobierz kopertę przez zadanie_10_zapytaj_model(url, api_key,
-    #   model, max_tokens, prompt)
-    # TODO: zwróć wynik zadanie_09_wyciagnij_dane_z_odpowiedzi(dane)
-    pass
+    prompt = zadanie_01_zbuduj_prompt_ekstrakcji(tekst)
+    dane = zadanie_10_zapytaj_model(url, api_key, model, max_tokens, prompt)
+    return zadanie_09_wyciagnij_dane_z_odpowiedzi(dane)
 
 
 def zadanie_12_wyekstrahuj_pola(
@@ -227,11 +201,12 @@ def zadanie_12_wyekstrahuj_pola(
         dict | None: słownik danych zawierający wszystkie wymagane pola
             albo None, gdy ekstrakcja zawiodła LUB brakuje choć jednego pola.
     """
-    # TODO: zbuduj prompt przez zadanie_02_zbuduj_prompt_z_polami(pola, tekst)
-    # TODO: pobierz kopertę przez zadanie_10_zapytaj_model(...)
-    # TODO: wyciągnij dane przez zadanie_09_wyciagnij_dane_z_odpowiedzi
-    # TODO: jeśli wynik is None — zwróć None
-    # TODO: w pętli sprawdź każde pole z pola; gdy któregoś brakuje
-    #   w wyniku (pole not in wynik) — zwróć None
-    # TODO: zwróć wynik
-    pass
+    prompt = zadanie_02_zbuduj_prompt_z_polami(pola, tekst)
+    dane = zadanie_10_zapytaj_model(url, api_key, model, max_tokens, prompt)
+    wynik = zadanie_09_wyciagnij_dane_z_odpowiedzi(dane)
+    if wynik is None:
+        return None
+    for pole in pola:
+        if pole not in wynik:
+            return None
+    return wynik

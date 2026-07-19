@@ -17,9 +17,7 @@ def odpowiedz_api_poprawna() -> dict:
         dict: słownik {"content": [{"type": "text", "text": ...}]},
             gdzie text to '```json\\n{"imie": "Anna", "wiek": 30}\\n```'.
     """
-    # TODO: zwróć słownik z kluczem "content" — listą z jednym słownikiem
-    #   {"type": "text", "text": '```json\n{"imie": "Anna", "wiek": 30}\n```'}
-    pass
+    return {"content": [{"type": "text", "text": '```json\n{"imie": "Anna", "wiek": 30}\n```'}]}
 
 
 @pytest.fixture
@@ -33,6 +31,4 @@ def odpowiedz_api_zepsuta_tresc() -> dict:
         dict: słownik {"content": [{"type": "text", "text":
             "Niestety nie moge wyciagnac danych."}]}.
     """
-    # TODO: zwróć słownik z kluczem "content" — listą z jednym słownikiem
-    #   {"type": "text", "text": "Niestety nie moge wyciagnac danych."}
-    pass
+    return {"content": [{"type": "text", "text": "Niestety nie moge wyciagnac danych."}]}
