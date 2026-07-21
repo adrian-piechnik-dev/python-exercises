@@ -308,7 +308,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 20. llm_structured_extraction — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 
 Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
-21. docker_podstawy — ✅ wygenerowany
+21. docker_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 22. github_actions_ci — ✅ wygenerowany
 23. async_httpx — ✅ wygenerowany
 24. playwright_podstawy — ✅ wygenerowany

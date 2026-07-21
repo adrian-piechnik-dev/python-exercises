@@ -23,10 +23,10 @@ def test_zadanie_01_buduje_linie_from_dla_pythona() -> None:
     Co udaję: nic — funkcja tylko skleja napis.
     Co sprawdzam: wynik to dokładnie "FROM python:3.12-slim".
     """
-    # TODO: przygotuj obraz "python" i tag "3.12-slim"
-    # TODO: wywołaj zadanie_01_linia_from
-    # TODO: sprawdź, że wynik == "FROM python:3.12-slim"
-    pass
+    obraz = "python"
+    tag = "3.12-slim"
+    wynik = zadanie_01_linia_from(obraz, tag)
+    assert wynik == "FROM python:3.12-slim"
 
 
 def test_zadanie_01_dziala_dla_innego_obrazu() -> None:
@@ -35,10 +35,10 @@ def test_zadanie_01_dziala_dla_innego_obrazu() -> None:
     Co sprawdzam: dla obrazu "nginx" i taga "1.25" wynik to
     "FROM nginx:1.25".
     """
-    # TODO: przygotuj obraz "nginx" i tag "1.25"
-    # TODO: wywołaj zadanie_01_linia_from
-    # TODO: sprawdź, że wynik == "FROM nginx:1.25"
-    pass
+    obraz = "nginx"
+    tag = "1.25"
+    wynik = zadanie_01_linia_from(obraz, tag)
+    assert wynik == "FROM nginx:1.25"
 
 
 # --- zadanie_02 ---
@@ -49,10 +49,10 @@ def test_zadanie_02_buduje_linie_copy_do_kropki() -> None:
     Co udaję: nic — funkcja tylko skleja napis.
     Co sprawdzam: wynik to dokładnie "COPY requirements.txt .".
     """
-    # TODO: przygotuj źródło "requirements.txt" i cel "."
-    # TODO: wywołaj zadanie_02_linia_copy
-    # TODO: sprawdź, że wynik == "COPY requirements.txt ."
-    pass
+    zrodlo = "requirements.txt"
+    cel = "."
+    wynik = zadanie_02_linia_copy(zrodlo, cel)
+    assert wynik == "COPY requirements.txt ."
 
 
 def test_zadanie_02_buduje_linie_copy_do_podfolderu() -> None:
@@ -61,10 +61,10 @@ def test_zadanie_02_buduje_linie_copy_do_podfolderu() -> None:
     Co sprawdzam: dla źródła "app.py" i celu "/app" wynik to
     "COPY app.py /app".
     """
-    # TODO: przygotuj źródło "app.py" i cel "/app"
-    # TODO: wywołaj zadanie_02_linia_copy
-    # TODO: sprawdź, że wynik == "COPY app.py /app"
-    pass
+    zrodlo = "app.py"
+    cel = "/app"
+    wynik = zadanie_02_linia_copy(zrodlo, cel)
+    assert wynik == "COPY app.py /app"
 
 
 # --- zadanie_03 ---
@@ -76,11 +76,9 @@ def test_zadanie_03_laczy_dwa_polecenia_operatorem_and() -> None:
     Co sprawdzam: wynik to dokładnie
     "RUN pip install -r requirements.txt && pip list".
     """
-    # TODO: przygotuj listę ["pip install -r requirements.txt", "pip list"]
-    # TODO: wywołaj zadanie_03_linia_run
-    # TODO: sprawdź, że wynik ==
-    #   "RUN pip install -r requirements.txt && pip list"
-    pass
+    polecenia = ["pip install -r requirements.txt", "pip list"]
+    wynik = zadanie_03_linia_run(polecenia)
+    assert wynik == "RUN pip install -r requirements.txt && pip list"
 
 
 def test_zadanie_03_zwraca_none_dla_pustej_listy() -> None:
@@ -88,10 +86,9 @@ def test_zadanie_03_zwraca_none_dla_pustej_listy() -> None:
     Co udaję: nic — pusta lista to legalny argument.
     Co sprawdzam: dla pustej listy wynik to None (nie pusty napis).
     """
-    # TODO: przygotuj pustą listę
-    # TODO: wywołaj zadanie_03_linia_run
-    # TODO: sprawdź (assert ... is None), że wynik to None
-    pass
+    polecenia = []
+    wynik = zadanie_03_linia_run(polecenia)
+    assert wynik is None
 
 
 # --- zadanie_04 ---
@@ -103,10 +100,9 @@ def test_zadanie_04_buduje_cmd_w_formie_exec() -> None:
     Co sprawdzam: wynik to dokładnie 'CMD ["python", "app.py"]'
     (cudzysłowy podwójne, przecinek ze spacją — format JSON).
     """
-    # TODO: przygotuj listę ["python", "app.py"]
-    # TODO: wywołaj zadanie_04_linia_cmd
-    # TODO: sprawdź, że wynik == 'CMD ["python", "app.py"]'
-    pass
+    czesci = ["python", "app.py"]
+    wynik = zadanie_04_linia_cmd(czesci)
+    assert wynik == 'CMD ["python", "app.py"]'
 
 
 def test_zadanie_04_zwraca_none_dla_pustej_listy() -> None:
@@ -114,10 +110,9 @@ def test_zadanie_04_zwraca_none_dla_pustej_listy() -> None:
     Co udaję: nic — pusta lista to legalny argument.
     Co sprawdzam: dla pustej listy wynik to None.
     """
-    # TODO: przygotuj pustą listę
-    # TODO: wywołaj zadanie_04_linia_cmd
-    # TODO: sprawdź, że wynik is None
-    pass
+    czesci = []
+    wynik = zadanie_04_linia_cmd(czesci)
+    assert wynik is None
 
 
 # --- zadanie_05 ---
@@ -129,16 +124,18 @@ def test_zadanie_05_sklada_pelny_dockerfile_w_kolejnosci() -> None:
     Co sprawdzam: wynik to dokładnie pięć linii rozdzielonych "\\n":
     FROM, dwa COPY, RUN i CMD — w tej kolejności.
     """
-    # TODO: przygotuj argumenty: obraz "python", tag "3.12-slim",
-    #   kopiowania [["requirements.txt", "."], ["app.py", "."]],
-    #   polecenia_run ["pip install -r requirements.txt"],
-    #   cmd ["python", "app.py"]
-    # TODO: wywołaj zadanie_05_zbuduj_dockerfile
-    # TODO: przygotuj oczekiwany tekst: sklej "\n".join z listy pięciu
-    #   oczekiwanych linii (od "FROM python:3.12-slim"
-    #   do 'CMD ["python", "app.py"]')
-    # TODO: sprawdź, że wynik == oczekiwany tekst
-    pass
+    obraz = "python"
+    tag = "3.12-slim"
+    kopiowania = [["requirements.txt", "."], ["app.py", "."]]
+    polecenia_run = ["pip install -r requirements.txt"]
+    cmd = ["python", "app.py"]
+    wynik = zadanie_05_zbuduj_dockerfile(obraz, tag, kopiowania, polecenia_run, cmd)
+    oczekiwany = """FROM python:3.12-slim
+COPY requirements.txt .
+COPY app.py .
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]"""
+    assert wynik == oczekiwany
 
 
 def test_zadanie_05_pomija_run_gdy_brak_polecen() -> None:
@@ -147,11 +144,13 @@ def test_zadanie_05_pomija_run_gdy_brak_polecen() -> None:
     Co sprawdzam: w wyniku nie ma fragmentu "RUN"
     (assert "RUN" not in wynik).
     """
-    # TODO: przygotuj argumenty jak w teście wyżej, ale polecenia_run
-    #   jako pustą listę
-    # TODO: wywołaj zadanie_05_zbuduj_dockerfile
-    # TODO: sprawdź, że "RUN" not in wynik
-    pass
+    obraz = "python"
+    tag = "3.12-slim"
+    kopiowania = [["requirements.txt", "."], ["app.py", "."]]
+    polecenia_run = []
+    cmd = ["python", "app.py"]
+    wynik = zadanie_05_zbuduj_dockerfile(obraz, tag, kopiowania, polecenia_run, cmd)
+    assert "RUN" not in wynik
 
 
 # --- zadanie_06 ---
@@ -163,10 +162,8 @@ def test_zadanie_06_buduje_polecenie_z_domyslnym_kontekstem() -> None:
     Co sprawdzam: wywołanie BEZ kontekstu daje
     "docker build -t moja-apka:1.0 ." (kropka z wartości domyślnej).
     """
-    # TODO: przygotuj nazwę "moja-apka" i tag "1.0"
-    # TODO: wywołaj zadanie_06_polecenie_build bez trzeciego argumentu
-    # TODO: sprawdź, że wynik == "docker build -t moja-apka:1.0 ."
-    pass
+    wynik = zadanie_06_polecenie_build("moja-apka", "1.0")
+    assert wynik == "docker build -t moja-apka:1.0 ."
 
 
 def test_zadanie_06_uzywa_podanego_kontekstu() -> None:
@@ -174,10 +171,8 @@ def test_zadanie_06_uzywa_podanego_kontekstu() -> None:
     Co udaję: nic — czyste dane.
     Co sprawdzam: dla kontekstu "backend" wynik kończy się " backend".
     """
-    # TODO: przygotuj nazwę "moja-apka", tag "1.0" i kontekst "backend"
-    # TODO: wywołaj zadanie_06_polecenie_build z trzema argumentami
-    # TODO: sprawdź, że wynik == "docker build -t moja-apka:1.0 backend"
-    pass
+    wynik = zadanie_06_polecenie_build("moja-apka", "1.0", "backend")
+    assert wynik == "docker build -t moja-apka:1.0 backend"
 
 
 # --- zadanie_07 ---
@@ -188,10 +183,9 @@ def test_zadanie_07_parsuje_poprawne_mapowanie_na_krotke() -> None:
     Co udaję: nic — czyste dane.
     Co sprawdzam: wynik to dokładnie krotka (8000, 80).
     """
-    # TODO: przygotuj mapowanie "8000:80"
-    # TODO: wywołaj zadanie_07_parsuj_porty
-    # TODO: sprawdź, że wynik == (8000, 80)
-    pass
+    mapowanie = "8000:80"
+    wynik = zadanie_07_parsuj_porty(mapowanie)
+    assert wynik == (8000, 80)
 
 
 def test_zadanie_07_zwraca_none_gdy_brak_dwukropka() -> None:
@@ -199,10 +193,9 @@ def test_zadanie_07_zwraca_none_gdy_brak_dwukropka() -> None:
     Co udaję: nic — czyste dane.
     Co sprawdzam: dla "8000" wynik to None.
     """
-    # TODO: przygotuj mapowanie "8000" (bez dwukropka)
-    # TODO: wywołaj zadanie_07_parsuj_porty
-    # TODO: sprawdź, że wynik is None
-    pass
+    mapowanie = "8000"
+    wynik = zadanie_07_parsuj_porty(mapowanie)
+    assert wynik is None
 
 
 def test_zadanie_07_zwraca_none_gdy_port_nie_jest_liczba() -> None:
@@ -210,10 +203,9 @@ def test_zadanie_07_zwraca_none_gdy_port_nie_jest_liczba() -> None:
     Co udaję: nic — czyste dane.
     Co sprawdzam: dla "abc:80" wynik to None (isdigit odrzuca litery).
     """
-    # TODO: przygotuj mapowanie "abc:80"
-    # TODO: wywołaj zadanie_07_parsuj_porty
-    # TODO: sprawdź, że wynik is None
-    pass
+    mapowanie = "abc:80"
+    wynik = zadanie_07_parsuj_porty(mapowanie)
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -225,12 +217,11 @@ def test_zadanie_08_buduje_pelne_polecenie_run() -> None:
     Co sprawdzam: wynik to dokładnie
     "docker run -d --name moj-kontener -p 8000:80 moja-apka:1.0".
     """
-    # TODO: przygotuj obraz "moja-apka:1.0", nazwę "moj-kontener"
-    #   i mapowanie "8000:80"
-    # TODO: wywołaj zadanie_08_polecenie_run
-    # TODO: sprawdź, że wynik ==
-    #   "docker run -d --name moj-kontener -p 8000:80 moja-apka:1.0"
-    pass
+    obraz = "moja-apka:1.0"
+    nazwa = "moj-kontener"
+    mapowanie = "8000:80"
+    wynik = zadanie_08_polecenie_run(obraz, nazwa, mapowanie)
+    assert wynik == "docker run -d --name moj-kontener -p 8000:80 moja-apka:1.0"
 
 
 def test_zadanie_08_zwraca_none_dla_zlego_mapowania() -> None:
@@ -239,10 +230,11 @@ def test_zadanie_08_zwraca_none_dla_zlego_mapowania() -> None:
     Co sprawdzam: dla mapowania "abc:80" wynik to None (funkcja
     korzysta z walidacji z zadania 07).
     """
-    # TODO: przygotuj obraz, nazwę i niepoprawne mapowanie "abc:80"
-    # TODO: wywołaj zadanie_08_polecenie_run
-    # TODO: sprawdź, że wynik is None
-    pass
+    obraz = "moja-apka:1.0"
+    nazwa = "moj-kontener"
+    mapowanie = "abc:80"
+    wynik = zadanie_08_polecenie_run(obraz, nazwa, mapowanie)
+    assert wynik is None
 
 
 # --- zadanie_09 ---
@@ -254,12 +246,15 @@ def test_zadanie_09_buduje_usluge_z_portami_i_wolumenami() -> None:
     Co sprawdzam: wynik to dokładnie słownik z kluczami "image",
     "ports" i "volumes" o podanych wartościach.
     """
-    # TODO: przygotuj obraz "moja-apka:1.0", porty ["8000:80"]
-    #   i wolumeny ["./dane:/app/dane"]
-    # TODO: wywołaj zadanie_09_usluga_compose
-    # TODO: sprawdź, że wynik == {"image": "moja-apka:1.0",
-    #   "ports": ["8000:80"], "volumes": ["./dane:/app/dane"]}
-    pass
+    obraz = "moja-apka:1.0"
+    porty = ["8000:80"]
+    wolumeny = ["./dane:/app/dane"]
+    wynik = zadanie_09_usluga_compose(obraz, porty, wolumeny)
+    assert wynik == {
+        "image": "moja-apka:1.0",
+        "ports": ["8000:80"],
+        "volumes": ["./dane:/app/dane"]
+    }
 
 
 def test_zadanie_09_pomija_puste_listy() -> None:
@@ -268,11 +263,11 @@ def test_zadanie_09_pomija_puste_listy() -> None:
     Co sprawdzam: dla pustych list wynik to dokładnie
     {"image": "moja-apka:1.0"} — bez kluczy "ports" i "volumes".
     """
-    # TODO: przygotuj obraz "moja-apka:1.0" i dwie puste listy
-    # TODO: wywołaj zadanie_09_usluga_compose
-    # TODO: sprawdź, że wynik == {"image": "moja-apka:1.0"}
-    # TODO: sprawdź dodatkowo, że "ports" not in wynik
-    pass
+    obraz = "moja-apka:1.0"
+    porty = []
+    wolumeny = []
+    wynik = zadanie_09_usluga_compose(obraz, porty, wolumeny)
+    assert wynik == {"image": "moja-apka:1.0"}
 
 
 # --- zadanie_10 ---
@@ -283,12 +278,9 @@ def test_zadanie_10_opakowuje_uslugi_w_klucz_services() -> None:
     Co udaję: nic — czyste dane.
     Co sprawdzam: wynik to {"services": <przekazany słownik usług>}.
     """
-    # TODO: przygotuj słownik usług
-    #   {"aplikacja": {"image": "moja-apka:1.0"}}
-    # TODO: wywołaj zadanie_10_zbuduj_compose
-    # TODO: sprawdź, że wynik ==
-    #   {"services": {"aplikacja": {"image": "moja-apka:1.0"}}}
-    pass
+    uslugi = {"aplikacja": {"image": "moja-apka:1.0"}}
+    wynik = zadanie_10_zbuduj_compose(uslugi)
+    assert wynik == {"services": {"aplikacja": {"image": "moja-apka:1.0"}}}
 
 
 def test_zadanie_10_zwraca_none_dla_pustych_uslug() -> None:
@@ -296,10 +288,9 @@ def test_zadanie_10_zwraca_none_dla_pustych_uslug() -> None:
     Co udaję: nic — pusty słownik to legalny argument.
     Co sprawdzam: dla pustego słownika wynik to None.
     """
-    # TODO: przygotuj pusty słownik
-    # TODO: wywołaj zadanie_10_zbuduj_compose
-    # TODO: sprawdź, że wynik is None
-    pass
+    uslugi = {}
+    wynik = zadanie_10_zbuduj_compose(uslugi)
+    assert wynik is None
 
 
 # --- zadanie_11 ---
@@ -313,13 +304,13 @@ def test_zadanie_11_dockerfile_zawiera_wszystkie_linie() -> None:
     rozdzielonych "\\n" (FROM, COPY requirements, RUN pip install,
     COPY app.py, CMD).
     """
-    # TODO: wywołaj zadanie_11_dockerfile_dla_api("app.py")
-    # TODO: przygotuj oczekiwany tekst: "\n".join z linii
-    #   "FROM python:3.12-slim", "COPY requirements.txt .",
-    #   "RUN pip install -r requirements.txt", "COPY app.py .",
-    #   'CMD ["python", "app.py"]'
-    # TODO: sprawdź, że wynik == oczekiwany tekst
-    pass
+    wynik = zadanie_11_dockerfile_dla_api("app.py")
+    oczekiwany = """FROM python:3.12-slim
+COPY requirements.txt .
+COPY app.py .
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]"""
+    assert wynik == oczekiwany
 
 
 def test_zadanie_11_uzywa_podanej_nazwy_pliku() -> None:
@@ -328,10 +319,9 @@ def test_zadanie_11_uzywa_podanej_nazwy_pliku() -> None:
     Co sprawdzam: dla pliku "klient.py" wynik zawiera linię
     "COPY klient.py ." oraz fragment '"klient.py"' w linii CMD.
     """
-    # TODO: wywołaj zadanie_11_dockerfile_dla_api("klient.py")
-    # TODO: sprawdź, że "COPY klient.py ." in wynik
-    # TODO: sprawdź, że '"klient.py"' in wynik
-    pass
+    wynik = zadanie_11_dockerfile_dla_api("klient.py")
+    assert "COPY klient.py ." in wynik
+    assert '"klient.py"' in wynik
 
 
 # --- zadanie_12 ---
@@ -344,10 +334,8 @@ def test_zadanie_12_headless_daje_trzy_flagi() -> None:
     Co sprawdzam: wynik to dokładnie
     ["--no-sandbox", "--disable-gpu", "--headless=new"].
     """
-    # TODO: wywołaj zadanie_12_flagi_chrome_dla_kontenera(True)
-    # TODO: sprawdź, że wynik ==
-    #   ["--no-sandbox", "--disable-gpu", "--headless=new"]
-    pass
+    wynik = zadanie_12_flagi_chrome_dla_kontenera(True)
+    assert wynik == ["--no-sandbox", "--disable-gpu", "--headless=new"]
 
 
 def test_zadanie_12_bez_headless_sa_tylko_dwie_flagi() -> None:
@@ -356,10 +344,9 @@ def test_zadanie_12_bez_headless_sa_tylko_dwie_flagi() -> None:
     Co sprawdzam: wynik to dokładnie ["--no-sandbox", "--disable-gpu"]
     i nie zawiera "--headless=new".
     """
-    # TODO: wywołaj zadanie_12_flagi_chrome_dla_kontenera(False)
-    # TODO: sprawdź, że wynik == ["--no-sandbox", "--disable-gpu"]
-    # TODO: sprawdź dodatkowo, że "--headless=new" not in wynik
-    pass
+    wynik = zadanie_12_flagi_chrome_dla_kontenera(False)
+    assert wynik == ["--no-sandbox", "--disable-gpu"]
+    assert "--headless=new" not in wynik
 
 
 # --- zadanie_13 ---
@@ -373,12 +360,15 @@ def test_zadanie_13_buduje_compose_z_usluga_scraper() -> None:
     {"image": ..., "volumes": ["./wyniki:/app/wyniki"]}}} — bez
     klucza "ports".
     """
-    # TODO: wywołaj zadanie_13_compose_dla_scrapera("moj-scraper:1.0",
-    #   "wyniki")
-    # TODO: sprawdź, że wynik == {"services": {"scraper":
-    #   {"image": "moj-scraper:1.0",
-    #    "volumes": ["./wyniki:/app/wyniki"]}}}
-    pass
+    wynik = zadanie_13_compose_dla_scrapera("moj-scraper:1.0", "wyniki")
+    assert wynik == {
+        "services": {
+            "scraper": {
+                "image": "moj-scraper:1.0",
+                "volumes": ["./wyniki:/app/wyniki"]
+            }
+        }
+    }
 
 
 def test_zadanie_13_wolumen_zawiera_podany_folder() -> None:
@@ -387,9 +377,6 @@ def test_zadanie_13_wolumen_zawiera_podany_folder() -> None:
     Co sprawdzam: dla folderu "eksport" wolumen usługi scraper to
     ["./eksport:/app/wyniki"].
     """
-    # TODO: wywołaj zadanie_13_compose_dla_scrapera("moj-scraper:1.0",
-    #   "eksport")
-    # TODO: wyciągnij z wyniku listę wolumenów:
-    #   wynik["services"]["scraper"]["volumes"]
-    # TODO: sprawdź, że ta lista == ["./eksport:/app/wyniki"]
-    pass
+    wynik = zadanie_13_compose_dla_scrapera("moj-scraper:1.0", "eksport")
+    lista = wynik["services"]["scraper"]["volumes"]
+    assert lista == ["./eksport:/app/wyniki"]

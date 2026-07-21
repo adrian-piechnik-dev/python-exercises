@@ -1,18 +1,3 @@
-# Spis zadań:
-# 01 — zbuduj linię FROM z obrazu i taga
-# 02 — zbuduj linię COPY ze źródła i celu
-# 03 — zbuduj linię RUN z listy poleceń (łączenie przez &&)
-# 04 — zbuduj linię CMD w formie exec (json.dumps)
-# 05 — złóż pełny Dockerfile z części (funkcje 01-04)
-# 06 — zbuduj polecenie docker build (flaga -t, kontekst domyślny)
-# 07 — sparsuj mapowanie portów "host:kontener" na krotkę (kontrakt None)
-# 08 — zbuduj polecenie docker run z walidacją mapowania (funkcja 07)
-# 09 — zbuduj słownik usługi compose (klucze ports/volumes warunkowo)
-# 10 — złóż pełną konfigurację compose z usług (kontrakt None)
-# 11 — zazębienie: Dockerfile dla aplikacji API z tematu 11 (funkcja 05)
-# 12 — zazębienie: flagi Chrome dla kontenera (Selenium z tematu 17)
-# 13 — zazębienie: compose dla scrapera z tematu 12 (funkcje 09-10)
-
 import json
 
 
@@ -27,8 +12,7 @@ def zadanie_01_linia_from(obraz: str, tag: str) -> str:
         str: linia w formacie "FROM obraz:tag",
             np. "FROM python:3.12-slim".
     """
-    # TODO: zwróć f-string sklejający "FROM ", obraz, dwukropek i tag
-    pass
+    return f"FROM {obraz}:{tag}"
 
 
 def zadanie_02_linia_copy(zrodlo: str, cel: str) -> str:
@@ -42,9 +26,7 @@ def zadanie_02_linia_copy(zrodlo: str, cel: str) -> str:
         str: linia w formacie "COPY zrodlo cel",
             np. "COPY requirements.txt .".
     """
-    # TODO: zwróć f-string ze słowem COPY, źródłem i celem
-    #   rozdzielonymi pojedynczymi spacjami
-    pass
+    return f"COPY {zrodlo} {cel}"
 
 
 def zadanie_03_linia_run(polecenia: list) -> str | None:
@@ -58,10 +40,10 @@ def zadanie_03_linia_run(polecenia: list) -> str | None:
         str | None: linia "RUN polecenie1 && polecenie2 && ...";
             None, gdy lista poleceń jest pusta.
     """
-    # TODO: jeśli lista jest pusta (if not polecenia:) — zwróć None
-    # TODO: sklej polecenia przez " && ".join(polecenia)
-    # TODO: zwróć "RUN " + sklejone polecenia
-    pass
+    if not polecenia:
+        return None
+    run = " && ".join(polecenia)
+    return f"RUN {run}"
 
 
 def zadanie_04_linia_cmd(czesci: list) -> str | None:
@@ -74,10 +56,10 @@ def zadanie_04_linia_cmd(czesci: list) -> str | None:
         str | None: linia w formacie 'CMD ["python", "app.py"]';
             None, gdy lista części jest pusta.
     """
-    # TODO: jeśli lista jest pusta — zwróć None
-    # TODO: zamień listę na napis JSON przez json.dumps(czesci)
-    # TODO: zwróć "CMD " + wynik json.dumps
-    pass
+    if not czesci:
+        return None
+    wynik = json.dumps(czesci)
+    return f"CMD {wynik}"
 
 
 def zadanie_05_zbuduj_dockerfile(
@@ -102,14 +84,18 @@ def zadanie_05_zbuduj_dockerfile(
         str: treść Dockerfile — linie FROM, COPY (po jednej na parę),
             RUN (o ile są polecenia) i CMD, sklejone znakiem "\\n".
     """
-    # TODO: zacznij od listy linii z wynikiem zadanie_01_linia_from
-    # TODO: w pętli po kopiowania dodawaj wyniki zadanie_02_linia_copy
-    #   (para to lista dwuelementowa: para[0] = źródło, para[1] = cel)
-    # TODO: zbuduj linię RUN przez zadanie_03_linia_run i dodaj ją
-    #   TYLKO gdy wynik nie jest None (is not None)
-    # TODO: dodaj linię CMD przez zadanie_04_linia_cmd
-    # TODO: zwróć "\n".join(linie)
-    pass
+    linie = [zadanie_01_linia_from(obraz, tag)]
+    for para in kopiowania:
+        zrodlo = para[0]
+        cel = para[1]
+        linie.append(zadanie_02_linia_copy(zrodlo, cel))
+    linia_run = zadanie_03_linia_run(polecenia_run)
+    if linia_run is not None:
+        linie.append(linia_run)
+    linia_cmd = zadanie_04_linia_cmd(cmd)
+    if linia_cmd is not None:
+        linie.append(linia_cmd)
+    return "\n".join(linie)
 
 
 def zadanie_06_polecenie_build(nazwa: str, tag: str, kontekst: str = ".") -> str:
@@ -124,8 +110,7 @@ def zadanie_06_polecenie_build(nazwa: str, tag: str, kontekst: str = ".") -> str
         str: polecenie w formacie "docker build -t nazwa:tag kontekst",
             np. "docker build -t moja-apka:1.0 .".
     """
-    # TODO: zwróć f-string ze wzorem: docker build -t <nazwa>:<tag> <kontekst>
-    pass
+    return f"docker build -t {nazwa}:{tag} {kontekst}"
 
 
 def zadanie_07_parsuj_porty(mapowanie: str) -> tuple | None:
@@ -139,11 +124,12 @@ def zadanie_07_parsuj_porty(mapowanie: str) -> tuple | None:
             int, np. (8000, 80); None, gdy mapowanie nie ma dokładnie
             dwóch części albo któraś część nie jest liczbą.
     """
-    # TODO: potnij mapowanie przez mapowanie.split(":")
-    # TODO: jeśli liczba kawałków != 2 — zwróć None
-    # TODO: jeśli któryś kawałek nie przechodzi .isdigit() — zwróć None
-    # TODO: zwróć krotkę (int(pierwszy), int(drugi))
-    pass
+    kawalki = mapowanie.split(":")
+    if len(kawalki) != 2:
+        return None
+    if not kawalki[0].isdigit() or not kawalki[1].isdigit():
+        return None
+    return (int(kawalki[0]), int(kawalki[1]))
 
 
 def zadanie_08_polecenie_run(obraz: str, nazwa: str, mapowanie: str) -> str | None:
@@ -159,11 +145,10 @@ def zadanie_08_polecenie_run(obraz: str, nazwa: str, mapowanie: str) -> str | No
             "docker run -d --name nazwa -p mapowanie obraz";
             None, gdy mapowanie jest niepoprawne.
     """
-    # TODO: sprawdź mapowanie przez zadanie_07_parsuj_porty;
-    #   gdy wynik is None — zwróć None
-    # TODO: zwróć f-string ze wzorem:
-    #   docker run -d --name <nazwa> -p <mapowanie> <obraz>
-    pass
+    wynik = zadanie_07_parsuj_porty(mapowanie)
+    if wynik is None:
+        return None
+    return f"docker run -d --name {nazwa} -p {mapowanie} {obraz}"
 
 
 def zadanie_09_usluga_compose(obraz: str, porty: list, wolumeny: list) -> dict:
@@ -180,11 +165,12 @@ def zadanie_09_usluga_compose(obraz: str, porty: list, wolumeny: list) -> dict:
             i "volumes" TYLKO wtedy, gdy odpowiednia lista nie jest
             pusta.
     """
-    # TODO: zacznij od słownika {"image": obraz}
-    # TODO: jeśli porty (if porty:) — dodaj klucz "ports" z listą porty
-    # TODO: jeśli wolumeny — dodaj klucz "volumes" z listą wolumeny
-    # TODO: zwróć słownik
-    pass
+    apka = {"image": obraz}
+    if porty:
+        apka["ports"] = porty
+    if wolumeny:
+        apka["volumes"] = wolumeny
+    return apka
 
 
 def zadanie_10_zbuduj_compose(uslugi: dict) -> dict | None:
@@ -198,9 +184,9 @@ def zadanie_10_zbuduj_compose(uslugi: dict) -> dict | None:
         dict | None: słownik {"services": uslugi}; None, gdy słownik
             usług jest pusty (compose bez usług nie ma sensu).
     """
-    # TODO: jeśli słownik uslugi jest pusty (if not uslugi:) — zwróć None
-    # TODO: zwróć słownik z jednym kluczem "services" i wartością uslugi
-    pass
+    if not uslugi:
+        return None
+    return {"services": uslugi}
 
 
 def zadanie_11_dockerfile_dla_api(plik_aplikacji: str) -> str:
@@ -215,12 +201,12 @@ def zadanie_11_dockerfile_dla_api(plik_aplikacji: str) -> str:
             requirements.txt, COPY pliku aplikacji do ".",
             CMD ["python", plik_aplikacji].
     """
-    # TODO: zwróć wynik zadanie_05_zbuduj_dockerfile z argumentami:
-    #   obraz "python", tag "3.12-slim",
-    #   kopiowania: [["requirements.txt", "."], [plik_aplikacji, "."]],
-    #   polecenia_run: ["pip install -r requirements.txt"],
-    #   cmd: ["python", plik_aplikacji]
-    pass
+    obraz = "python"
+    tag = "3.12-slim"
+    kopiowania = [["requirements.txt", "."], [plik_aplikacji, "."]]
+    polecenia_run = ["pip install -r requirements.txt"]
+    cmd = ["python", plik_aplikacji]
+    return zadanie_05_zbuduj_dockerfile(obraz, tag, kopiowania, polecenia_run, cmd)
 
 
 def zadanie_12_flagi_chrome_dla_kontenera(headless: bool) -> list:
@@ -234,14 +220,13 @@ def zadanie_12_flagi_chrome_dla_kontenera(headless: bool) -> list:
             (w tej kolejności); gdy headless is True — dodatkowo
             "--headless=new" na końcu.
     """
-    # TODO: zbuduj listę z dwiema obowiązkowymi flagami
-    # TODO: jeśli headless is True — dopisz "--headless=new"
-    #   metodą .append()
-    # TODO: zwróć listę
-    pass
+    flagi = ["--no-sandbox", "--disable-gpu"]
+    if headless is True:
+        flagi.append("--headless=new")
+    return flagi
 
 
-def zadanie_13_compose_dla_scrapera(obraz: str, folder_wynikow: str) -> dict:
+def zadanie_13_compose_dla_scrapera(obraz: str, folder_wynikow: str) -> dict | None:
     """Buduje konfigurację compose dla scrapera z tematu 12.
 
     Args:
@@ -250,13 +235,10 @@ def zadanie_13_compose_dla_scrapera(obraz: str, folder_wynikow: str) -> dict:
             np. "wyniki".
 
     Returns:
-        dict: pełna konfiguracja compose z jedną usługą "scraper":
+        dict | None: pełna konfiguracja compose z jedną usługą "scraper":
             obraz oraz wolumen "./<folder_wynikow>:/app/wyniki";
             bez mapowania portów (scraper ich nie potrzebuje).
     """
-    # TODO: zbuduj napis wolumenu f-stringiem: ./<folder_wynikow>:/app/wyniki
-    # TODO: zbuduj usługę przez zadanie_09_usluga_compose
-    #   (porty: pusta lista, wolumeny: lista z jednym napisem)
-    # TODO: zwróć wynik zadanie_10_zbuduj_compose ze słownikiem
-    #   {"scraper": usluga}
-    pass
+    wolumen = [f"./{folder_wynikow}:/app/wyniki"]
+    usluga = zadanie_09_usluga_compose(obraz, [], wolumen)
+    return zadanie_10_zbuduj_compose({"scraper": usluga})
