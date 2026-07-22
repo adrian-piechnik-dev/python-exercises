@@ -1,20 +1,3 @@
-# Zadania — github_actions_ci
-#
-# Spis zadan:
-# zadanie_01 — zbuduj slownik wyzwalacza push na wskazana galaz
-# zadanie_02 — zbuduj krok typu run (nazwa + polecenie terminalowe)
-# zadanie_03 — zbuduj krok typu uses (nazwa + gotowa akcja z wersja)
-# zadanie_04 — zbuduj krok setup-python z parametrem with/python-version
-# zadanie_05 — zbuduj job (runs-on + lista krokow)
-# zadanie_06 — zloz caly workflow (name + on + jobs)
-# zadanie_07 — zamien slownik workflow na tekst YAML
-# zadanie_08 — zapisz workflow do .github/workflows/ w podanym folderze
-# zadanie_09 — wczytaj plik YAML do slownika (None gdy pliku brak)
-# zadanie_10 — wyciagnij nazwy krokow joba (None gdy job nie istnieje)
-# zadanie_11 — zbuduj markdown badge'a CI dla repo
-# zadanie_12 — gotowy workflow: pytest na testach ukonczonego tematu
-# zadanie_13 — wariant z tematu docker: job pytest w kontenerze
-
 from pathlib import Path
 
 import yaml
@@ -29,9 +12,7 @@ def zadanie_01_zbuduj_trigger_push(galaz: str) -> dict:
     Returns:
         dict: {"push": {"branches": [galaz]}}.
     """
-    # TODO: zwroc slownik z kluczem "push", ktorego wartoscia jest
-    #       slownik {"branches": lista z jedna galezia}
-    pass
+    return {"push": {"branches": [galaz]}}
 
 
 def zadanie_02_zbuduj_krok_run(nazwa: str, polecenie: str) -> dict:
@@ -44,8 +25,7 @@ def zadanie_02_zbuduj_krok_run(nazwa: str, polecenie: str) -> dict:
     Returns:
         dict: {"name": nazwa, "run": polecenie}.
     """
-    # TODO: zwroc slownik z dwoma kluczami: "name" i "run"
-    pass
+    return {"name": nazwa, "run": polecenie}
 
 
 def zadanie_03_zbuduj_krok_uses(nazwa: str, akcja: str) -> dict:
@@ -59,8 +39,7 @@ def zadanie_03_zbuduj_krok_uses(nazwa: str, akcja: str) -> dict:
     Returns:
         dict: {"name": nazwa, "uses": akcja}.
     """
-    # TODO: zwroc slownik z dwoma kluczami: "name" i "uses"
-    pass
+    return {"name": nazwa, "uses": akcja}
 
 
 def zadanie_04_zbuduj_krok_setup_python(wersja: str) -> dict:
@@ -74,9 +53,11 @@ def zadanie_04_zbuduj_krok_setup_python(wersja: str) -> dict:
             "uses" ("actions/setup-python@v5")
             i "with" ({"python-version": wersja}).
     """
-    # TODO: zwroc slownik z trzema kluczami: "name", "uses" i "with";
-    #       wartoscia "with" jest slownik {"python-version": wersja}
-    pass
+    return {
+        "name": "Ustaw Pythona",
+        "uses": "actions/setup-python@v5",
+        "with": {"python-version": wersja}
+    }
 
 
 def zadanie_05_zbuduj_job(kroki: list[dict]) -> dict:
@@ -88,9 +69,7 @@ def zadanie_05_zbuduj_job(kroki: list[dict]) -> dict:
     Returns:
         dict: {"runs-on": "ubuntu-latest", "steps": kroki}.
     """
-    # TODO: zwroc slownik z kluczami "runs-on" (zawsze "ubuntu-latest")
-    #       i "steps" (przekazana lista krokow)
-    pass
+    return {"runs-on": "ubuntu-latest", "steps": kroki}
 
 
 def zadanie_06_zbuduj_workflow(nazwa: str, trigger: dict, joby: dict) -> dict:
@@ -104,9 +83,7 @@ def zadanie_06_zbuduj_workflow(nazwa: str, trigger: dict, joby: dict) -> dict:
     Returns:
         dict: {"name": nazwa, "on": trigger, "jobs": joby}.
     """
-    # TODO: zwroc slownik z trzema kluczami w kolejnosci:
-    #       "name", "on", "jobs"
-    pass
+    return {"name": nazwa, "on": trigger, "jobs": joby}
 
 
 def zadanie_07_workflow_do_yaml(workflow: dict) -> str:
@@ -118,9 +95,7 @@ def zadanie_07_workflow_do_yaml(workflow: dict) -> str:
     Returns:
         str: tekst YAML z zachowana kolejnoscia kluczy.
     """
-    # TODO: uzyj yaml.safe_dump z sort_keys=False i allow_unicode=True,
-    #       zwroc wynik
-    pass
+    return yaml.safe_dump(workflow, sort_keys=False, allow_unicode=True)
 
 
 def zadanie_08_zapisz_workflow(
@@ -136,13 +111,12 @@ def zadanie_08_zapisz_workflow(
     Returns:
         bool: True po pomyslnym zapisie pliku.
     """
-    # TODO: zbuduj sciezke Path(folder_repo) / ".github" / "workflows"
-    # TODO: utworz foldery przez mkdir(parents=True, exist_ok=True)
-    # TODO: zamien workflow na tekst YAML (uzyj zadanie_07_workflow_do_yaml)
-    # TODO: zapisz tekst do pliku (sciezka / nazwa_pliku) przez
-    #       write_text(..., encoding="utf-8")
-    # TODO: zwroc True
-    pass
+    sciezka = Path(folder_repo) / ".github" / "workflows"
+    sciezka.mkdir(parents=True, exist_ok=True)
+    plik = sciezka / nazwa_pliku
+    tekst = zadanie_07_workflow_do_yaml(workflow)
+    plik.write_text(tekst, encoding="utf-8")
+    return True
 
 
 def zadanie_09_wczytaj_workflow(sciezka: str) -> dict | None:
@@ -154,11 +128,10 @@ def zadanie_09_wczytaj_workflow(sciezka: str) -> dict | None:
     Returns:
         dict | None: slownik workflow albo None, gdy plik nie istnieje.
     """
-    # TODO: sprawdz przez Path(...).exists(), czy plik istnieje;
-    #       jesli nie — zwroc None
-    # TODO: odczytaj tekst przez read_text(encoding="utf-8")
-    # TODO: zwroc wynik yaml.safe_load na tym tekscie
-    pass
+    if not Path(sciezka).exists():
+        return None
+    tekst = Path(sciezka).read_text(encoding="utf-8")
+    return yaml.safe_load(tekst)
 
 
 def zadanie_10_wyciagnij_nazwy_krokow(
@@ -174,11 +147,10 @@ def zadanie_10_wyciagnij_nazwy_krokow(
         list[str] | None: lista wartosci "name" kolejnych krokow joba
             albo None, gdy joba o tej nazwie nie ma.
     """
-    # TODO: pobierz job przez workflow["jobs"].get(nazwa_joba)
-    # TODO: jesli job is None — zwroc None
-    # TODO: zwroc liste wartosci krok["name"] dla kazdego kroku
-    #       z job["steps"] (petla albo list comprehension)
-    pass
+    job = workflow["jobs"].get(nazwa_joba)
+    if job is None:
+        return None
+    return [krok["name"] for krok in job["steps"]]
 
 
 def zadanie_11_zbuduj_badge(uzytkownik: str, repo: str, plik_workflow: str) -> str:
@@ -193,10 +165,8 @@ def zadanie_11_zbuduj_badge(uzytkownik: str, repo: str, plik_workflow: str) -> s
         str: markdown w formacie
             ![CI](https://github.com/UZYTKOWNIK/REPO/actions/workflows/PLIK/badge.svg).
     """
-    # TODO: zloz f-stringiem adres
-    #       https://github.com/{uzytkownik}/{repo}/actions/workflows/{plik_workflow}/badge.svg
-    # TODO: opakuj go w skladnie obrazka markdown: ![CI](adres)
-    pass
+    adres = f"https://github.com/{uzytkownik}/{repo}/actions/workflows/{plik_workflow}/badge.svg"
+    return f"![CI]({adres})"
 
 
 def zadanie_12_workflow_dla_pytest(sciezka_testow: str) -> dict:
@@ -213,13 +183,20 @@ def zadanie_12_workflow_dla_pytest(sciezka_testow: str) -> dict:
             3. "Zainstaluj zaleznosci" (run "pip install pytest"),
             4. "Uruchom testy" (run "pytest <sciezka_testow> -v").
     """
-    # TODO: zbuduj cztery kroki funkcjami z zadan 02-04
-    #       (checkout i "Pobierz kod" przez zadanie_03, setup-python przez
-    #       zadanie_04, dwa kroki run przez zadanie_02)
-    # TODO: zloz job funkcja zadanie_05 i wyzwalacz funkcja zadanie_01
-    # TODO: zwroc calosc przez zadanie_06 (nazwa "CI",
-    #       joby = {"testy": job})
-    pass
+    krok_1 = zadanie_03_zbuduj_krok_uses("Pobierz kod", "actions/checkout@v4")
+    krok_2 = zadanie_04_zbuduj_krok_setup_python("3.13")
+    krok_3 = zadanie_02_zbuduj_krok_run(
+        "Zainstaluj zaleznosci",
+        "pip install pytest"
+    )
+    krok_4 = zadanie_02_zbuduj_krok_run(
+        "Uruchom testy",
+        f"pytest {sciezka_testow} -v"
+    )
+    kroki = [krok_1, krok_2, krok_3, krok_4]
+    joby = {"testy": zadanie_05_zbuduj_job(kroki)}
+    trigger = zadanie_01_zbuduj_trigger_push("main")
+    return zadanie_06_zbuduj_workflow("CI", trigger, joby)
 
 
 def zadanie_13_workflow_pytest_w_kontenerze(
@@ -239,9 +216,17 @@ def zadanie_13_workflow_pytest_w_kontenerze(
             2. "Zainstaluj zaleznosci" (run "pip install pytest"),
             3. "Uruchom testy" (run "pytest <sciezka_testow> -v").
     """
-    # TODO: zbuduj trzy kroki funkcjami z zadan 02-03 (BEZ setup-python)
-    # TODO: zbuduj job funkcja zadanie_05, a potem DOPISZ do niego
-    #       klucz "container" z wartoscia obraz (job["container"] = obraz)
-    # TODO: zwroc calosc przez zadanie_06 (nazwa "CI", trigger na "main",
-    #       joby = {"testy": job})
-    pass
+    krok_1 = zadanie_03_zbuduj_krok_uses("Pobierz kod", "actions/checkout@v4")
+    krok_2 = zadanie_02_zbuduj_krok_run(
+        "Zainstaluj zaleznosci",
+        "pip install pytest"
+    )
+    krok_3 = zadanie_02_zbuduj_krok_run(
+        "Uruchom testy",
+        f"pytest {sciezka_testow} -v"
+    )
+    kroki = [krok_1, krok_2, krok_3]
+    job = zadanie_05_zbuduj_job(kroki)
+    job["container"] = obraz
+    trigger = zadanie_01_zbuduj_trigger_push("main")
+    return zadanie_06_zbuduj_workflow("CI", trigger, joby={"testy": job})

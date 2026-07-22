@@ -24,9 +24,8 @@ def test_zadanie_01_buduje_trigger_na_main() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik == {"push": {"branches": ["main"]}}.
     """
-    # TODO: wywolaj zadanie_01_zbuduj_trigger_push z "main"
-    # TODO: sprawdz assertem rownosc z oczekiwanym slownikiem
-    pass
+    wynik = zadanie_01_zbuduj_trigger_push("main")
+    assert wynik == {"push": {"branches": ["main"]}}
 
 
 def test_zadanie_01_galaz_trafia_do_listy() -> None:
@@ -34,9 +33,8 @@ def test_zadanie_01_galaz_trafia_do_listy() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik["push"]["branches"] == ["develop"].
     """
-    # TODO: wywolaj funkcje z galezia "develop"
-    # TODO: sprawdz assertem, ze lista branches zawiera dokladnie "develop"
-    pass
+    wynik = zadanie_01_zbuduj_trigger_push("develop")
+    assert wynik["push"]["branches"] == ["develop"]
 
 
 # --- zadanie_02 ---
@@ -46,9 +44,8 @@ def test_zadanie_02_buduje_krok_run() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik == {"name": "Uruchom testy", "run": "pytest -v"}.
     """
-    # TODO: wywolaj zadanie_02_zbuduj_krok_run("Uruchom testy", "pytest -v")
-    # TODO: sprawdz assertem rownosc z oczekiwanym slownikiem
-    pass
+    wynik = zadanie_02_zbuduj_krok_run("Uruchom testy", "pytest -v")
+    assert wynik == {"name": "Uruchom testy", "run": "pytest -v"}
 
 
 def test_zadanie_02_krok_run_nie_ma_klucza_uses() -> None:
@@ -56,9 +53,8 @@ def test_zadanie_02_krok_run_nie_ma_klucza_uses() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: "uses" not in wynik.
     """
-    # TODO: wywolaj funkcje z dowolna nazwa i poleceniem
-    # TODO: sprawdz assertem, ze klucza "uses" nie ma w wyniku
-    pass
+    wynik = zadanie_02_zbuduj_krok_run("Uruchom testy", "pytest -v")
+    assert "uses" not in wynik
 
 
 # --- zadanie_03 ---
@@ -68,10 +64,8 @@ def test_zadanie_03_buduje_krok_checkout() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik == {"name": "Pobierz kod", "uses": "actions/checkout@v4"}.
     """
-    # TODO: wywolaj zadanie_03_zbuduj_krok_uses("Pobierz kod",
-    #       "actions/checkout@v4")
-    # TODO: sprawdz assertem rownosc z oczekiwanym slownikiem
-    pass
+    wynik = zadanie_03_zbuduj_krok_uses("Pobierz kod", "actions/checkout@v4")
+    assert wynik == {"name": "Pobierz kod", "uses": "actions/checkout@v4"}
 
 
 def test_zadanie_03_krok_uses_nie_ma_klucza_run() -> None:
@@ -79,9 +73,8 @@ def test_zadanie_03_krok_uses_nie_ma_klucza_run() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: "run" not in wynik.
     """
-    # TODO: wywolaj funkcje z dowolna nazwa i akcja
-    # TODO: sprawdz assertem, ze klucza "run" nie ma w wyniku
-    pass
+    wynik = zadanie_03_zbuduj_krok_uses("Pobierz kod", "actions/checkout@v4")
+    assert "run" not in wynik
 
 
 # --- zadanie_04 ---
@@ -91,9 +84,8 @@ def test_zadanie_04_setup_python_ma_wersje_w_with() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik["with"] == {"python-version": "3.13"}.
     """
-    # TODO: wywolaj zadanie_04_zbuduj_krok_setup_python("3.13")
-    # TODO: sprawdz assertem zawartosc klucza "with"
-    pass
+    wynik = zadanie_04_zbuduj_krok_setup_python("3.13")
+    assert wynik["with"] == {"python-version": "3.13"}
 
 
 def test_zadanie_04_setup_python_uzywa_akcji_v5() -> None:
@@ -101,9 +93,8 @@ def test_zadanie_04_setup_python_uzywa_akcji_v5() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik["uses"] == "actions/setup-python@v5".
     """
-    # TODO: wywolaj funkcje z dowolna wersja
-    # TODO: sprawdz assertem wartosc klucza "uses"
-    pass
+    wynik = zadanie_04_zbuduj_krok_setup_python("3.13")
+    assert wynik["uses"] == "actions/setup-python@v5"
 
 
 # --- zadanie_05 ---
@@ -113,11 +104,9 @@ def test_zadanie_05_job_biegnie_na_ubuntu() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik["runs-on"] == "ubuntu-latest".
     """
-    # TODO: przygotuj liste z jednym krokiem (moze byc recznie zbudowany
-    #       slownik, np. {"name": "x", "run": "echo"})
-    # TODO: wywolaj zadanie_05_zbuduj_job z ta lista
-    # TODO: sprawdz assertem wartosc "runs-on"
-    pass
+    kroki = [{"name": "Pobierz kod", "run": "echo"}]
+    wynik = zadanie_05_zbuduj_job(kroki)
+    assert wynik["runs-on"] == "ubuntu-latest"
 
 
 def test_zadanie_05_kroki_trafiaja_do_steps() -> None:
@@ -126,10 +115,9 @@ def test_zadanie_05_kroki_trafiaja_do_steps() -> None:
     Co sprawdzam: wynik["steps"] to dokladnie przekazana lista (dlugosc
     i zawartosc sie zgadzaja).
     """
-    # TODO: przygotuj liste dwoch roznych krokow
-    # TODO: wywolaj funkcje i sprawdz assertem, ze wynik["steps"]
-    #       jest rowny tej liscie
-    pass
+    kroki = [{"name": "Pobierz kod", "run": "echo"}]
+    wynik = zadanie_05_zbuduj_job(kroki)
+    assert wynik["steps"] == kroki
 
 
 # --- zadanie_06 ---
@@ -139,10 +127,12 @@ def test_zadanie_06_workflow_ma_trzy_klucze() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: wynik["name"], wynik["on"] i wynik["jobs"] rowne wejsciom.
     """
-    # TODO: przygotuj prosty trigger (slownik) i proste joby (slownik)
-    # TODO: wywolaj zadanie_06_zbuduj_workflow("CI", trigger, joby)
-    # TODO: sprawdz trzema assertami, ze kazdy klucz ma przekazana wartosc
-    pass
+    triger = {"push": {"branches": ["main"]}}
+    joby = [{"name": "Pobierz kod", "run": "echo"}]
+    wynik = zadanie_06_zbuduj_workflow("CI", triger, joby)
+    assert wynik["name"] == "CI"
+    assert wynik["on"] == triger
+    assert wynik["jobs"] == joby
 
 
 def test_zadanie_06_zachowuje_kolejnosc_kluczy() -> None:
@@ -150,9 +140,10 @@ def test_zadanie_06_zachowuje_kolejnosc_kluczy() -> None:
     Co udaje: nic — czysta funkcja na slownikach.
     Co sprawdzam: list(wynik.keys()) == ["name", "on", "jobs"].
     """
-    # TODO: wywolaj funkcje z dowolnymi wejsciami
-    # TODO: sprawdz assertem kolejnosc kluczy (list(wynik.keys()))
-    pass
+    triger = {"push": {"branches": ["main"]}}
+    joby = [{"name": "Pobierz kod", "run": "echo"}]
+    wynik = zadanie_06_zbuduj_workflow("CI", triger, joby)
+    assert list(wynik.keys()) == ["name", "on", "jobs"]
 
 
 # --- zadanie_07 ---
@@ -162,10 +153,9 @@ def test_zadanie_07_yaml_zawiera_nazwe_workflow() -> None:
     Co udaje: nic — konwersja slownika na tekst w pamieci.
     Co sprawdzam: "name: CI" in wynik.
     """
-    # TODO: przygotuj prosty workflow, np. {"name": "CI", "on": ...}
-    # TODO: wywolaj zadanie_07_workflow_do_yaml
-    # TODO: sprawdz assertem obecnosc "name: CI" w tekscie
-    pass
+    workflow = {"name": "CI", "on": {"push": {"branches": ["main"]}}}
+    wynik = zadanie_07_workflow_do_yaml(workflow)
+    assert "name: CI" in wynik
 
 
 def test_zadanie_07_yaml_nie_sortuje_kluczy() -> None:
@@ -173,10 +163,12 @@ def test_zadanie_07_yaml_nie_sortuje_kluczy() -> None:
     Co udaje: nic — konwersja slownika na tekst w pamieci.
     Co sprawdzam: pozycja "name:" w tekscie < pozycja "jobs:" (str.index).
     """
-    # TODO: przygotuj workflow z kluczami w kolejnosci name, on, jobs
-    # TODO: wywolaj funkcje
-    # TODO: sprawdz assertem, ze wynik.index("name:") < wynik.index("jobs:")
-    pass
+    workflow = {
+        "name": "CI", "on": {"push": {"branches": ["main"]}},
+        "jobs": {"name": "Pobierz kod", "run": "echo"}
+    }
+    wynik = zadanie_07_workflow_do_yaml(workflow)
+    assert wynik.index("name:") < wynik.index("jobs:")
 
 
 # --- zadanie_08 ---
@@ -186,10 +178,12 @@ def test_zadanie_08_tworzy_plik_w_github_workflows(tmp_path: Path) -> None:
     Co udaje: prawdziwe repo — zastepuje je folderem tmp_path.
     Co sprawdzam: (tmp_path / ".github" / "workflows" / "ci.yml").exists() is True.
     """
-    # TODO: przygotuj prosty slownik workflow
-    # TODO: wywolaj zadanie_08_zapisz_workflow(str(tmp_path), "ci.yml", workflow)
-    # TODO: sprawdz assertem istnienie pliku w oczekiwanej sciezce
-    pass
+    workflow = {
+        "name": "CI", "on": {"push": {"branches": ["main"]}},
+        "jobs": {"name": "Pobierz kod", "run": "echo"}
+    }
+    zadanie_08_zapisz_workflow(str(tmp_path), "ci.yml", workflow)
+    assert (tmp_path / ".github" / "workflows" / "ci.yml").exists() is True
 
 
 def test_zadanie_08_zwraca_true_i_zapisuje_yaml(tmp_path: Path) -> None:
@@ -197,12 +191,15 @@ def test_zadanie_08_zwraca_true_i_zapisuje_yaml(tmp_path: Path) -> None:
     Co udaje: prawdziwe repo — zastepuje je folderem tmp_path.
     Co sprawdzam: wynik is True; tekst pliku zawiera "name:".
     """
-    # TODO: przygotuj slownik workflow z kluczem "name"
-    # TODO: wywolaj funkcje i zapisz wynik do zmiennej
-    # TODO: sprawdz assertem wynik is True
-    # TODO: odczytaj plik przez read_text(encoding="utf-8")
-    #       i sprawdz assertem obecnosc "name:" w tekscie
-    pass
+    workflow = {
+        "name": "CI", "on": {"push": {"branches": ["main"]}},
+        "jobs": {"name": "Pobierz kod", "run": "echo"}
+    }
+    wynik = zadanie_08_zapisz_workflow(str(tmp_path), "ci.yml", workflow)
+    assert wynik is True
+    sciezka = tmp_path / ".github" / "workflows" / "ci.yml"
+    tekst = sciezka.read_text(encoding="utf-8")
+    assert "name:" in tekst
 
 
 # --- zadanie_09 ---
@@ -212,10 +209,9 @@ def test_zadanie_09_wczytuje_zapisany_workflow(plik_workflow: Path) -> None:
     Co udaje: nic — uzywam fixture plik_workflow (prawdziwy plik w tmp_path).
     Co sprawdzam: wynik["name"] == "CI" i "testy" in wynik["jobs"].
     """
-    # TODO: wywolaj zadanie_09_wczytaj_workflow ze sciezka fixture
-    #       (str(plik_workflow))
-    # TODO: sprawdz assertem wartosc "name" i obecnosc joba "testy"
-    pass
+    wynik = zadanie_09_wczytaj_workflow(str(plik_workflow))
+    assert wynik["name"] == "CI"
+    assert "testy" in wynik["jobs"]
 
 
 def test_zadanie_09_zwraca_none_gdy_pliku_brak(tmp_path: Path) -> None:
@@ -223,10 +219,9 @@ def test_zadanie_09_zwraca_none_gdy_pliku_brak(tmp_path: Path) -> None:
     Co udaje: nic — uzywam sciezki, ktora na pewno nie istnieje.
     Co sprawdzam: wynik is None.
     """
-    # TODO: przygotuj sciezke do nieistniejacego pliku w tmp_path
-    # TODO: wywolaj funkcje z ta sciezka
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    sciezka = tmp_path / "nieistniejacy.yml"
+    wynik = zadanie_09_wczytaj_workflow(str(sciezka))
+    assert wynik is None
 
 
 # --- zadanie_10 ---
@@ -236,10 +231,8 @@ def test_zadanie_10_zwraca_nazwy_krokow(przykladowy_workflow: dict) -> None:
     Co udaje: nic — uzywam fixture przykladowy_workflow.
     Co sprawdzam: wynik == ["Pobierz kod", "Uruchom testy"].
     """
-    # TODO: wywolaj zadanie_10_wyciagnij_nazwy_krokow(przykladowy_workflow,
-    #       "testy")
-    # TODO: sprawdz assertem rownosc z oczekiwana lista
-    pass
+    wynik = zadanie_10_wyciagnij_nazwy_krokow(przykladowy_workflow, "testy")
+    assert wynik == ["Pobierz kod", "Uruchom testy"]
 
 
 def test_zadanie_10_zwraca_none_gdy_joba_brak(przykladowy_workflow: dict) -> None:
@@ -247,9 +240,8 @@ def test_zadanie_10_zwraca_none_gdy_joba_brak(przykladowy_workflow: dict) -> Non
     Co udaje: nic — uzywam fixture przykladowy_workflow.
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywolaj funkcje z nazwa joba, ktorego nie ma (np. "deploy")
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    wynik = zadanie_10_wyciagnij_nazwy_krokow(przykladowy_workflow, "deploy")
+    assert wynik is None
 
 
 # --- zadanie_11 ---
@@ -260,10 +252,8 @@ def test_zadanie_11_badge_ma_poprawny_adres() -> None:
     Co sprawdzam: wynik ==
     "![CI](https://github.com/looki/python-exercises/actions/workflows/ci.yml/badge.svg)".
     """
-    # TODO: wywolaj zadanie_11_zbuduj_badge("looki", "python-exercises",
-    #       "ci.yml")
-    # TODO: sprawdz assertem rownosc z oczekiwanym markdownem
-    pass
+    wynik = zadanie_11_zbuduj_badge("looki", "python-exercises", "ci.yml")
+    assert wynik == "![CI](https://github.com/looki/python-exercises/actions/workflows/ci.yml/badge.svg)"
 
 
 def test_zadanie_11_badge_zaczyna_sie_od_wykrzyknika() -> None:
@@ -271,9 +261,8 @@ def test_zadanie_11_badge_zaczyna_sie_od_wykrzyknika() -> None:
     Co udaje: nic — czysta funkcja na tekstach.
     Co sprawdzam: wynik.startswith("![") is True.
     """
-    # TODO: wywolaj funkcje z dowolnymi argumentami
-    # TODO: sprawdz assertem, ze wynik zaczyna sie od "!["
-    pass
+    wynik = zadanie_11_zbuduj_badge("looki", "python-exercises", "ci.yml")
+    assert wynik.startswith("![") is True
 
 
 # --- zadanie_12 ---
@@ -285,10 +274,15 @@ def test_zadanie_12_workflow_ma_cztery_kroki_w_dobrej_kolejnosci() -> None:
     Co sprawdzam: lista name'ow krokow == ["Pobierz kod", "Ustaw Pythona",
     "Zainstaluj zaleznosci", "Uruchom testy"].
     """
-    # TODO: wywolaj zadanie_12_workflow_dla_pytest z dowolna sciezka testow
-    # TODO: wyciagnij kroki z wynik["jobs"]["testy"]["steps"]
-    # TODO: sprawdz assertem liste wartosci "name" kolejnych krokow
-    pass
+    sciezka_testow = "cwiczenia/openpyxl_formatowanie"
+    wynik = zadanie_12_workflow_dla_pytest(sciezka_testow)
+    lista_krokow = [krok["name"] for krok in wynik["jobs"]["testy"]["steps"]]
+    assert lista_krokow == [
+        "Pobierz kod",
+        "Ustaw Pythona",
+        "Zainstaluj zaleznosci",
+        "Uruchom testy"
+    ]
 
 
 def test_zadanie_12_ostatni_krok_odpala_pytest_na_sciezce() -> None:
@@ -297,11 +291,10 @@ def test_zadanie_12_ostatni_krok_odpala_pytest_na_sciezce() -> None:
     Co sprawdzam: "cwiczenia/slowniki" in ostatni_krok["run"]
     i wynik["on"] == {"push": {"branches": ["main"]}}.
     """
-    # TODO: wywolaj funkcje ze sciezka "cwiczenia/slowniki"
-    # TODO: pobierz ostatni krok joba "testy" (indeks -1)
-    # TODO: sprawdz assertem, ze sciezka jest w jego "run"
-    # TODO: sprawdz assertem wyzwalacz push na "main"
-    pass
+    sciezka_testow = "cwiczenia/slowniki"
+    wynik = zadanie_12_workflow_dla_pytest(sciezka_testow)
+    ostatni_krok = wynik["jobs"]["testy"]["steps"][-1]
+    assert "cwiczenia/slowniki" in ostatni_krok["run"]
 
 
 # --- zadanie_13 ---
@@ -311,10 +304,8 @@ def test_zadanie_13_job_ma_kontener_z_obrazem() -> None:
     Co udaje: nic — funkcja tylko sklada slownik.
     Co sprawdzam: wynik["jobs"]["testy"]["container"] == "python:3.13-slim".
     """
-    # TODO: wywolaj zadanie_13_workflow_pytest_w_kontenerze
-    #       ("cwiczenia/slowniki", "python:3.13-slim")
-    # TODO: sprawdz assertem wartosc klucza "container" w jobie "testy"
-    pass
+    wynik = zadanie_13_workflow_pytest_w_kontenerze("cwiczenia/slowniki", "python:3.13-slim")
+    assert wynik["jobs"]["testy"]["container"] == "python:3.13-slim"
 
 
 def test_zadanie_13_brak_kroku_setup_python() -> None:
@@ -324,10 +315,7 @@ def test_zadanie_13_brak_kroku_setup_python() -> None:
     Co sprawdzam: len(steps) == 3 i zaden krok nie ma "setup-python"
     w wartosci "uses".
     """
-    # TODO: wywolaj funkcje z dowolna sciezka i obrazem
-    # TODO: pobierz liste krokow joba "testy"
-    # TODO: sprawdz assertem dlugosc listy (3)
-    # TODO: sprawdz assertem, ze zaden krok nie zawiera "setup-python"
-    #       w kluczu "uses" (uwaga: kroki run nie maja klucza "uses" —
-    #       uzyj krok.get("uses", ""))
-    pass
+    wynik = zadanie_13_workflow_pytest_w_kontenerze("cwiczenia/slowniki", "python:3.13-slim")
+    lista_krokow = [krok["name"] for krok in wynik["jobs"]["testy"]["steps"]]
+    assert len(lista_krokow) == 3
+    assert "Ustaw Pythona" not in lista_krokow

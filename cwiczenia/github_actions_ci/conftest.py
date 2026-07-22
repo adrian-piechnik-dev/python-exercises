@@ -1,12 +1,14 @@
-# TODO: zaimportuj sys i os (stdlib), a nizej pytest (third-party)
-#       — pamietaj o kolejnosci grup importow i pustej linii miedzy nimi
+import os
+import sys
+from pathlib import Path
 
-# TODO: dodaj sys.path.insert(0, ...) wskazujacy na folder tego tematu,
-#       zeby test_github_actions_ci.py widzial modul github_actions_ci
-#       (wzorzec: os.path.dirname(os.path.abspath(__file__)))
+import pytest
+import yaml
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture
+@pytest.fixture
 def przykladowy_workflow() -> dict:
     """Gotowy slownik workflow do testow zadan 09-10.
 
@@ -19,14 +21,27 @@ def przykladowy_workflow() -> dict:
             krokach: "Pobierz kod" (uses actions/checkout@v4)
             i "Uruchom testy" (run "pytest -v").
     """
-    # TODO: zbuduj i zwroc slownik doslownie wedlug opisu z Returns —
-    #       recznie, bez funkcji z github_actions_ci.py (fixture nie moze
-    #       zalezec od kodu, ktory dopiero testujemy)
-    pass
+    return {
+        "name": "CI",
+        "on": {
+            "push": {
+                "branches": ["main"]
+            }
+        },
+        "jobs": {
+            "testy": {
+                "runs-on": "ubuntu-latest",
+                "steps": [
+                    {"name": "Pobierz kod", "uses": "actions/checkout@v4"},
+                    {"name": "Uruchom testy", "run": "pytest -v"}
+                ]
+            }
+        }
+    }
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture
-def plik_workflow(tmp_path, przykladowy_workflow: dict):
+@pytest.fixture
+def plik_workflow(tmp_path: Path, przykladowy_workflow: dict) -> Path:
     """Plik ci.yml zapisany w folderze tymczasowym — do testow zadania 09.
 
     Args:
@@ -36,12 +51,9 @@ def plik_workflow(tmp_path, przykladowy_workflow: dict):
     Returns:
         Path: sciezka do zapisanego pliku ci.yml.
     """
-    # TODO: zaimportuj yaml na gorze pliku (third-party)
-    # TODO: zamien przykladowy_workflow na tekst przez yaml.safe_dump
-    #       (sort_keys=False, allow_unicode=True)
-    # TODO: zapisz tekst do tmp_path / "ci.yml" przez
-    #       write_text(..., encoding="utf-8")
-    # TODO: zwroc sciezke do pliku
-    # TODO: uzupelnij tez type hinty parametru tmp_path i zwracanej
-    #       wartosci (Path z pathlib — import na gorze pliku)
-    pass
+    workflow = przykladowy_workflow
+    tekst = yaml.safe_dump(workflow, sort_keys=False, allow_unicode=True)
+    plik = tmp_path / "ci.yml"
+    plik.write_text(tekst, encoding="utf-8")
+    return plik
+

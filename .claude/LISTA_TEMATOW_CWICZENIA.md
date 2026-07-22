@@ -309,7 +309,7 @@ Obowiązują TYLKO dla slotów M1, M2, ... (tematy numerowane 1-25 bez zmian).
 
 Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 21. docker_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-22. github_actions_ci — ✅ wygenerowany
+22. github_actions_ci — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 23. async_httpx — ✅ wygenerowany
 24. playwright_podstawy — ✅ wygenerowany
 25. playwright_pytest_network — ✅ wygenerowany
