@@ -28,10 +28,10 @@ def test_zadanie_01_wczytuje_wszystkie_wiersze(wydatki_csv: Path) -> None:
     Co sprawdzam: 7 wierszy; w pierwszym kategoria "jedzenie"
     i kwota "120.50" jako STRING (DictReader nie konwertuje).
     """
-    # TODO: wywołaj testowaną funkcję ze ścieżką z fixture (funkcja
-    #       przyjmuje string, fixture daje Path)
-    # TODO: sprawdź liczbę wierszy oraz kategorię i kwotę pierwszego
-    pass
+    wynik = zadanie_01_wczytaj_wydatki(str(wydatki_csv))
+    assert len(wynik) == 7
+    assert wynik[0]["kategoria"] == "jedzenie"
+    assert wynik[0]["kwota"] == "120.50"
 
 
 def test_zadanie_01_zwraca_none_gdy_brak_pliku(tmp_path: Path) -> None:
@@ -39,9 +39,9 @@ def test_zadanie_01_zwraca_none_gdy_brak_pliku(tmp_path: Path) -> None:
     Co udaje: nic — ścieżka w pustym katalogu tymczasowym na pewno nie istnieje.
     Co sprawdzam: wynik is None (bez wyjątku).
     """
-    # TODO: przygotuj ścieżkę do pliku, którego nie ma (tmp_path jest pusty)
-    # TODO: wywołaj testowaną funkcję i sprawdź kontrakt None
-    pass
+    p = tmp_path / "nieistniejacy.csv"
+    wynik = zadanie_01_wczytaj_wydatki(str(p))
+    assert wynik is None
 
 
 # --- zadanie_02 ---
@@ -53,10 +53,10 @@ def test_zadanie_02_odrzuca_zepsute_kwoty(
     Co udaje: nic — gotowa lista z fixture brudne_wiersze (2 poprawne z 5).
     Co sprawdzam: zostały dokładnie 2 wiersze, a ich kwoty to floaty 18.0 i 150.0.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź liczbę wierszy w wyniku
-    # TODO: sprawdź, że kwoty w wyniku to już liczby o właściwych wartościach
-    pass
+    wynik = zadanie_02_waliduj_wiersze(brudne_wiersze)
+    assert len(wynik) == 2
+    assert wynik[0]["kwota"] == 18.0
+    assert wynik[1]["kwota"] == 150.0
 
 
 def test_zadanie_02_pusta_lista_daje_pusta_liste() -> None:
@@ -64,9 +64,8 @@ def test_zadanie_02_pusta_lista_daje_pusta_liste() -> None:
     Co udaje: nic — podaję pustą listę wprost.
     Co sprawdzam: wynik to pusta lista (nie None, nie wyjątek).
     """
-    # TODO: wywołaj testowaną funkcję z pustą listą
-    # TODO: sprawdź, że wynik to dokładnie pusta lista
-    pass
+    wynik = zadanie_02_waliduj_wiersze([])
+    assert wynik == []
 
 
 # --- zadanie_03 ---
@@ -76,12 +75,15 @@ def test_zadanie_03_buduje_dataframe_z_wierszy() -> None:
     Co udaje: nic — podaję wprost małą listę 2 zwalidowanych wierszy.
     Co sprawdzam: wynik ma 2 wiersze i kolumny kategoria oraz kwota.
     """
-    # TODO: przygotuj listę 2 słowników z kluczami kategoria i kwota
-    #       (kwota jako float — po walidacji)
-    # TODO: wywołaj testowaną funkcję
-    # TODO: sprawdź liczbę wierszy (len) i obecność obu kolumn
-    #       (nazwa in df.columns)
-    pass
+    lista = [
+        {"kategoria": "jedzenie", "kwota": 18.00},
+        {"kategoria": "transport", "kwota": 150.00}
+    ]
+    wynik = zadanie_03_zbuduj_dataframe(lista)
+    assert len(wynik) == 2
+    assert "kategoria" in wynik.columns
+    assert "kwota" in wynik.columns
+
 
 
 def test_zadanie_03_kolumna_kwota_jest_liczbowa() -> None:
@@ -89,10 +91,12 @@ def test_zadanie_03_kolumna_kwota_jest_liczbowa() -> None:
     Co udaje: nic — własna lista 2 wierszy z kwotami float.
     Co sprawdzam: suma kolumny kwota zgadza się z sumą podanych wartości.
     """
-    # TODO: przygotuj listę 2 słowników z kwotami np. 10.0 i 20.0
-    # TODO: wywołaj testowaną funkcję i zsumuj kolumnę kwota
-    # TODO: sprawdź wartość sumy
-    pass
+    lista = [
+        {"kwota": 18.00},
+        {"kwota": 150.00}
+    ]
+    wynik = zadanie_03_zbuduj_dataframe(lista)
+    assert wynik["kwota"].sum() == 168.00
 
 
 # --- zadanie_04 ---
@@ -102,9 +106,8 @@ def test_zadanie_04_filtruje_powyzej_progu(df_wydatki: pd.DataFrame) -> None:
     Co udaje: nic — gotowy DataFrame z fixture df_wydatki.
     Co sprawdzam: dla progu 100 zostają 4 wiersze (120.50, 110.00, 180.00, 150.00).
     """
-    # TODO: wywołaj testowaną funkcję z progiem 100
-    # TODO: sprawdź liczbę wierszy wyniku
-    pass
+    wynik = zadanie_04_wydatki_powyzej(df_wydatki, 100)
+    assert len(wynik) == 4
 
 
 def test_zadanie_04_nie_modyfikuje_oryginalu(df_wydatki: pd.DataFrame) -> None:
@@ -112,10 +115,9 @@ def test_zadanie_04_nie_modyfikuje_oryginalu(df_wydatki: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_wydatki.
     Co sprawdzam: po wywołaniu funkcji oryginał nadal ma 7 wierszy.
     """
-    # TODO: zapamiętaj liczbę wierszy oryginału przed wywołaniem
-    # TODO: wywołaj testowaną funkcję z dowolnym progiem
-    # TODO: sprawdź, że oryginał ma nadal tyle samo wierszy
-    pass
+    oryginal = len(df_wydatki)
+    zadanie_04_wydatki_powyzej(df_wydatki, 100)
+    assert len(df_wydatki) == oryginal
 
 
 # --- zadanie_05 ---
@@ -125,9 +127,9 @@ def test_zadanie_05_liczy_sume_wydatkow(df_wydatki: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_wydatki (suma kontrolna 739.0).
     Co sprawdzam: wynik == 739.0 i jest typu float.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź wartość oraz typ wyniku (isinstance)
-    pass
+    wynik = zadanie_05_suma_calkowita(df_wydatki)
+    assert isinstance(wynik, float)
+    assert wynik == 739.0
 
 
 def test_zadanie_05_pusta_tabela_daje_zero() -> None:
@@ -135,9 +137,9 @@ def test_zadanie_05_pusta_tabela_daje_zero() -> None:
     Co udaje: nic — buduję pusty DataFrame z samą kolumną kwota.
     Co sprawdzam: wynik == 0.0.
     """
-    # TODO: przygotuj DataFrame z kolumną kwota i pustą listą wartości
-    # TODO: wywołaj testowaną funkcję i sprawdź wynik
-    pass
+    df = pd.DataFrame({"kwota":[]})
+    wynik = zadanie_05_suma_calkowita(df)
+    assert wynik == 0.0
 
 
 # --- zadanie_06 ---
@@ -152,7 +154,9 @@ def test_zadanie_06_liczy_sumy_kategorii(df_wydatki: pd.DataFrame) -> None:
     # TODO: wybierz wiersz jedzenia filtrem boolean i sprawdź jego sumę
     #       (do pojedynczej wartości z przefiltrowanej kolumny prowadzi
     #       np. konwersja na listę)
-    pass
+    wynik = zadanie_06_agreguj_kategorie(df_wydatki)
+    assert len(wynik) == 3
+
 
 
 def test_zadanie_06_ma_wszystkie_kolumny_raportu(

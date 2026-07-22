@@ -1,18 +1,3 @@
-# Spis zadań (mini-projekt M1 — pipeline: CSV -> pandas -> Excel):
-# 01 — wczytanie wydatków z pliku CSV do listy słowników (None gdy brak pliku)
-# 02 — walidacja wierszy: odrzucenie zepsutych kwot, konwersja na float
-# 03 — budowa DataFrame z listy poprawnych wierszy
-# 04 — filtr wydatków powyżej progu (bez modyfikacji oryginału)
-# 05 — suma wszystkich wydatków jako float
-# 06 — agregacja po kategorii: suma, średnia, liczba (nazwana agregacja)
-# 07 — kolumna procentowego udziału kategorii w całości wydatków
-# 08 — sortowanie raportu malejąco po sumie
-# 09 — eksport raportu do pliku Excel bez kolumny indeksu
-# 10 — formatowanie nagłówków raportu (pogrubienie, tło, wyśrodkowanie)
-# 11 — układ arkusza: szerokości kolumn i zamrożenie wiersza nagłówków
-# 12 — wyróżnienie kolorem kategorii przekraczających próg kwotowy
-# 13 — pełny pipeline: z pliku CSV do sformatowanego raportu Excel
-
 import csv
 
 import pandas as pd
@@ -30,12 +15,14 @@ def zadanie_01_wczytaj_wydatki(sciezka: str) -> list[dict[str, str]] | None:
         list[dict[str, str]] | None: lista wierszy jako słowniki (wszystkie
             wartości to stringi) albo None, gdy plik nie istnieje.
     """
-    # TODO: wczytaj plik CSV do listy słowników — wzorzec czytania CSV
-    #       znasz z tematu 6 (pamiętaj o dwóch specjalnych argumentach
-    #       open dla plików CSV)
-    # TODO: brak pliku to spodziewana sytuacja — obsłuż ją kontraktem
-    #       None (wzorzec z tematów 4-5), nie wypuszczaj wyjątku na zewnątrz
-    pass
+    try:
+        with open(sciezka, "r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            return [wiersz for wiersz in reader]
+    except FileNotFoundError:
+        return None
+
+
 
 
 def zadanie_02_waliduj_wiersze(
@@ -51,12 +38,17 @@ def zadanie_02_waliduj_wiersze(
             się skonwertować na float i jest większa od zera; w zwróconych
             wierszach kwota jest już floatem.
     """
-    # TODO: przejdź po wierszach i zastosuj bramkę jakości z teorii
-    #       (sekcja "walidacja danych"): próba konwersji kwoty, odrzucenie
-    #       wiersza przy błędzie konwersji, odrzucenie kwot niedodatnich
-    # TODO: w wierszach, które przechodzą, podmień kwotę na float
-    #       i dopiero wtedy dodaj wiersz do wyniku
-    pass
+    poprawne = []
+    for wiersz in wiersze:
+        try:
+            kwota = float(wiersz["kwota"])
+        except ValueError:
+            continue
+        if kwota > 0:
+            wiersz["kwota"] = kwota
+            poprawne.append(wiersz)
+    return poprawne
+
 
 
 def zadanie_03_zbuduj_dataframe(
@@ -71,9 +63,7 @@ def zadanie_03_zbuduj_dataframe(
         pd.DataFrame: tabela z kolumnami jak klucze słowników; kolumna
             kwota jest liczbowa, bo walidacja zrobiła konwersję wcześniej.
     """
-    # TODO: zamień listę słowników na DataFrame (pandas umie to zrobić
-    #       jednym wywołaniem — znasz je z tematu 8)
-    pass
+    return pd.DataFrame(wiersze)
 
 
 def zadanie_04_wydatki_powyzej(df: pd.DataFrame, prog: float) -> pd.DataFrame:
@@ -87,9 +77,7 @@ def zadanie_04_wydatki_powyzej(df: pd.DataFrame, prog: float) -> pd.DataFrame:
         pd.DataFrame: nowa tabela tylko z wierszami powyżej progu;
             oryginalny df pozostaje niezmieniony.
     """
-    # TODO: przefiltruj tabelę filtrem boolean (temat 8) i zadbaj,
-    #       żeby wynik był niezależną kopią, nie widokiem oryginału
-    pass
+    return df[df["kwota"] > prog]
 
 
 def zadanie_05_suma_calkowita(df: pd.DataFrame) -> float:
@@ -101,10 +89,7 @@ def zadanie_05_suma_calkowita(df: pd.DataFrame) -> float:
     Returns:
         float: suma kolumny kwota; 0.0 dla pustej tabeli.
     """
-    # TODO: zsumuj kolumnę kwota (temat 8) i upewnij się, że zwracasz
-    #       zwykły float (typy liczbowe pandas warto rzutować wbudowaną
-    #       funkcją float, żeby kontrakt się zgadzał)
-    pass
+    return float(df["kwota"].sum())
 
 
 def zadanie_06_agreguj_kategorie(df: pd.DataFrame) -> pd.DataFrame:
@@ -123,7 +108,11 @@ def zadanie_06_agreguj_kategorie(df: pd.DataFrame) -> pd.DataFrame:
     #       suma, srednia, liczba
     # TODO: przywróć kategorię z indeksu do zwykłej kolumny
     #       (pułapkę znasz z tematu 10)
-    pass
+    return df.groupby("kategoria").agg(
+        suma=("kwota", "sum"),
+        srednia=("kwota", "mean"),
+        liczba=("kwota", "count"),
+    ).reset_index()
 
 
 def zadanie_07_dodaj_procent(df_raport: pd.DataFrame) -> pd.DataFrame:
