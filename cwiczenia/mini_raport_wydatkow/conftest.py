@@ -1,8 +1,3 @@
-# UWAGA (reguły mini-projektu M1): ten conftest dostajesz GOTOWY, bez TODO.
-# Dane testowe są żmudne do wpisywania i niczego nie uczą — twoja praca
-# to logika w mini_raport_wydatkow.py i asserty w testach.
-# Przeczytaj jednak te fixture uważnie: musisz znać dane, żeby testować.
-
 import os
 import sys
 from pathlib import Path

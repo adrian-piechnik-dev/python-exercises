@@ -18,11 +18,9 @@ def zadanie_01_wczytaj_wydatki(sciezka: str) -> list[dict[str, str]] | None:
     try:
         with open(sciezka, "r", newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            return [wiersz for wiersz in reader]
+            return list(reader)
     except FileNotFoundError:
         return None
-
-
 
 
 def zadanie_02_waliduj_wiersze(
@@ -48,7 +46,6 @@ def zadanie_02_waliduj_wiersze(
             wiersz["kwota"] = kwota
             poprawne.append(wiersz)
     return poprawne
-
 
 
 def zadanie_03_zbuduj_dataframe(
@@ -103,11 +100,6 @@ def zadanie_06_agreguj_kategorie(df: pd.DataFrame) -> pd.DataFrame:
             po jednym wierszu na kategorię; kategoria jest zwykłą kolumną,
             nie indeksem.
     """
-    # TODO: pogrupuj po kategorii i użyj NAZWANEJ agregacji z teorii
-    #       (sekcja 4), tak żeby kolumny wyniku nazywały się dokładnie
-    #       suma, srednia, liczba
-    # TODO: przywróć kategorię z indeksu do zwykłej kolumny
-    #       (pułapkę znasz z tematu 10)
     return df.groupby("kategoria").agg(
         suma=("kwota", "sum"),
         srednia=("kwota", "mean"),
@@ -126,11 +118,10 @@ def zadanie_07_dodaj_procent(df_raport: pd.DataFrame) -> pd.DataFrame:
             udział sumy kategorii w sumie całkowitej, w procentach,
             zaokrąglony do 1 miejsca; oryginał pozostaje niezmieniony.
     """
-    # TODO: dodaj kolumnę bez modyfikowania oryginału — wzorzec dodawania
-    #       kolumny w łańcuchu znasz z tematu 9
-    # TODO: udział = suma kategorii / suma wszystkich sum * 100,
-    #       zaokrąglenie metodą kolumny z teorii (sekcja 6)
-    pass
+    suma_wszystkich = df_raport["suma"].sum()
+    return df_raport.assign(
+        procent=(df_raport["suma"] / suma_wszystkich * 100).round(1)
+    )
 
 
 def zadanie_08_posortuj_raport(df_raport: pd.DataFrame) -> pd.DataFrame:
@@ -143,9 +134,7 @@ def zadanie_08_posortuj_raport(df_raport: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: nowa tabela z wierszami od największej do najmniejszej
             sumy; oryginał pozostaje niezmieniony.
     """
-    # TODO: posortuj tabelę metodą z teorii (sekcja 5) tak, żeby
-    #       największe wydatki były na górze
-    pass
+    return df_raport.sort_values("suma", ascending=False)
 
 
 def zadanie_09_eksportuj_raport(df_raport: pd.DataFrame, sciezka: str) -> bool:
@@ -158,9 +147,8 @@ def zadanie_09_eksportuj_raport(df_raport: pd.DataFrame, sciezka: str) -> bool:
     Returns:
         bool: True po pomyślnym zapisie pliku.
     """
-    # TODO: wyeksportuj DataFrame do Excela tak, żeby w pliku NIE było
-    #       śmieciowej kolumny z numerami wierszy (pułapka z tematu 10)
-    pass
+    df_raport.to_excel(sciezka, index=False)
+    return True
 
 
 def zadanie_10_formatuj_naglowki(sciezka: str) -> bool:
@@ -172,13 +160,16 @@ def zadanie_10_formatuj_naglowki(sciezka: str) -> bool:
     Returns:
         bool: True po pomyślnym zapisie pliku.
     """
-    # TODO: otwórz istniejący plik i przejdź po WSZYSTKICH komórkach
-    #       wiersza 1 (iterowanie po wierszach znasz z tematu 10 — da się
-    #       je ograniczyć do samego pierwszego wiersza)
-    # TODO: każdej komórce nagłówka ustaw pogrubioną czcionkę, jednolite
-    #       tło w kolorze DDDDDD i wyśrodkowanie w poziomie (temat 10)
-    # TODO: zapisz plik przed zwróceniem True (żelazna zasada z tematu 10)
-    pass
+    wb = load_workbook(sciezka)
+    ws = wb.active
+    for komorka in ws[1]:
+        komorka.font = Font(bold=True)
+        komorka.fill = PatternFill(
+            start_color="DDDDDD", end_color="DDDDDD", fill_type="solid"
+        )
+        komorka.alignment = Alignment(horizontal="center")
+    wb.save(sciezka)
+    return True
 
 
 def zadanie_11_dopasuj_uklad(sciezka: str) -> bool:
@@ -190,12 +181,15 @@ def zadanie_11_dopasuj_uklad(sciezka: str) -> bool:
     Returns:
         bool: True po pomyślnym zapisie pliku.
     """
-    # TODO: ustaw szerokość kolumny A na 18, a kolumn B, C i D na 12
-    #       (mechanizm szerokości kolumn znasz z tematu 10)
-    # TODO: zamroź widok tak, żeby przy przewijaniu wiersz nagłówków
-    #       zawsze został na ekranie (temat 10)
-    # TODO: zapisz plik przed zwróceniem True
-    pass
+    wb = load_workbook(sciezka)
+    ws = wb.active
+    ws.column_dimensions["A"].width = 18
+    ws.column_dimensions["B"].width = 12
+    ws.column_dimensions["C"].width = 12
+    ws.column_dimensions["D"].width = 12
+    ws.freeze_panes = "A2"
+    wb.save(sciezka)
+    return True
 
 
 def zadanie_12_wyroznij_duze_wydatki(sciezka: str, prog: float) -> bool:
@@ -209,13 +203,16 @@ def zadanie_12_wyroznij_duze_wydatki(sciezka: str, prog: float) -> bool:
     Returns:
         bool: True po pomyślnym zapisie pliku.
     """
-    # TODO: przejdź po komórkach kolumny B od wiersza 2 w dół
-    #       (iter_rows z tematu 10 przyjmuje ograniczenia zakresu —
-    #       zajrzyj do tamtej teorii)
-    # TODO: komórkom z wartością większą od progu ustaw jednolite tło
-    #       w kolorze FFC7CE; pozostałych NIE dotykaj
-    # TODO: zapisz plik przed zwróceniem True
-    pass
+    wb = load_workbook(sciezka)
+    ws = wb.active
+    for row in ws.iter_rows(min_row=2, min_col=2, max_col=2, max_row=ws.max_row):
+        komorka = row[0]
+        if komorka.value is not None and komorka.value > prog:
+            komorka.fill = PatternFill(
+                start_color="FFC7CE", end_color="FFC7CE", fill_type="solid"
+            )
+    wb.save(sciezka)
+    return True
 
 
 def zadanie_13_generuj_raport(sciezka_csv: str, sciezka_xlsx: str) -> bool | None:
@@ -229,10 +226,15 @@ def zadanie_13_generuj_raport(sciezka_csv: str, sciezka_xlsx: str) -> bool | Non
         bool | None: True po zapisaniu gotowego raportu; None, gdy plik CSV
             nie istnieje (wtedy plik raportu w ogóle nie powstaje).
     """
-    # TODO: to dyrygent (teoria, sekcja 7) — wywołaj po kolei klocki:
-    #       wczytanie -> walidacja -> DataFrame -> agregacja -> procent ->
-    #       sortowanie -> eksport -> formatowanie nagłówków -> układ arkusza
-    # TODO: gdy wczytanie zwróci None, przerwij od razu kontraktem None
-    #       (early return z tematu 1) — ZANIM cokolwiek trafi na dysk
-    # TODO: pamiętaj o kolejności dane -> ozdoby -> save (teoria, sekcja 7)
-    pass
+    wiersze = zadanie_01_wczytaj_wydatki(sciezka_csv)
+    if wiersze is None:
+        return None
+    poprawne = zadanie_02_waliduj_wiersze(wiersze)
+    df = zadanie_03_zbuduj_dataframe(poprawne)
+    df_raport = zadanie_06_agreguj_kategorie(df)
+    df_raport = zadanie_07_dodaj_procent(df_raport)
+    df_raport = zadanie_08_posortuj_raport(df_raport)
+    zadanie_09_eksportuj_raport(df_raport, sciezka_xlsx)
+    zadanie_10_formatuj_naglowki(sciezka_xlsx)
+    zadanie_11_dopasuj_uklad(sciezka_xlsx)
+    return True

@@ -313,7 +313,7 @@ Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 23. async_httpx — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 24. playwright_podstawy — ✅ wygenerowany
 25. playwright_pytest_network — ✅ wygenerowany
-M1. mini_raport_wydatkow — ✅ wygenerowany
+M1. mini_raport_wydatkow — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M2. mini_api_katalog — ✅ wygenerowany
 M3. mini_monitor_cen — ✅ wygenerowany
 

@@ -85,7 +85,6 @@ def test_zadanie_03_buduje_dataframe_z_wierszy() -> None:
     assert "kwota" in wynik.columns
 
 
-
 def test_zadanie_03_kolumna_kwota_jest_liczbowa() -> None:
     """Co testuje: czy na kolumnie kwota da się od razu liczyć.
     Co udaje: nic — własna lista 2 wierszy z kwotami float.
@@ -137,7 +136,7 @@ def test_zadanie_05_pusta_tabela_daje_zero() -> None:
     Co udaje: nic — buduję pusty DataFrame z samą kolumną kwota.
     Co sprawdzam: wynik == 0.0.
     """
-    df = pd.DataFrame({"kwota":[]})
+    df = pd.DataFrame({"kwota": []})
     wynik = zadanie_05_suma_calkowita(df)
     assert wynik == 0.0
 
@@ -149,14 +148,10 @@ def test_zadanie_06_liczy_sumy_kategorii(df_wydatki: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_wydatki.
     Co sprawdzam: 3 wiersze wyniku; suma dla jedzenia to 261.0.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź liczbę wierszy
-    # TODO: wybierz wiersz jedzenia filtrem boolean i sprawdź jego sumę
-    #       (do pojedynczej wartości z przefiltrowanej kolumny prowadzi
-    #       np. konwersja na listę)
     wynik = zadanie_06_agreguj_kategorie(df_wydatki)
     assert len(wynik) == 3
-
+    suma_jedzenie = wynik[wynik["kategoria"] == "jedzenie"]["suma"].tolist()[0]
+    assert suma_jedzenie == 261.0
 
 
 def test_zadanie_06_ma_wszystkie_kolumny_raportu(
@@ -167,10 +162,12 @@ def test_zadanie_06_ma_wszystkie_kolumny_raportu(
     Co sprawdzam: wynik ma kolumny kategoria, suma, srednia, liczba;
     liczba dla transportu to 2.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź obecność wszystkich czterech kolumn
-    # TODO: sprawdź liczbę pozycji transportu
-    pass
+    wynik = zadanie_06_agreguj_kategorie(df_wydatki)
+    assert wynik.columns.tolist() == ["kategoria", "suma", "srednia", "liczba"]
+    liczba_transport = (
+        wynik[wynik["kategoria"] == "transport"]["liczba"].tolist()[0]
+    )
+    assert liczba_transport == 2
 
 
 # --- zadanie_07 ---
@@ -180,10 +177,9 @@ def test_zadanie_07_liczy_udzial_procentowy(df_raport: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_raport (całość 739.0).
     Co sprawdzam: procent jedzenia == 35.3 (261/739*100 po zaokrągleniu).
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź obecność kolumny procent
-    # TODO: sprawdź wartość procentu dla jedzenia
-    pass
+    wynik = zadanie_07_dodaj_procent(df_raport)
+    assert "procent" in wynik.columns
+    assert wynik[wynik["kategoria"] == "jedzenie"]["procent"].tolist()[0] == 35.3
 
 
 def test_zadanie_07_nie_modyfikuje_oryginalu(df_raport: pd.DataFrame) -> None:
@@ -191,10 +187,8 @@ def test_zadanie_07_nie_modyfikuje_oryginalu(df_raport: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_raport.
     Co sprawdzam: po wywołaniu w oryginale NADAL nie ma kolumny procent.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź, że w oryginalnym df_raport nie pojawiła się
-    #       kolumna procent (not in df.columns)
-    pass
+    zadanie_07_dodaj_procent(df_raport)
+    assert "procent" not in df_raport
 
 
 # --- zadanie_08 ---
@@ -204,10 +198,8 @@ def test_zadanie_08_najwieksza_suma_na_gorze(df_raport: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_raport (największa suma: transport 290.0).
     Co sprawdzam: kolejność kategorii to transport, jedzenie, rozrywka.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź kolejność wartości w kolumnie kategoria
-    #       (kolumnę da się zamienić na zwykłą listę i porównać całość)
-    pass
+    wynik = zadanie_08_posortuj_raport(df_raport)
+    assert wynik["kategoria"].tolist() == ["transport", "jedzenie", "rozrywka"]
 
 
 def test_zadanie_08_nie_modyfikuje_oryginalu(df_raport: pd.DataFrame) -> None:
@@ -215,9 +207,8 @@ def test_zadanie_08_nie_modyfikuje_oryginalu(df_raport: pd.DataFrame) -> None:
     Co udaje: nic — fixture df_raport (pierwszy wiersz: jedzenie).
     Co sprawdzam: po wywołaniu pierwszy wiersz oryginału to nadal jedzenie.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź pierwszą wartość kolumny kategoria w ORYGINALE
-    pass
+    zadanie_08_posortuj_raport(df_raport)
+    assert df_raport["kategoria"].tolist()[0] == "jedzenie"
 
 
 # --- zadanie_09 ---
@@ -229,10 +220,10 @@ def test_zadanie_09_tworzy_plik_i_zwraca_true(
     Co udaje: nic — zapis do prawdziwego pliku w tmp_path.
     Co sprawdzam: wynik is True i plik istnieje na dysku.
     """
-    # TODO: przygotuj ścieżkę docelową w tmp_path
-    # TODO: wywołaj testowaną funkcję
-    # TODO: sprawdź zwróconą wartość i istnienie pliku (Path.exists)
-    pass
+    sciezka = tmp_path / "plik.xlsx"
+    wynik = zadanie_09_eksportuj_raport(df_raport, str(sciezka))
+    assert wynik is True
+    assert Path(sciezka).exists()
 
 
 def test_zadanie_09_bez_kolumny_indeksu(
@@ -242,9 +233,11 @@ def test_zadanie_09_bez_kolumny_indeksu(
     Co udaje: nic — zapis i odczyt prawdziwego pliku.
     Co sprawdzam: komórka A1 zawiera "kategoria" (a nie pusty nagłówek indeksu).
     """
-    # TODO: wyeksportuj raport do pliku w tmp_path
-    # TODO: otwórz plik przez load_workbook i sprawdź wartość A1
-    pass
+    sciezka = tmp_path / "plik.xlsx"
+    zadanie_09_eksportuj_raport(df_raport, str(sciezka))
+    wb = load_workbook(str(sciezka))
+    ws = wb.active
+    assert ws["A1"].value == "kategoria"
 
 
 # --- zadanie_10 ---
@@ -254,10 +247,12 @@ def test_zadanie_10_pogrubia_wszystkie_naglowki(raport_xlsx: Path) -> None:
     Co udaje: nic — gotowy plik z fixture raport_xlsx (nagłówki A1-D1).
     Co sprawdzam: czcionka A1 i D1 ma bold ustawione na True.
     """
-    # TODO: wywołaj testowaną funkcję na pliku z fixture
-    # TODO: otwórz plik ponownie i sprawdź atrybut font.bold komórek
-    #       A1 oraz D1
-    pass
+    wynik = zadanie_10_formatuj_naglowki(str(raport_xlsx))
+    wb = load_workbook(raport_xlsx)
+    ws = wb.active
+    assert ws["A1"].font.bold is True
+    assert ws["D1"].font.bold is True
+    assert wynik is True
 
 
 def test_zadanie_10_tlo_i_wysrodkowanie(raport_xlsx: Path) -> None:
@@ -265,10 +260,11 @@ def test_zadanie_10_tlo_i_wysrodkowanie(raport_xlsx: Path) -> None:
     Co udaje: nic — fixture raport_xlsx.
     Co sprawdzam: A1 ma fill typu solid i wyrównanie poziome center.
     """
-    # TODO: wywołaj testowaną funkcję na pliku z fixture
-    # TODO: otwórz plik i sprawdź fill.patternType oraz
-    #       alignment.horizontal komórki A1
-    pass
+    zadanie_10_formatuj_naglowki(str(raport_xlsx))
+    wb = load_workbook(raport_xlsx)
+    ws = wb.active
+    assert ws["A1"].fill.patternType == "solid"
+    assert ws["A1"].alignment.horizontal == "center"
 
 
 # --- zadanie_11 ---
@@ -278,9 +274,11 @@ def test_zadanie_11_ustawia_szerokosci_kolumn(raport_xlsx: Path) -> None:
     Co udaje: nic — fixture raport_xlsx.
     Co sprawdzam: kolumna A ma szerokość 18, kolumna B ma 12.
     """
-    # TODO: wywołaj testowaną funkcję na pliku z fixture
-    # TODO: otwórz plik i sprawdź width w column_dimensions dla A i B
-    pass
+    zadanie_11_dopasuj_uklad(str(raport_xlsx))
+    wb = load_workbook(str(raport_xlsx))
+    ws = wb.active
+    assert ws.column_dimensions["A"].width == 18
+    assert ws.column_dimensions["B"].width == 12
 
 
 def test_zadanie_11_zamraza_wiersz_naglowkow(raport_xlsx: Path) -> None:
@@ -288,9 +286,10 @@ def test_zadanie_11_zamraza_wiersz_naglowkow(raport_xlsx: Path) -> None:
     Co udaje: nic — fixture raport_xlsx.
     Co sprawdzam: freeze_panes arkusza to "A2".
     """
-    # TODO: wywołaj testowaną funkcję na pliku z fixture
-    # TODO: otwórz plik i sprawdź wartość freeze_panes arkusza
-    pass
+    zadanie_11_dopasuj_uklad(str(raport_xlsx))
+    wb = load_workbook(str(raport_xlsx))
+    ws = wb.active
+    assert ws.freeze_panes == "A2"
 
 
 # --- zadanie_12 ---
@@ -301,9 +300,13 @@ def test_zadanie_12_wyroznia_sumy_powyzej_progu(raport_xlsx: Path) -> None:
     Co sprawdzam: dla progu 250 komórki B2 i B3 mają fill typu solid,
     a B4 nie ma (patternType is None).
     """
-    # TODO: wywołaj testowaną funkcję z progiem 250
-    # TODO: otwórz plik i sprawdź fill.patternType komórek B2, B3 i B4
-    pass
+    wynik = zadanie_12_wyroznij_duze_wydatki(str(raport_xlsx), 250)
+    assert wynik is True
+    wb = load_workbook(raport_xlsx)
+    ws = wb.active
+    assert ws["B2"].fill.patternType == "solid"
+    assert ws["B3"].fill.patternType == "solid"
+    assert ws["B4"].fill.patternType is None
 
 
 def test_zadanie_12_prog_wyzszy_niz_wszystko_nic_nie_barwi(
@@ -314,9 +317,10 @@ def test_zadanie_12_prog_wyzszy_niz_wszystko_nic_nie_barwi(
     Co sprawdzam: dla progu 1000 komórka B3 (największa suma) NIE ma
     wypełnienia solid.
     """
-    # TODO: wywołaj testowaną funkcję z progiem 1000
-    # TODO: otwórz plik i sprawdź, że fill.patternType komórki B3 is None
-    pass
+    zadanie_12_wyroznij_duze_wydatki(str(raport_xlsx), 1000)
+    wb = load_workbook(raport_xlsx)
+    ws = wb.active
+    assert ws["B3"].fill.patternType is None
 
 
 # --- zadanie_13 ---
@@ -329,11 +333,13 @@ def test_zadanie_13_buduje_kompletny_raport(
     Co sprawdzam: wynik is True; w pliku A1 == "kategoria",
     a B2 == 290.0 (transport na górze po sortowaniu malejąco).
     """
-    # TODO: przygotuj ścieżkę wynikową .xlsx w tmp_path
-    # TODO: wywołaj testowaną funkcję (obie ścieżki jako stringi)
-    # TODO: sprawdź zwróconą wartość
-    # TODO: otwórz plik i sprawdź A1 oraz B2
-    pass
+    sciezka = tmp_path / "raport.xlsx"
+    wynik = zadanie_13_generuj_raport(str(wydatki_csv), str(sciezka))
+    assert wynik is True
+    wb = load_workbook(str(sciezka))
+    ws = wb.active
+    assert ws["A1"].value == "kategoria"
+    assert ws["B2"].value == 290.0
 
 
 def test_zadanie_13_none_gdy_brak_csv(tmp_path: Path) -> None:
@@ -341,7 +347,8 @@ def test_zadanie_13_none_gdy_brak_csv(tmp_path: Path) -> None:
     Co udaje: nic — ścieżka CSV, która nie istnieje.
     Co sprawdzam: wynik is None i plik raportu NIE powstał.
     """
-    # TODO: przygotuj ścieżkę do nieistniejącego CSV oraz ścieżkę wynikową
-    # TODO: wywołaj testowaną funkcję
-    # TODO: sprawdź kontrakt None i że plik wynikowy nie istnieje
-    pass
+    sciezka_csv = tmp_path / "brak.csv"
+    sciezka_xlsx = tmp_path / "raport.xlsx"
+    wynik = zadanie_13_generuj_raport(str(sciezka_csv), str(sciezka_xlsx))
+    assert wynik is None
+    assert not sciezka_xlsx.exists()
