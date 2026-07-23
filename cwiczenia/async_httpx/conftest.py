@@ -1,12 +1,13 @@
-# TODO: zaimportuj sys i os (stdlib), a nizej httpx i pytest (third-party)
-#       — kolejnosc grup importow i pusta linia miedzy nimi
+import os
+import sys
 
-# TODO: dodaj sys.path.insert(0, ...) wskazujacy na folder tego tematu,
-#       zeby test_async_httpx.py widzial modul async_httpx
-#       (wzorzec: os.path.dirname(os.path.abspath(__file__)))
+import httpx
+import pytest
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
-def odpowiadacz(request):
+def odpowiadacz(request: httpx.Request) -> httpx.Response:
     """Recepcjonistka udawanego internetu — odpowiada na zapytania testowe.
 
     Args:
@@ -22,16 +23,37 @@ def odpowiadacz(request):
             "/pusta"   -> 200, text "<html><body>bez tytulu</body></html>"
             inne       -> 200, text "ok"
     """
-    # TODO: sprawdzaj request.url.path serii instrukcji if/elif
-    #       i zwracaj httpx.Response dokladnie wedlug tabeli z Returns
-    # TODO: na koncu (bez warunku) zwroc domyslne httpx.Response(200, text="ok")
-    # TODO: uzupelnij type hinty parametru (httpx.Request)
-    #       i zwracanej wartosci (httpx.Response)
-    pass
+    if request.url.path == "/ok":
+        return httpx.Response(
+            200, text="ok"
+        )
+    elif request.url.path == "/brak":
+        return httpx.Response(
+            404, text="nie ma"
+        )
+    elif request.url.path == "/dane":
+        return httpx.Response(
+            200, json={"miasto": "Krakow", "sprzedaz": 200}
+        )
+    elif request.url.path == "/strona":
+        return httpx.Response(
+            200, text="<html><head><title>Testowa strona</title></head></html>"
+        )
+    elif request.url.path == "/strona2":
+        return httpx.Response(
+            200, text="<html><head><title>Druga strona</title></head></html>")
+    elif request.url.path == "/pusta":
+        return httpx.Response(
+            200, text="<html><body>bez tytulu</body></html>"
+        )
+    else:
+        return httpx.Response(
+            200, text="ok"
+        )
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture
-def klient_testowy():
+@pytest.fixture
+def klient_testowy() -> httpx.AsyncClient:
     """Klient httpx z podmienionym transportem — internet udawany w pamieci.
 
     Args:
@@ -41,7 +63,4 @@ def klient_testowy():
         httpx.AsyncClient: klient, ktorego zapytania obsluguje funkcja
             odpowiadacz zamiast prawdziwej sieci.
     """
-    # TODO: zwroc httpx.AsyncClient z argumentem
-    #       transport=httpx.MockTransport(odpowiadacz)
-    # TODO: uzupelnij type hint zwracanej wartosci (httpx.AsyncClient)
-    pass
+    return httpx.AsyncClient(transport=httpx.MockTransport(odpowiadacz))

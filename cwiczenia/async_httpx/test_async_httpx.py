@@ -26,9 +26,8 @@ def test_zadanie_01_wita_po_imieniu() -> None:
     Co udaje: nic — czysta coroutine, uruchamiam ja przez asyncio.run.
     Co sprawdzam: wynik == "Czesc, Ala!".
     """
-    # TODO: wywolaj asyncio.run(zadanie_01_zwroc_powitanie("Ala"))
-    # TODO: sprawdz assertem dokladny tekst wyniku
-    pass
+    wynik = asyncio.run(zadanie_01_zwroc_powitanie("Ala"))
+    assert wynik == "Czesc, Ala!"
 
 
 def test_zadanie_01_wywolanie_bez_run_daje_obiekt_coroutine() -> None:
@@ -39,11 +38,9 @@ def test_zadanie_01_wywolanie_bez_run_daje_obiekt_coroutine() -> None:
     is False); na koncu zamykam obiekt przez .close(), zeby uciszyc
     RuntimeWarning.
     """
-    # TODO: przygotuj obiekt = zadanie_01_zwroc_powitanie("Ala")
-    #       (bez asyncio.run!)
-    # TODO: sprawdz assertem, ze isinstance(obiekt, str) is False
-    # TODO: posprzataj: obiekt.close()
-    pass
+    obiekt = zadanie_01_zwroc_powitanie("Ala")
+    assert isinstance(obiekt, str) is False
+    obiekt.close()
 
 
 # --- zadanie_02 ---
@@ -53,9 +50,8 @@ def test_zadanie_02_zwraca_wartosc_po_spaniu() -> None:
     Co udaje: nic — prawdziwe (krotkie!) spanie 0.01 s.
     Co sprawdzam: wynik == "gotowe".
     """
-    # TODO: wywolaj przez asyncio.run z sekundami 0.01 i wartoscia "gotowe"
-    # TODO: sprawdz assertem wynik
-    pass
+    wynik = asyncio.run(zadanie_02_poczekaj_i_zwroc(0.01, "gotowe"))
+    assert wynik == "gotowe"
 
 
 def test_zadanie_02_dziala_dla_zera_sekund() -> None:
@@ -63,9 +59,8 @@ def test_zadanie_02_dziala_dla_zera_sekund() -> None:
     Co udaje: nic.
     Co sprawdzam: wynik == "natychmiast".
     """
-    # TODO: wywolaj przez asyncio.run z sekundami 0 i wartoscia "natychmiast"
-    # TODO: sprawdz assertem wynik
-    pass
+    wynik = asyncio.run(zadanie_02_poczekaj_i_zwroc(0, "natychmiast"))
+    assert wynik == "natychmiast"
 
 
 # --- zadanie_03 ---
@@ -75,10 +70,8 @@ def test_zadanie_03_zwraca_wynik_coroutine() -> None:
     Co udaje: nic — funkcja sama robi asyncio.run w srodku.
     Co sprawdzam: wynik == "przez-brame" (wywolanie BEZ asyncio.run w tescie!).
     """
-    # TODO: wywolaj zadanie_03_uruchom_synchronicznie(0.01, "przez-brame")
-    #       zwyczajnie, bez asyncio.run — to zwykla funkcja
-    # TODO: sprawdz assertem wynik
-    pass
+    wynik = zadanie_03_uruchom_synchronicznie(0.01, "przez-brame")
+    assert wynik == "przez-brame"
 
 
 def test_zadanie_03_wynik_jest_tekstem_nie_coroutine() -> None:
@@ -86,9 +79,8 @@ def test_zadanie_03_wynik_jest_tekstem_nie_coroutine() -> None:
     Co udaje: nic.
     Co sprawdzam: isinstance(wynik, str) is True.
     """
-    # TODO: wywolaj funkcje z dowolnymi argumentami (male spanie!)
-    # TODO: sprawdz assertem, ze wynik jest typu str
-    pass
+    wynik = zadanie_03_uruchom_synchronicznie(0.01, "przez-brame")
+    assert isinstance(wynik, str) is True
 
 
 # --- zadanie_04 ---
@@ -100,11 +92,12 @@ def test_zadanie_04_zbiera_wyniki_w_kolejnosci_podania() -> None:
     Co sprawdzam: wynik == ["pierwszy", "drugi"] (mimo ze "drugi" konczy
     sie szybciej).
     """
-    # TODO: przygotuj liste [zadanie_02_poczekaj_i_zwroc(0.05, "pierwszy"),
-    #       zadanie_02_poczekaj_i_zwroc(0.01, "drugi")]
-    # TODO: wywolaj asyncio.run(zadanie_04_zbierz_wyniki(lista))
-    # TODO: sprawdz assertem dokladna kolejnosc wynikow
-    pass
+    lista = [
+        zadanie_02_poczekaj_i_zwroc(0.05, "pierwszy"),
+        zadanie_02_poczekaj_i_zwroc(0.01, "drugi")
+    ]
+    wynik = asyncio.run(zadanie_04_zbierz_wyniki(lista))
+    assert wynik == ["pierwszy", "drugi"]
 
 
 def test_zadanie_04_pusta_lista_daje_pusta_liste() -> None:
@@ -112,9 +105,8 @@ def test_zadanie_04_pusta_lista_daje_pusta_liste() -> None:
     Co udaje: nic.
     Co sprawdzam: wynik == [].
     """
-    # TODO: wywolaj asyncio.run(zadanie_04_zbierz_wyniki([]))
-    # TODO: sprawdz assertem, ze wynik to pusta lista
-    pass
+    wynik = asyncio.run(zadanie_04_zbierz_wyniki([]))
+    assert wynik == []
 
 
 # --- zadanie_05 ---
@@ -124,9 +116,8 @@ def test_zadanie_05_czas_to_co_najmniej_suma_span() -> None:
     Co udaje: nic — prawdziwe krotkie spania.
     Co sprawdzam: wynik >= 0.06 dla listy [0.03, 0.03].
     """
-    # TODO: wywolaj przez asyncio.run z lista [0.03, 0.03]
-    # TODO: sprawdz assertem, ze zmierzony czas >= 0.06
-    pass
+    wynik = asyncio.run(zadanie_05_czas_sekwencyjnie([0.03, 0.03]))
+    assert wynik >= 0.06
 
 
 def test_zadanie_05_pusta_lista_konczy_sie_natychmiast() -> None:
@@ -134,9 +125,8 @@ def test_zadanie_05_pusta_lista_konczy_sie_natychmiast() -> None:
     Co udaje: nic.
     Co sprawdzam: wynik < 0.05.
     """
-    # TODO: wywolaj przez asyncio.run z pusta lista
-    # TODO: sprawdz assertem, ze czas < 0.05
-    pass
+    wynik = asyncio.run(zadanie_05_czas_sekwencyjnie([]))
+    assert wynik < 0.05
 
 
 # --- zadanie_06 ---
@@ -146,9 +136,8 @@ def test_zadanie_06_rownolegle_szybsze_niz_suma() -> None:
     Co udaje: nic — prawdziwe krotkie spania.
     Co sprawdzam: wynik < 0.1 dla listy [0.05, 0.05] (suma bylaby 0.1).
     """
-    # TODO: wywolaj przez asyncio.run z lista [0.05, 0.05]
-    # TODO: sprawdz assertem, ze zmierzony czas < 0.1
-    pass
+    wynik = asyncio.run(zadanie_06_czas_rownolegle([0.05, 0.05]))
+    assert wynik < 0.1
 
 
 def test_zadanie_06_rownolegle_szybsze_niz_sekwencyjnie() -> None:
@@ -156,11 +145,10 @@ def test_zadanie_06_rownolegle_szybsze_niz_sekwencyjnie() -> None:
     Co udaje: nic — mierze obie wersje naprawde.
     Co sprawdzam: czas rownolegly < czas sekwencyjny dla [0.03, 0.03, 0.03].
     """
-    # TODO: przygotuj liste [0.03, 0.03, 0.03]
-    # TODO: zmierz czas sekwencyjny (asyncio.run na zadaniu 05)
-    # TODO: zmierz czas rownolegly (asyncio.run na zadaniu 06)
-    # TODO: sprawdz assertem, ze rownolegly < sekwencyjny
-    pass
+    zadania = [0.03, 0.03, 0.03]
+    sekwencyjny = asyncio.run(zadanie_05_czas_sekwencyjnie(zadania))
+    rownolegly = asyncio.run(zadanie_06_czas_rownolegle(zadania))
+    assert rownolegly < sekwencyjny
 
 
 # --- zadanie_07 ---
@@ -172,10 +160,10 @@ def test_zadanie_07_zwraca_200_dla_istniejacej_strony(
     Co udaje: internet — klient_testowy z MockTransport (adres /ok -> 200).
     Co sprawdzam: wynik == 200.
     """
-    # TODO: wywolaj przez asyncio.run zadanie_07_pobierz_status
-    #       z klientem i adresem "https://testowy.pl/ok"
-    # TODO: sprawdz assertem, ze wynik == 200
-    pass
+    wynik = asyncio.run(
+        zadanie_07_pobierz_status(klient_testowy, "https://testowy.pl/ok")
+    )
+    assert wynik == 200
 
 
 def test_zadanie_07_zwraca_404_dla_brakujacej_strony(
@@ -185,9 +173,10 @@ def test_zadanie_07_zwraca_404_dla_brakujacej_strony(
     Co udaje: internet — MockTransport (adres /brak -> 404).
     Co sprawdzam: wynik == 404.
     """
-    # TODO: wywolaj funkcje z adresem "https://testowy.pl/brak"
-    # TODO: sprawdz assertem, ze wynik == 404
-    pass
+    wynik = asyncio.run(
+        zadanie_07_pobierz_status(klient_testowy, "https://testowy.pl/brak")
+    )
+    assert wynik == 404
 
 
 # --- zadanie_08 ---
@@ -199,9 +188,10 @@ def test_zadanie_08_zwraca_tresc_odpowiedzi(
     Co udaje: internet — MockTransport (adres /ok -> tekst "ok").
     Co sprawdzam: wynik == "ok".
     """
-    # TODO: wywolaj przez asyncio.run z adresem "https://testowy.pl/ok"
-    # TODO: sprawdz assertem tekst wyniku
-    pass
+    wynik = asyncio.run(
+        zadanie_08_pobierz_tekst(klient_testowy, "https://testowy.pl/ok")
+    )
+    assert wynik == "ok"
 
 
 def test_zadanie_08_zwraca_html_strony(
@@ -211,9 +201,10 @@ def test_zadanie_08_zwraca_html_strony(
     Co udaje: internet — MockTransport (adres /strona -> HTML z tytulem).
     Co sprawdzam: "<title>" in wynik.
     """
-    # TODO: wywolaj funkcje z adresem "https://testowy.pl/strona"
-    # TODO: sprawdz assertem, ze "<title>" wystepuje w wyniku
-    pass
+    wynik = asyncio.run(
+        zadanie_08_pobierz_tekst(klient_testowy, "https://testowy.pl/strona")
+    )
+    assert "<title>" in wynik
 
 
 # --- zadanie_09 ---
@@ -225,11 +216,13 @@ def test_zadanie_09_statusy_w_kolejnosci_adresow(
     Co udaje: internet — MockTransport (/ok -> 200, /brak -> 404).
     Co sprawdzam: wynik == [200, 404, 200].
     """
-    # TODO: przygotuj liste adresow: /ok, /brak, /ok
-    #       (pelne adresy https://testowy.pl/...)
-    # TODO: wywolaj przez asyncio.run zadanie_09_pobierz_wiele_statusow
-    # TODO: sprawdz assertem cala liste wynikow
-    pass
+    urle = [
+        "https://testowy.pl/ok",
+        "https://testowy.pl/brak",
+        "https://testowy.pl/ok",
+    ]
+    wynik = asyncio.run(zadanie_09_pobierz_wiele_statusow(klient_testowy, urle))
+    assert wynik == [200, 404, 200]
 
 
 def test_zadanie_09_pusta_lista_adresow(
@@ -239,9 +232,9 @@ def test_zadanie_09_pusta_lista_adresow(
     Co udaje: internet — MockTransport (nieuzyty).
     Co sprawdzam: wynik == [].
     """
-    # TODO: wywolaj funkcje z pusta lista adresow
-    # TODO: sprawdz assertem, ze wynik to pusta lista
-    pass
+    urle = []
+    wynik = asyncio.run(zadanie_09_pobierz_wiele_statusow(klient_testowy, urle))
+    assert wynik == []
 
 
 # --- zadanie_10 ---
@@ -253,9 +246,10 @@ def test_zadanie_10_zwraca_slownik_dla_statusu_200(
     Co udaje: internet — MockTransport (/dane -> 200 + json z miastem).
     Co sprawdzam: wynik == {"miasto": "Krakow", "sprzedaz": 200}.
     """
-    # TODO: wywolaj przez asyncio.run z adresem "https://testowy.pl/dane"
-    # TODO: sprawdz assertem caly slownik
-    pass
+    wynik = asyncio.run(
+        zadanie_10_pobierz_json(klient_testowy, "https://testowy.pl/dane")
+    )
+    assert wynik == {"miasto": "Krakow", "sprzedaz": 200}
 
 
 def test_zadanie_10_zwraca_none_dla_statusu_404(
@@ -265,9 +259,10 @@ def test_zadanie_10_zwraca_none_dla_statusu_404(
     Co udaje: internet — MockTransport (/brak -> 404).
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywolaj funkcje z adresem "https://testowy.pl/brak"
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    wynik = asyncio.run(
+        zadanie_10_pobierz_json(klient_testowy, "https://testowy.pl/brak")
+    )
+    assert wynik is None
 
 
 # --- zadanie_11 ---
@@ -279,10 +274,17 @@ def test_zadanie_11_jsony_w_kolejnosci_adresow(
     Co udaje: internet — MockTransport (/dane -> slownik).
     Co sprawdzam: wynik == [slownik, slownik] dla dwoch adresow /dane.
     """
-    # TODO: przygotuj liste dwoch adresow /dane
-    # TODO: wywolaj przez asyncio.run zadanie_11_pobierz_wiele_jsonow
-    # TODO: sprawdz assertem, ze wynik to dwa identyczne slowniki z miastem
-    pass
+    urle = [
+        "https://testowy.pl/dane",
+        "https://testowy.pl/dane"
+    ]
+    wynik = asyncio.run(
+        zadanie_11_pobierz_wiele_jsonow(klient_testowy, urle)
+    )
+    assert wynik == [
+        {"miasto": "Krakow", "sprzedaz": 200},
+        {"miasto": "Krakow", "sprzedaz": 200}
+    ]
 
 
 def test_zadanie_11_none_na_pozycji_bledu(
@@ -293,10 +295,17 @@ def test_zadanie_11_none_na_pozycji_bledu(
     Co udaje: internet — MockTransport (/dane -> 200, /brak -> 404).
     Co sprawdzam: wynik[0] to slownik, wynik[1] is None, wynik[2] to slownik.
     """
-    # TODO: przygotuj liste adresow: /dane, /brak, /dane
-    # TODO: wywolaj funkcje przez asyncio.run
-    # TODO: sprawdz trzema assertami pozycje 0, 1 i 2
-    pass
+    urle = [
+        "https://testowy.pl/dane",
+        "https://testowy.pl/brak",
+        "https://testowy.pl/dane"
+    ]
+    wynik = asyncio.run(
+        zadanie_11_pobierz_wiele_jsonow(klient_testowy, urle)
+    )
+    assert isinstance(wynik[0], dict)
+    assert wynik[1] is None
+    assert isinstance(wynik[2], dict)
 
 
 # --- zadanie_12 ---
@@ -309,9 +318,10 @@ def test_zadanie_12_wyciaga_tytul_strony(
     "Testowa strona").
     Co sprawdzam: wynik == "Testowa strona".
     """
-    # TODO: wywolaj przez asyncio.run z adresem "https://testowy.pl/strona"
-    # TODO: sprawdz assertem dokladny tytul
-    pass
+    wynik = asyncio.run(
+        zadanie_12_pobierz_tytul_strony(klient_testowy, "https://testowy.pl/strona")
+    )
+    assert wynik == "Testowa strona"
 
 
 def test_zadanie_12_zwraca_none_gdy_strona_bez_tytulu(
@@ -321,9 +331,10 @@ def test_zadanie_12_zwraca_none_gdy_strona_bez_tytulu(
     Co udaje: internet — MockTransport (/pusta -> HTML bez title).
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywolaj funkcje z adresem "https://testowy.pl/pusta"
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    wynik = asyncio.run(
+        zadanie_12_pobierz_tytul_strony(klient_testowy, "https://testowy.pl/pusta")
+    )
+    assert wynik is None
 
 
 # --- zadanie_13 ---
@@ -335,10 +346,14 @@ def test_zadanie_13_tytuly_wielu_stron_w_kolejnosci(
     Co udaje: internet — MockTransport (/strona i /strona2 z roznymi tytulami).
     Co sprawdzam: wynik == ["Testowa strona", "Druga strona"].
     """
-    # TODO: przygotuj liste adresow /strona i /strona2
-    # TODO: wywolaj przez asyncio.run zadanie_13_pobierz_wiele_tytulow
-    # TODO: sprawdz assertem cala liste tytulow
-    pass
+    urle = [
+        "https://testowy.pl/strona",
+        "https://testowy.pl/strona2"
+    ]
+    wynik = asyncio.run(
+        zadanie_13_pobierz_wiele_tytulow(klient_testowy, urle)
+    )
+    assert wynik == ["Testowa strona", "Druga strona"]
 
 
 def test_zadanie_13_none_dla_strony_bez_tytulu_w_srodku(
@@ -349,7 +364,12 @@ def test_zadanie_13_none_dla_strony_bez_tytulu_w_srodku(
     Co udaje: internet — MockTransport (/strona, /pusta, /strona2).
     Co sprawdzam: wynik == ["Testowa strona", None, "Druga strona"].
     """
-    # TODO: przygotuj liste adresow: /strona, /pusta, /strona2
-    # TODO: wywolaj funkcje przez asyncio.run
-    # TODO: sprawdz assertem cala liste (z None w srodku)
-    pass
+    urle = [
+        "https://testowy.pl/strona",
+        "https://testowy.pl/pusta",
+        "https://testowy.pl/strona2"
+    ]
+    wynik = asyncio.run(
+        zadanie_13_pobierz_wiele_tytulow(klient_testowy, urle)
+    )
+    assert wynik == ["Testowa strona", None, "Druga strona"]
