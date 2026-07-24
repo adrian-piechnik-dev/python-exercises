@@ -18,4 +18,4 @@ jobs:
     - name: Zainstaluj przegladarki Playwright
       run: playwright install --with-deps
     - name: Uruchom testy
-      run: pytest cwiczenia -v
+      run: pytest cwiczenia -v -p no:anyio
