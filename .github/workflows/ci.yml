@@ -15,5 +15,7 @@ jobs:
         python-version: '3.13'
     - name: Zainstaluj zaleznosci
       run: pip install -r requirements.txt
+    - name: Zainstaluj przegladarki Playwright
+      run: playwright install --with-deps
     - name: Uruchom testy
       run: pytest cwiczenia -v
