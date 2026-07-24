@@ -1,16 +1,16 @@
-# TODO: zaimportuj json, sys, os i threading oraz BaseHTTPRequestHandler
-#       i HTTPServer z http.server (stdlib), a nizej pytest oraz
-#       APIRequestContext i Playwright z playwright.sync_api (third-party)
-#       — kolejnosc grup importow i pusta linia miedzy nimi
+import json
+import os
+import sys
+import threading
+from collections.abc import Iterator
+from http.server import BaseHTTPRequestHandler
+from http.server import HTTPServer
 
-# TODO: dodaj sys.path.insert(0, ...) wskazujacy na folder tego tematu,
-#       zeby test_playwright_pytest_network.py widzial modul
-#       playwright_pytest_network
-#       (wzorzec: os.path.dirname(os.path.abspath(__file__)))
+import pytest
+from playwright.sync_api import APIRequestContext
+from playwright.sync_api import Playwright
 
-
-# Gotowa strona testowa (DANE, nie rozwiazanie — nie zmieniaj tresci,
-# testy zaleza od dokladnych tekstow ponizej).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 HTML_SKLEP = """
 <html>
@@ -39,9 +39,7 @@ HTML_SKLEP = """
 """
 
 
-# TODO: zbuduj klase Sprzedawca dziedziczaca po BaseHTTPRequestHandler —
-#       to budka-serwer dla testow API (zadania 05-07)
-class Sprzedawca:
+class Sprzedawca(BaseHTTPRequestHandler):
     """Obsluga zapytan budki-serwera testowego API produktow.
 
     Odpowiedzi (wszystkie z naglowkiem Content-Type: application/json):
@@ -53,29 +51,67 @@ class Sprzedawca:
         POST inne        -> 404, {"blad": "nie znaleziono"}
     """
 
-    # TODO: zmien naglowek klasy na dziedziczenie:
-    #       class Sprzedawca(BaseHTTPRequestHandler):
+    def do_GET(self) -> None:
+        """Obsługuje GET wedlug tabeli tras z docstringa klasy.
 
-    # TODO: napisz metode do_GET(self) -> None z docstringiem:
-    #       rozpoznaj self.path serii if/elif i odpowiedz wedlug tabeli
-    #       z docstringa klasy; kazda odpowiedz to trzy kroki:
-    #       send_response(kod), send_header("Content-Type",
-    #       "application/json") + end_headers(),
-    #       wfile.write(json.dumps(dane).encode("utf-8"))
+        Args:
+            Brak.
 
-    # TODO: napisz metode do_POST(self) -> None z docstringiem:
-    #       najpierw odbierz tresc zapytania:
-    #       self.rfile.read(int(self.headers.get("Content-Length", 0))),
-    #       potem odpowiedz wedlug tabeli (201 dla /produkty, 404 inne)
+        Returns:
+            None
+        """
+        if self.path == "/produkty":
+            dane = [{"id": 1, "nazwa": "kubek"}, {"id": 2, "nazwa": "talerz"}]
+            kod = 200
+        elif self.path == "/produkt/1":
+            dane = {"id": 1, "nazwa": "kubek"}
+            kod = 200
+        else:
+            dane = {"blad": "nie znaleziono"}
+            kod = 404
+        self.send_response(kod)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(dane).encode("utf-8"))
 
-    # TODO: napisz metode log_message(self, format, *args) -> None
-    #       z docstringiem i samym pass — ucisza logi budki w konsoli
-    pass
+    def do_POST(self) -> None:
+        """Obsługuje POST wedlug tabeli tras z docstringa klasy.
+
+        Args:
+            Brak.
+
+        Returns:
+            None
+        """
+        self.rfile.read(int(self.headers.get("Content-Length", 0)))
+
+        if self.path == "/produkty":
+            dane = {"utworzono": True}
+            kod = 201
+        else:
+            dane = {"blad": "nie znaleziono"}
+            kod = 404
+
+        self.send_response(kod)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(json.dumps(dane).encode("utf-8"))
+
+    def log_message(self, format, *args) -> None:
+        """Ucisza logi serwera w konsoli.
+
+        Args:
+            format: format stringa logu (ignorowany).
+            *args: argumenty logu (ignorowane).
+
+        Returns:
+            None
+        """
+        pass
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture(scope="session")
-#       — jedna budka-serwer na cala sesje testowa
-def serwer_api():
+@pytest.fixture(scope="session")
+def serwer_api() -> Iterator[str]:
     """Lokalna budka-serwer API na losowym wolnym porcie.
 
     Args:
@@ -85,17 +121,16 @@ def serwer_api():
         str: bazowy adres budki, np. "http://127.0.0.1:54321"
             (bez ukosnika na koncu); po sesji budka jest zamykana.
     """
-    # TODO: zbuduj serwer: HTTPServer(("127.0.0.1", 0), Sprzedawca)
-    # TODO: odczytaj wylosowany port z serwer.server_address[1]
-    # TODO: odpal petle obslugi w watku: threading.Thread(
-    #       target=serwer.serve_forever, daemon=True).start()
-    # TODO: oddaj adres testom: yield f"http://127.0.0.1:{port}"
-    # TODO: po yield zamknij budke: serwer.shutdown()
-    pass
+    serwer = HTTPServer(("127.0.0.1", 0), Sprzedawca)
+    port = serwer.server_address[1]
+    watek = threading.Thread(target=serwer.serve_forever, daemon=True)
+    watek.start()
+    yield f"http://127.0.0.1:{port}"
+    serwer.shutdown()
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture
-def api(playwright):
+@pytest.fixture
+def api(playwright: Playwright) -> APIRequestContext:
     """Kontekst zapytan API zbudowany z silnika wtyczki.
 
     Args:
@@ -106,16 +141,13 @@ def api(playwright):
         APIRequestContext: telefon do API (get/post);
             po tescie odkladany przez dispose().
     """
-    # TODO: zbuduj kontekst: playwright.request.new_context()
-    # TODO: oddaj go testowi przez yield
-    # TODO: po yield posprzataj przez .dispose()
-    # TODO: uzupelnij type hinty (parametr Playwright,
-    #       zwrot APIRequestContext)
-    pass
+    kontekst = playwright.request.new_context()
+    yield kontekst
+    kontekst.dispose()
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture
-def html_sklepu():
+@pytest.fixture
+def html_sklepu() -> str:
     """Strona sklepu do zadania 12 (final offline).
 
     Args:
@@ -124,7 +156,4 @@ def html_sklepu():
     Returns:
         str: zawartosc stalej HTML_SKLEP.
     """
-    # TODO: zwroc stala HTML_SKLEP (zwykly return — fixture bez sprzatania
-    #       nie potrzebuje yield)
-    # TODO: uzupelnij type hint zwracanej wartosci (str)
-    pass
+    return HTML_SKLEP

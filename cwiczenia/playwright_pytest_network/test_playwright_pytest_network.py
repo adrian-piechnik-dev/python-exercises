@@ -26,10 +26,9 @@ def test_zadanie_01_czyta_naglowek(page: Page) -> None:
     Co udaje: internet — HTML wstrzykniety przez set_content.
     Co sprawdzam: wynik == "Katalog" dla HTML z naglowkiem Katalog.
     """
-    # TODO: przygotuj prosty HTML z jednym <h1>Katalog</h1>
-    # TODO: wywolaj zadanie_01_naglowek_strony(page, html)
-    # TODO: sprawdz assertem tekst
-    pass
+    html = "<h1>Katalog</h1>"
+    wynik = zadanie_01_naglowek_strony(page, html)
+    assert wynik == "Katalog"
 
 
 def test_zadanie_01_pusty_naglowek(page: Page) -> None:
@@ -37,9 +36,9 @@ def test_zadanie_01_pusty_naglowek(page: Page) -> None:
     Co udaje: internet — HTML wstrzykniety przez set_content.
     Co sprawdzam: wynik == "".
     """
-    # TODO: przygotuj HTML z pustym <h1></h1>
-    # TODO: wywolaj funkcje i sprawdz assertem pusty string
-    pass
+    html = "<h1></h1>"
+    wynik = zadanie_01_naglowek_strony(page, html)
+    assert wynik == ""
 
 
 # --- zadanie_02 ---
@@ -51,12 +50,10 @@ def test_zadanie_02_goto_dostaje_podstawiona_strone(page: Page) -> None:
     Co sprawdzam: po goto na "https://sklep.testowy/sklep"
     page.title() == "Atrapa".
     """
-    # TODO: przygotuj HTML "<html><head><title>Atrapa</title></head></html>"
-    # TODO: podmien (zarejestruj celnika) przez zadanie_02_podmien_strone
-    #       na adresie "https://sklep.testowy/sklep" — PRZED goto!
-    # TODO: wywolaj page.goto("https://sklep.testowy/sklep")
-    # TODO: sprawdz assertem tytul strony
-    pass
+    html = "<html><head><title>Atrapa</title></head></html>"
+    zadanie_02_podmien_strone(page, "https://sklep.testowy/sklep", html)
+    page.goto("https://sklep.testowy/sklep")
+    assert page.title() == "Atrapa"
 
 
 def test_zadanie_02_naglowek_z_podstawionej_strony_widoczny(page: Page) -> None:
@@ -65,10 +62,10 @@ def test_zadanie_02_naglowek_z_podstawionej_strony_widoczny(page: Page) -> None:
     Co udaje: internet — celnik z route.fulfill.
     Co sprawdzam: get_by_role("heading") ma tekst "Sklep atrapa".
     """
-    # TODO: przygotuj HTML z <h1>Sklep atrapa</h1>
-    # TODO: zarejestruj celnika i wykonaj goto na podmieniony adres
-    # TODO: sprawdz assertem inner_text naglowka przez get_by_role
-    pass
+    html = "<html><h1>Sklep atrapa</h1></html>"
+    zadanie_02_podmien_strone(page, "https://sklep.testowy/sklep", html)
+    page.goto("https://sklep.testowy/sklep")
+    assert page.get_by_role("heading").inner_text() == "Sklep atrapa"
 
 
 # --- zadanie_03 ---
@@ -80,11 +77,9 @@ def test_zadanie_03_goto_pokazuje_podstawiony_json(page: Page) -> None:
     Co sprawdzam: po goto tekst "Krakow" jest widoczny na stronie
     (expect + to_be_visible).
     """
-    # TODO: podmien API przez zadanie_03_podmien_api_json na wzorcu
-    #       "**/api/dane" ze slownikiem {"miasto": "Krakow"}
-    # TODO: wywolaj page.goto("https://sklep.testowy/api/dane")
-    # TODO: sprawdz przez expect(page.get_by_text("Krakow")).to_be_visible()
-    pass
+    zadanie_03_podmien_api_json(page, "**/api/dane", {"miasto": "Krakow"})
+    page.goto("https://sklep.testowy/api/dane")
+    expect(page.get_by_text("Krakow")).to_be_visible()
 
 
 def test_zadanie_03_zwraca_none(page: Page) -> None:
@@ -93,10 +88,10 @@ def test_zadanie_03_zwraca_none(page: Page) -> None:
     Co udaje: internet — celnik z route.fulfill.
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywolaj funkcje z dowolnym wzorcem i slownikiem,
-    #       zapisujac wynik do zmiennej
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    wynik = zadanie_03_podmien_api_json(
+        page, "**/api/dane", {"miasto": "Krakow"}
+    )
+    assert wynik is None
 
 
 # --- zadanie_04 ---
@@ -110,13 +105,11 @@ def test_zadanie_04_strona_dziala_mimo_zablokowanych_obrazkow(
     na strone z <img src="logo.png">.
     Co sprawdzam: naglowek strony widoczny (inner_text == "Galeria").
     """
-    # TODO: zarejestruj blokade przez zadanie_04_zablokuj_obrazki(page)
-    # TODO: podmien strone (zadanie_02) na adresie
-    #       "https://sklep.testowy/galeria" HTML-em:
-    #       "<html><body><h1>Galeria</h1><img src='logo.png'></body></html>"
-    # TODO: wykonaj goto na ten adres
-    # TODO: sprawdz assertem tekst naglowka
-    pass
+    zadanie_04_zablokuj_obrazki(page)
+    html = "<html><body><h1>Galeria</h1><img src='logo.png'></body></html>"
+    zadanie_02_podmien_strone(page, "https://sklep.testowy/galeria", html)
+    page.goto("https://sklep.testowy/galeria")
+    assert page.get_by_role("heading").inner_text() == "Galeria"
 
 
 def test_zadanie_04_goto_na_png_rzuca_error(page: Page) -> None:
@@ -126,9 +119,9 @@ def test_zadanie_04_goto_na_png_rzuca_error(page: Page) -> None:
     Co sprawdzam: page.goto("https://sklep.testowy/logo.png") w bloku
     pytest.raises(Error).
     """
-    # TODO: zarejestruj blokade obrazkow
-    # TODO: w bloku with pytest.raises(Error): wykonaj goto na adres .png
-    pass
+    zadanie_04_zablokuj_obrazki(page)
+    with pytest.raises(Error):
+        page.goto("https://sklep.testowy/logo.png")
 
 
 # --- zadanie_05 ---
@@ -140,10 +133,9 @@ def test_zadanie_05_status_200_dla_produktow(
     Co udaje: prawdziwe API — lokalna budka-serwer z fixture.
     Co sprawdzam: wynik == 200 dla adresu <serwer>/produkty.
     """
-    # TODO: zbuduj adres f"{serwer_api}/produkty"
-    # TODO: wywolaj zadanie_05_pobierz_status_api(api, adres)
-    # TODO: sprawdz assertem status 200
-    pass
+    adres = f"{serwer_api}/produkty"
+    wynik = zadanie_05_pobierz_status_api(api, adres)
+    assert wynik == 200
 
 
 def test_zadanie_05_status_404_dla_nieznanej_sciezki(
@@ -153,9 +145,9 @@ def test_zadanie_05_status_404_dla_nieznanej_sciezki(
     Co udaje: prawdziwe API — lokalna budka-serwer.
     Co sprawdzam: wynik == 404 dla adresu <serwer>/nie-ma-takiej.
     """
-    # TODO: zbuduj adres nieistniejacej sciezki i wywolaj funkcje
-    # TODO: sprawdz assertem status 404
-    pass
+    adres = f"{serwer_api}/nie-ma-takiej"
+    wynik = zadanie_05_pobierz_status_api(api, adres)
+    assert wynik == 404
 
 
 # --- zadanie_06 ---
@@ -167,9 +159,9 @@ def test_zadanie_06_zwraca_slownik_produktu(
     Co udaje: prawdziwe API — budka-serwer (GET /produkt/1).
     Co sprawdzam: wynik == {"id": 1, "nazwa": "kubek"}.
     """
-    # TODO: wywolaj zadanie_06_pobierz_json_api dla adresu /produkt/1
-    # TODO: sprawdz assertem caly slownik
-    pass
+    adres = f"{serwer_api}/produkt/1"
+    wynik = zadanie_06_pobierz_json_api(api, adres)
+    assert wynik == {"id": 1, "nazwa": "kubek"}
 
 
 def test_zadanie_06_zwraca_none_dla_404(
@@ -179,9 +171,9 @@ def test_zadanie_06_zwraca_none_dla_404(
     Co udaje: prawdziwe API — budka-serwer (GET /produkt/999 nie istnieje).
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywolaj funkcje dla adresu /produkt/999
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    adres = f"{serwer_api}/produkt/999"
+    wynik = zadanie_06_pobierz_json_api(api, adres)
+    assert wynik is None
 
 
 # --- zadanie_07 ---
@@ -193,10 +185,9 @@ def test_zadanie_07_post_zwraca_201(
     Co udaje: prawdziwe API — budka-serwer (POST /produkty -> 201).
     Co sprawdzam: wynik == 201.
     """
-    # TODO: wywolaj zadanie_07_utworz_produkt_api dla adresu /produkty
-    #       ze slownikiem {"nazwa": "szklanka"}
-    # TODO: sprawdz assertem status 201
-    pass
+    adres = f"{serwer_api}/produkty"
+    wynik = zadanie_07_utworz_produkt_api(api, adres, {"nazwa": "szklanka"})
+    assert wynik == 201
 
 
 def test_zadanie_07_post_w_zle_miejsce_zwraca_404(
@@ -206,9 +197,9 @@ def test_zadanie_07_post_w_zle_miejsce_zwraca_404(
     Co udaje: prawdziwe API — budka-serwer.
     Co sprawdzam: wynik == 404 dla adresu /zamowienia.
     """
-    # TODO: wywolaj funkcje dla adresu /zamowienia z dowolnym slownikiem
-    # TODO: sprawdz assertem status 404
-    pass
+    adres = f"{serwer_api}/zamowienia"
+    wynik = zadanie_07_utworz_produkt_api(api, adres, {"nazwa": "szklanka"})
+    assert wynik == 404
 
 
 # --- zadanie_08 ---
@@ -218,9 +209,8 @@ def test_zadanie_08_sklada_komende_codegen() -> None:
     Co udaje: nic — czysta funkcja na tekstach.
     Co sprawdzam: wynik == "playwright codegen https://example.com".
     """
-    # TODO: wywolaj zadanie_08_polecenie_codegen("https://example.com")
-    # TODO: sprawdz assertem cala komende
-    pass
+    wynik = zadanie_08_polecenie_codegen("https://example.com")
+    assert wynik == "playwright codegen https://example.com"
 
 
 def test_zadanie_08_komenda_zaczyna_sie_od_playwright() -> None:
@@ -228,9 +218,8 @@ def test_zadanie_08_komenda_zaczyna_sie_od_playwright() -> None:
     Co udaje: nic — czysta funkcja na tekstach.
     Co sprawdzam: wynik.startswith("playwright codegen ") is True.
     """
-    # TODO: wywolaj funkcje z dowolnym adresem
-    # TODO: sprawdz assertem prefiks przez startswith
-    pass
+    wynik = zadanie_08_polecenie_codegen("https://example.com")
+    assert wynik.startswith("playwright codegen ") is True
 
 
 # --- zadanie_09 ---
@@ -240,9 +229,8 @@ def test_zadanie_09_sklada_komende_show_trace() -> None:
     Co udaje: nic — czysta funkcja na tekstach.
     Co sprawdzam: wynik == "playwright show-trace nagranie.zip".
     """
-    # TODO: wywolaj zadanie_09_polecenie_trace("nagranie.zip")
-    # TODO: sprawdz assertem cala komende
-    pass
+    wynik = zadanie_09_polecenie_trace("nagranie.zip")
+    assert wynik == "playwright show-trace nagranie.zip"
 
 
 def test_zadanie_09_sciezka_pliku_trafia_na_koniec() -> None:
@@ -250,9 +238,8 @@ def test_zadanie_09_sciezka_pliku_trafia_na_koniec() -> None:
     Co udaje: nic — czysta funkcja na tekstach.
     Co sprawdzam: wynik.endswith("wyniki/test.zip") is True.
     """
-    # TODO: wywolaj funkcje ze sciezka "wyniki/test.zip"
-    # TODO: sprawdz assertem koncowke przez endswith
-    pass
+    wynik = zadanie_09_polecenie_trace("wyniki/test.zip")
+    assert wynik.endswith("wyniki/test.zip") is True
 
 
 # --- zadanie_10 ---
@@ -264,12 +251,10 @@ def test_zadanie_10_tworzy_plik_z_nagraniem(
     Co udaje: docelowy folder — tmp_path od pytest.
     Co sprawdzam: wynik is True i plik istnieje.
     """
-    # TODO: przygotuj sciezke str(tmp_path / "nagranie.zip")
-    # TODO: wywolaj zadanie_10_nagraj_trace(context, sciezka)
-    # TODO: sprawdz assertem wynik is True
-    # TODO: sprawdz assertem istnienie pliku ((tmp_path / "nagranie.zip")
-    #       .exists() is True)
-    pass
+    sciezka = str(tmp_path / "nagranie.zip")
+    wynik = zadanie_10_nagraj_trace(context, sciezka)
+    assert wynik is True
+    assert (tmp_path / "nagranie.zip").exists() is True
 
 
 def test_zadanie_10_nagranie_nie_jest_puste(
@@ -280,9 +265,9 @@ def test_zadanie_10_nagranie_nie_jest_puste(
     Co udaje: docelowy folder — tmp_path.
     Co sprawdzam: rozmiar pliku > 0 (przez .stat().st_size).
     """
-    # TODO: wywolaj funkcje ze sciezka w tmp_path
-    # TODO: sprawdz assertem, ze (sciezka).stat().st_size > 0
-    pass
+    sciezka = str(tmp_path / "nagranie.zip")
+    zadanie_10_nagraj_trace(context, sciezka)
+    assert Path(sciezka).stat().st_size > 0
 
 
 # --- zadanie_11 ---
@@ -293,10 +278,10 @@ def test_zadanie_11_tlumaczy_stare_podmiany() -> None:
     Co sprawdzam: "monkeypatch.setattr" -> "page.route"
     oraz "side_effect" -> "route.abort".
     """
-    # TODO: wywolaj zadanie_11_przetlumacz_podmiane("monkeypatch.setattr")
-    #       i sprawdz assertem wynik
-    # TODO: wywolaj funkcje dla "side_effect" i sprawdz assertem wynik
-    pass
+    wynik = zadanie_11_przetlumacz_podmiane("monkeypatch.setattr")
+    assert wynik == "page.route"
+    wynik = zadanie_11_przetlumacz_podmiane("side_effect")
+    assert wynik == "route.abort"
 
 
 def test_zadanie_11_none_dla_nieznanego_narzedzia() -> None:
@@ -304,9 +289,8 @@ def test_zadanie_11_none_dla_nieznanego_narzedzia() -> None:
     Co udaje: nic — czysta funkcja na slowniku.
     Co sprawdzam: wynik is None dla "czarna-magia".
     """
-    # TODO: wywolaj funkcje z nazwa spoza slownika
-    # TODO: sprawdz assertem, ze wynik is None
-    pass
+    wynik = zadanie_11_przetlumacz_podmiane("czarna-magia")
+    assert wynik is None
 
 
 # --- zadanie_12 ---
@@ -319,10 +303,9 @@ def test_zadanie_12_sklep_offline_rysuje_produkty(
     Co udaje: internet — dwaj celnicy (HTML + JSON).
     Co sprawdzam: wynik == ["kubek", "talerz"].
     """
-    # TODO: przygotuj produkty: [{"nazwa": "kubek"}, {"nazwa": "talerz"}]
-    # TODO: wywolaj zadanie_12_sklep_offline(page, html_sklepu, produkty)
-    # TODO: sprawdz assertem cala liste nazw
-    pass
+    produkty = [{"nazwa": "kubek"}, {"nazwa": "talerz"}]
+    wynik = zadanie_12_sklep_offline(page, html_sklepu, produkty)
+    assert wynik == ["kubek", "talerz"]
 
 
 def test_zadanie_12_pusta_lista_produktow_daje_pusta_liste(
@@ -333,6 +316,5 @@ def test_zadanie_12_pusta_lista_produktow_daje_pusta_liste(
     Co udaje: internet — dwaj celnicy (HTML + JSON z pusta lista).
     Co sprawdzam: wynik == [].
     """
-    # TODO: wywolaj funkcje z pusta lista produktow
-    # TODO: sprawdz assertem, ze wynik to pusta lista
-    pass
+    wynik = zadanie_12_sklep_offline(page, html_sklepu, [])
+    assert wynik == []
