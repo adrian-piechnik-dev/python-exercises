@@ -15,7 +15,23 @@ jobs:
         python-version: '3.13'
     - name: Zainstaluj zaleznosci
       run: pip install -r requirements.txt
+    - name: Uruchom testy
+      run: pytest cwiczenia --ignore=cwiczenia/playwright_podstawy --ignore=cwiczenia/playwright_pytest_network
+        -v -p no:anyio
+  testy_playwright:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pobierz kod
+      uses: actions/checkout@v4
+    - name: Ustaw Pythona
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: Zainstaluj zaleznosci
+      run: pip install -r requirements.txt
     - name: Zainstaluj przegladarki Playwright
       run: playwright install --with-deps
-    - name: Uruchom testy
-      run: pytest cwiczenia -v -p no:anyio
+    - name: Uruchom testy playwright_podstawy
+      run: pytest cwiczenia/playwright_podstawy -v -p no:anyio
+    - name: Uruchom testy playwright_pytest_network
+      run: pytest cwiczenia/playwright_pytest_network -v -p no:anyio
