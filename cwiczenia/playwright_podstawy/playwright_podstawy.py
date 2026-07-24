@@ -1,19 +1,3 @@
-# Zadania — playwright_podstawy
-#
-# Spis zadan:
-# zadanie_01 — pelny rytual startowy: otworz strone i zwroc jej tytul
-# zadanie_02 — locator get_by_role: tekst naglowka strony
-# zadanie_03 — locator get_by_text: czy tekst jest widoczny (migawka)
-# zadanie_04 — locator get_by_label + akcja fill: wypelnij pole formularza
-# zadanie_05 — akcja check: odhacz pole zgody i potwierdz stan
-# zadanie_06 — akcja click: kliknij przycisk o podanej nazwie
-# zadanie_07 — count: policz elementy o danej roli
-# zadanie_08 — get_attribute: adres linku (None gdy linku brak)
-# zadanie_09 — expect + to_be_visible: poczekaj na tekst z opoznieniem
-# zadanie_10 — zlozenie: wypelnij, odhacz, kliknij i odczytaj komunikat
-# zadanie_11 — zazebienie: tlumacz pojec Selenium -> Playwright
-# zadanie_12 — zazebienie: scenariusz logowania znany z tematu Selenium
-
 from playwright.sync_api import Page, expect, sync_playwright
 
 
@@ -26,12 +10,13 @@ def zadanie_01_pobierz_tytul(url: str) -> str:
     Returns:
         str: tytul strony (zawartosc znacznika <title>).
     """
-    # TODO: uzyj pelnego rytualu: with sync_playwright() as p:
-    # TODO: odpal przegladarke p.chromium.launch(headless=True)
-    # TODO: otworz karte browser.new_page() i wejdz na url przez goto
-    # TODO: odczytaj tytul przez page.title() i zapisz do zmiennej
-    # TODO: zamknij przegladarke (browser.close()) i zwroc tytul
-    pass
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto(url)
+        tytul = page.title()
+        browser.close()
+    return tytul
 
 
 def zadanie_02_pobierz_tekst_naglowka(page: Page) -> str:
@@ -43,9 +28,8 @@ def zadanie_02_pobierz_tekst_naglowka(page: Page) -> str:
     Returns:
         str: tekst elementu o roli "heading".
     """
-    # TODO: zbuduj locator page.get_by_role("heading")
-    # TODO: zwroc jego .inner_text()
-    pass
+    locator = page.get_by_role("heading")
+    return locator.inner_text()
 
 
 def zadanie_03_czy_tekst_widoczny(page: Page, tekst: str) -> bool:
@@ -58,9 +42,8 @@ def zadanie_03_czy_tekst_widoczny(page: Page, tekst: str) -> bool:
     Returns:
         bool: True gdy tekst jest teraz widoczny, False w przeciwnym razie.
     """
-    # TODO: zbuduj locator page.get_by_text(tekst)
-    # TODO: zwroc wynik .is_visible() (migawka — bez czekania)
-    pass
+    locator = page.get_by_text(tekst)
+    return locator.is_visible()
 
 
 def zadanie_04_wypelnij_pole(page: Page, etykieta: str, tekst: str) -> str:
@@ -74,10 +57,9 @@ def zadanie_04_wypelnij_pole(page: Page, etykieta: str, tekst: str) -> str:
     Returns:
         str: aktualna zawartosc pola po wpisaniu (input_value).
     """
-    # TODO: zbuduj locator page.get_by_label(etykieta)
-    # TODO: wpisz tekst akcja .fill(tekst)
-    # TODO: zwroc .input_value() tego samego locatora
-    pass
+    locator = page.get_by_label(etykieta)
+    locator.fill(tekst)
+    return locator.input_value()
 
 
 def zadanie_05_zaznacz_zgode(page: Page, nazwa: str) -> bool:
@@ -90,10 +72,9 @@ def zadanie_05_zaznacz_zgode(page: Page, nazwa: str) -> bool:
     Returns:
         bool: True gdy pole jest po operacji odhaczone.
     """
-    # TODO: zbuduj locator page.get_by_role("checkbox", name=nazwa)
-    # TODO: odhacz akcja .check()
-    # TODO: zwroc wynik .is_checked()
-    pass
+    locator = page.get_by_role("checkbox", name=nazwa)
+    locator.check()
+    return locator.is_checked()
 
 
 def zadanie_06_kliknij_przycisk(page: Page, nazwa: str) -> None:
@@ -106,9 +87,8 @@ def zadanie_06_kliknij_przycisk(page: Page, nazwa: str) -> None:
     Returns:
         None: funkcja wykonuje akcje, niczego nie zwraca.
     """
-    # TODO: zbuduj locator page.get_by_role("button", name=nazwa)
-    # TODO: kliknij akcja .click() (bez return — kontrakt None)
-    pass
+    locator = page.get_by_role("button", name=nazwa)
+    locator.click()
 
 
 def zadanie_07_policz_elementy(page: Page, rola: str) -> int:
@@ -121,9 +101,8 @@ def zadanie_07_policz_elementy(page: Page, rola: str) -> int:
     Returns:
         int: liczba pasujacych elementow (0 gdy brak).
     """
-    # TODO: zbuduj locator page.get_by_role(rola)
-    # TODO: zwroc jego .count()
-    pass
+    locator = page.get_by_role(rola)
+    return locator.count()
 
 
 def zadanie_08_pobierz_adres_linku(page: Page, nazwa: str) -> str | None:
@@ -137,10 +116,10 @@ def zadanie_08_pobierz_adres_linku(page: Page, nazwa: str) -> str | None:
         str | None: wartosc atrybutu href albo None, gdy takiego linku
             nie ma na stronie.
     """
-    # TODO: zbuduj locator page.get_by_role("link", name=nazwa)
-    # TODO: jesli .count() == 0 — zwroc None (istnienie bez czekania)
-    # TODO: w przeciwnym razie zwroc .get_attribute("href")
-    pass
+    locator = page.get_by_role("link", name=nazwa)
+    if locator.count() == 0:
+        return None
+    return locator.get_attribute("href")
 
 
 def zadanie_09_poczekaj_na_tekst(page: Page, tekst: str) -> bool:
@@ -154,9 +133,8 @@ def zadanie_09_poczekaj_na_tekst(page: Page, tekst: str) -> bool:
         bool: True gdy tekst stal sie widoczny w limicie 2 sekund
             (gdy nie — expect rzuca AssertionError).
     """
-    # TODO: uzyj expect(page.get_by_text(tekst)).to_be_visible(timeout=2000)
-    # TODO: po udanym expect zwroc True
-    pass
+    expect(page.get_by_text(tekst)).to_be_visible(timeout=2000)
+    return True
 
 
 def zadanie_10_wyslij_formularz(page: Page, imie: str) -> str:
@@ -169,13 +147,11 @@ def zadanie_10_wyslij_formularz(page: Page, imie: str) -> str:
     Returns:
         str: tekst komunikatu (element o roli "status") po wyslaniu.
     """
-    # TODO: wypelnij pole "Imie" (get_by_label + fill)
-    # TODO: odhacz checkbox "Akceptuje regulamin" (get_by_role + check)
-    # TODO: kliknij przycisk "Wyslij" (get_by_role + click)
-    # TODO: poczekaj na komunikat: expect(page.get_by_role("status"))
-    #       .to_be_visible(timeout=2000)
-    # TODO: zwroc .inner_text() elementu o roli "status"
-    pass
+    page.get_by_label("Imie").fill(imie)
+    page.get_by_role("checkbox", name = "Akceptuje regulamin").check()
+    page.get_by_role("button", name="Wyslij").click()
+    expect(page.get_by_role("status")).to_be_visible(timeout=2000)
+    return page.get_by_role("status").inner_text()
 
 
 def zadanie_11_przetlumacz_selenium(pojecie: str) -> str | None:
@@ -190,13 +166,14 @@ def zadanie_11_przetlumacz_selenium(pojecie: str) -> str | None:
             ("locatory", "fill", "auto-waiting", "expect", "page.goto");
             None dla nieznanego pojecia.
     """
-    # TODO: zbuduj slownik tlumaczen (5 par wedlug sekcji 8 teorii):
-    #       "find_element" -> "locatory", "send_keys" -> "fill",
-    #       "WebDriverWait" -> "auto-waiting",
-    #       "expected_conditions" -> "expect", "driver.get" -> "page.goto"
-    # TODO: zwroc slownik.get(pojecie) — get bez domyslnej daje None
-    #       dla nieznanego klucza
-    pass
+    translator = {
+        "find_element": "locatory",
+        "send_keys": "fill",
+        "WebDriverWait": "auto-waiting",
+        "expected_conditions": "expect",
+        "driver.get": "page.goto"
+    }
+    return translator.get(pojecie)
 
 
 def zadanie_12_zaloguj(page: Page, login: str, haslo: str) -> str:
@@ -211,10 +188,8 @@ def zadanie_12_zaloguj(page: Page, login: str, haslo: str) -> str:
         str: tekst komunikatu (rola "status") po probie logowania —
             powitanie albo informacja o blednych danych.
     """
-    # TODO: wypelnij pole "Login" (get_by_label + fill)
-    # TODO: wypelnij pole "Haslo" (get_by_label + fill)
-    # TODO: kliknij przycisk "Zaloguj" (get_by_role + click)
-    # TODO: poczekaj na komunikat (expect + to_be_visible, timeout=2000,
-    #       rola "status")
-    # TODO: zwroc .inner_text() komunikatu
-    pass
+    page.get_by_label("Login").fill(login)
+    page.get_by_label("Haslo").fill(haslo)
+    page.get_by_role("button", name="Zaloguj").click()
+    expect(page.get_by_role("status")).to_be_visible(timeout=2000)
+    return page.get_by_role("status").inner_text()

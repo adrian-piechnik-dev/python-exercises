@@ -1,14 +1,10 @@
-# TODO: zaimportuj sys i os (stdlib), a nizej pytest oraz Browser i Page
-#       z playwright.sync_api i sync_playwright (third-party) —
-#       kolejnosc grup importow i pusta linia miedzy nimi
+import os
+import sys
 
-# TODO: dodaj sys.path.insert(0, ...) wskazujacy na folder tego tematu,
-#       zeby test_playwright_podstawy.py widzial modul playwright_podstawy
-#       (wzorzec: os.path.dirname(os.path.abspath(__file__)))
+import pytest
+from playwright.sync_api import Browser, Page, sync_playwright
 
-
-# Gotowe strony testowe (DANE, nie rozwiazanie — nie zmieniaj tresci,
-# testy zaleza od dokladnych tekstow ponizej).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 HTML_FORMULARZ = """
 <html>
@@ -79,9 +75,8 @@ HTML_LOGOWANIE = """
 """
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture(scope="session")
-#       — jedna przegladarka na cala sesje testowa
-def przegladarka():
+@pytest.fixture(scope="session")
+def przegladarka() -> Browser:
     """Wspolna niewidzialna przegladarka dla wszystkich testow tematu.
 
     Args:
@@ -91,17 +86,15 @@ def przegladarka():
         Browser: uruchomiona przegladarka Chromium (headless);
             po sesji testowej zamykana w fazie sprzatania.
     """
-    # TODO: uruchom silnik: p = sync_playwright().start()
-    # TODO: odpal przegladarke: browser = p.chromium.launch(headless=True)
-    # TODO: oddaj ja testom przez yield browser
-    # TODO: po yield posprzataj: browser.close() i p.stop()
-    # TODO: uzupelnij type hint zwracanej wartosci (Browser)
-    pass
+    p = sync_playwright().start()
+    browser = p.chromium.launch(headless=True)
+    yield browser
+    browser.close()
+    p.stop()
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture (zwykly zasieg —
-#       swieza karta dla kazdego testu)
-def strona(przegladarka):
+@pytest.fixture
+def strona(przegladarka: Browser) -> Page:
     """Swieza karta ze strona formularza sklepu (HTML_FORMULARZ).
 
     Args:
@@ -111,16 +104,14 @@ def strona(przegladarka):
         Page: karta z wczytana strona formularza;
             po tescie zamykana w fazie sprzatania.
     """
-    # TODO: otworz karte: page = przegladarka.new_page()
-    # TODO: wstrzyknij HTML: page.set_content(HTML_FORMULARZ)
-    # TODO: oddaj karte testowi przez yield page
-    # TODO: po yield posprzataj: page.close()
-    # TODO: uzupelnij type hinty (parametr Browser, zwrot Page)
-    pass
+    page = przegladarka.new_page()
+    page.set_content(HTML_FORMULARZ)
+    yield page
+    page.close()
 
 
-# TODO: udekoruj fixture dekoratorem @pytest.fixture
-def strona_logowania(przegladarka):
+@pytest.fixture
+def strona_logowania(przegladarka: Browser) -> Page:
     """Swieza karta ze strona logowania (HTML_LOGOWANIE).
 
     Args:
@@ -130,7 +121,7 @@ def strona_logowania(przegladarka):
         Page: karta z wczytana strona logowania;
             po tescie zamykana w fazie sprzatania.
     """
-    # TODO: otworz karte, wstrzyknij HTML_LOGOWANIE, yield, zamknij karte
-    #       (dokladnie jak w fixture strona)
-    # TODO: uzupelnij type hinty (parametr Browser, zwrot Page)
-    pass
+    page = przegladarka.new_page()
+    page.set_content(HTML_LOGOWANIE)
+    yield page
+    page.close()

@@ -311,8 +311,8 @@ Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 21. docker_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 22. github_actions_ci — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 23. async_httpx — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-24. playwright_podstawy — ✅ wygenerowany
-25. playwright_pytest_network — ✅ wygenerowany
+24. playwright_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
+25. playwright_pytest_network — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M1. mini_raport_wydatkow — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M2. mini_api_katalog — ✅ wygenerowany
 M3. mini_monitor_cen — ✅ wygenerowany
