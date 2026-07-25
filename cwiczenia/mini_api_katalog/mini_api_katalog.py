@@ -1,18 +1,3 @@
-# Spis zadań (mini-projekt M2 — pipeline: zewnętrzne API -> plik JSON -> własne API):
-# 01 — pobranie katalogu z zewnętrznego API z kontrolą błędów (None przy awarii)
-# 02 — pobranie katalogu strona po stronie (paginacja + extend)
-# 03 — filtr produktów dostępnych (list comprehension)
-# 04 — przycięcie produktów do pól id, nazwa, cena
-# 05 — wyszukanie produktu po id (None gdy brak)
-# 06 — zapis katalogu do pliku JSON
-# 07 — odczyt katalogu z pliku (None gdy brak pliku lub zepsuty JSON)
-# 08 — bramkarz Pydantic: słownik -> obiekt Produkt (None gdy złe dane)
-# 09 — aplikacja FastAPI: GET z listą produktów z pliku
-# 10 — aplikacja FastAPI: GET szczegółów produktu po id (404 gdy brak)
-# 11 — aplikacja FastAPI: POST dodający produkt do pliku (422 przy złych danych)
-# 12 — dyrygent zaopatrzenia: z zewnętrznego API do pliku katalogu
-# 13 — dyrygent całości: zaopatrzenie + pełne API sklepu (None gdy hurtownia padła)
-
 import json
 from typing import Any
 
@@ -33,9 +18,9 @@ class Produkt(BaseModel):
         Produkt: obiekt z polami id, nazwa i cena po walidacji.
     """
 
-    # TODO: zadeklaruj trzy pola modelu zgodnie z danymi katalogu
-    #       (deklarację pól BaseModel znasz z tematu 16)
-    pass
+    id: int
+    nazwa: str
+    cena: float
 
 
 def zadanie_01_pobierz_katalog(url: str) -> list[dict[str, Any]] | None:
@@ -48,11 +33,12 @@ def zadanie_01_pobierz_katalog(url: str) -> list[dict[str, Any]] | None:
         list[dict[str, Any]] | None: sparsowana lista produktów albo None
             przy jakimkolwiek błędzie sieci lub serwera (także 4xx/5xx).
     """
-    # TODO: pobierz dane z kontrolą błędów serwera i sieci — pełny
-    #       bezpieczny wzorzec (timeout, kontrola kodu, wspólny rodzic
-    #       wyjątków sieciowych) znasz z tematu 11
-    # TODO: awaria to spodziewana sytuacja — kontrakt None, nie wyjątek
-    pass
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException:
+        return None
 
 
 def zadanie_02_pobierz_strony(
@@ -68,12 +54,11 @@ def zadanie_02_pobierz_strony(
         list[dict[str, Any]]: produkty ze wszystkich stron w jednej,
             płaskiej liście; pusta lista dla liczba_stron równego 0.
     """
-    # TODO: w pętli po numerach stron pobieraj kolejne porcje —
-    #       numer strony przekazuj parametrem zapytania "strona"
-    #       (params i timeout znasz z tematu 11)
-    # TODO: porcje doklejaj do akumulatora wzorcem z teorii (sekcja 3) —
-    #       uważaj na pułapkę append vs extend
-    pass
+    wszystkie = []
+    for numer in range(1, liczba_stron + 1):
+        porcja = requests.get(url, params={"strona": numer}, timeout=10)
+        wszystkie.extend(porcja.json())
+    return wszystkie
 
 
 def zadanie_03_filtruj_dostepne(
@@ -88,9 +73,7 @@ def zadanie_03_filtruj_dostepne(
         list[dict[str, Any]]: nowa lista wyłącznie z produktami,
             których "dostepny" to True.
     """
-    # TODO: przefiltruj listę jedną linijką — comprehension z warunkiem
-    #       znasz z tematu 2
-    pass
+    return [produkt for produkt in produkty if produkt["dostepny"] is True]
 
 
 def zadanie_04_wybierz_pola(
@@ -105,10 +88,10 @@ def zadanie_04_wybierz_pola(
         list[dict[str, Any]]: nowa lista słowników zawierających
             WYŁĄCZNIE klucze id, nazwa i cena.
     """
-    # TODO: dla każdego produktu zbuduj NOWY słownik z trzema potrzebnymi
-    #       kluczami (budowanie słowników znasz z tematu 3; nie modyfikuj
-    #       słowników wejściowych)
-    pass
+    return [
+        {"id": p["id"], "nazwa": p["nazwa"], "cena": p["cena"]}
+        for p in produkty
+    ]
 
 
 def zadanie_05_znajdz_produkt(
@@ -124,10 +107,10 @@ def zadanie_05_znajdz_produkt(
         dict[str, Any] | None: pierwszy produkt o pasującym id
             albo None, gdy takiego nie ma.
     """
-    # TODO: przejdź po liście i porównuj id; znaleziony produkt zwróć
-    #       od razu (early return z tematu 1), a po pętli obsłuż brak
-    #       kontraktem None
-    pass
+    for produkt in produkty:
+        if id_produktu == produkt["id"]:
+            return produkt
+    return None
 
 
 def zadanie_06_zapisz_katalog(
@@ -142,9 +125,9 @@ def zadanie_06_zapisz_katalog(
     Returns:
         bool: True po pomyślnym zapisie pliku.
     """
-    # TODO: zapisz listę do pliku wzorcem z tematu 7 (with + zapis JSON,
-    #       encoding jak zawsze przy plikach tekstowych)
-    pass
+    with open(sciezka, "w", encoding="utf-8") as f:
+        json.dump(produkty, f, indent=2)
+    return True
 
 
 def zadanie_07_wczytaj_katalog(sciezka: str) -> list[dict[str, Any]] | None:
@@ -157,11 +140,13 @@ def zadanie_07_wczytaj_katalog(sciezka: str) -> list[dict[str, Any]] | None:
         list[dict[str, Any]] | None: lista produktów albo None, gdy plik
             nie istnieje LUB jego treść nie jest poprawnym JSON-em.
     """
-    # TODO: wczytaj plik wzorcem z tematu 7
-    # TODO: obsłuż DWA spodziewane problemy kontraktem None: brak pliku
-    #       (temat 5) i zepsutą treść (wyjątek JSON-a z tematu 7) —
-    #       pamiętaj o zasadzie kolejności wyjątków z tematu 4
-    pass
+    try:
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+    except json.JSONDecodeError:
+        return None
 
 
 def zadanie_08_waliduj_produkt(dane: dict[str, Any]) -> Produkt | None:
@@ -174,11 +159,10 @@ def zadanie_08_waliduj_produkt(dane: dict[str, Any]) -> Produkt | None:
         Produkt | None: zwalidowany obiekt Produkt albo None, gdy dane
             nie przechodzą walidacji modelu.
     """
-    # TODO: zbuduj obiekt Produkt rozpakowując słownik do argumentów
-    #       nazwanych (teoria, sekcja 4)
-    # TODO: nieudaną walidację zamień na kontrakt None (łap TYLKO
-    #       wyjątek walidacji — teoria, sekcja 4)
-    pass
+    try:
+        return Produkt(**dane)
+    except ValidationError:
+        return None
 
 
 def zadanie_09_api_listy(sciezka: str) -> FastAPI:
@@ -191,10 +175,22 @@ def zadanie_09_api_listy(sciezka: str) -> FastAPI:
         FastAPI: aplikacja, której GET /produkty odpowiada zawartością
             pliku (czytaną przy każdym zapytaniu).
     """
-    # TODO: zbuduj aplikację-fabrykę z endpointem GET (def w def —
-    #       wzorzec z tematu 16); endpoint przy każdym wywołaniu czyta
-    #       plik i zwraca listę
-    pass
+    app = FastAPI()
+
+    @app.get("/produkty")
+    def zwroc_produkty() -> list[dict]:
+        """Zwraca listę produktów.
+
+        Args:
+            Brak.
+
+        Returns:
+            list[dict]: Lista produktów.
+        """
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    return app
 
 
 def zadanie_10_api_szczegolow(sciezka: str) -> FastAPI:
@@ -208,12 +204,27 @@ def zadanie_10_api_szczegolow(sciezka: str) -> FastAPI:
             produktem o podanym id albo kodem 404, gdy go nie ma;
             tekst zamiast liczby w adresie daje automatyczne 422.
     """
-    # TODO: endpoint z parametrem ścieżki walidowanym jako int (temat 16)
-    # TODO: wczytaj listę z pliku i znajdź produkt po id — masz już
-    #       na to gotowy klocek wśród wcześniejszych zadań, użyj go
-    # TODO: brak produktu zgłoś klientowi wzorcem z teorii (sekcja 5) —
-    #       pamiętaj o pułapce raise vs return
-    pass
+    app = FastAPI()
+
+    @app.get("/produkty/{id_produktu}")
+    def zwroc_produkt(id_produktu: int) -> dict:
+        """Zwraca szczegóły jednego produktu albo 404.
+
+        Args:
+            id_produktu: numer produktu z adresu URL.
+
+        Returns:
+            dict: produkt o podanym id.
+        """
+        produkty = zadanie_07_wczytaj_katalog(sciezka)
+        if produkty is None:
+            raise HTTPException(status_code=500, detail="Katalog niedostępny")
+        produkt = zadanie_05_znajdz_produkt(produkty, id_produktu)
+        if produkt is None:
+            raise HTTPException(status_code=404, detail="Nie znaleziono produktu")
+        return produkt
+
+    return app
 
 
 def zadanie_11_api_dodawania(sciezka: str) -> FastAPI:
@@ -227,12 +238,27 @@ def zadanie_11_api_dodawania(sciezka: str) -> FastAPI:
             do modelu Produkt (złe dane = automatyczne 422), dopisuje
             produkt do pliku i odpowiada {"liczba": <nowa długość listy>}.
     """
-    # TODO: endpoint POST przyjmujący model Produkt jako treść zapytania
-    #       (temat 16)
-    # TODO: wczytaj listę z pliku, dopisz produkt zamieniony na słownik
-    #       (metodę modelu znasz z tematu 16), zapisz listę z powrotem
-    #       i zwróć nową liczebność
-    pass
+    app = FastAPI()
+
+    @app.post("/produkty")
+    def dodaj_produkt(produkt: Produkt) -> dict:
+        """Dodaje produkt do katalogu.
+
+        Args:
+            produkt: obiekt produktu do dodania.
+
+        Returns:
+            dict: Słownik z długością listy katalogu.
+        """
+        produkty = zadanie_07_wczytaj_katalog(sciezka)
+        if produkty is None:
+            raise HTTPException(status_code=500, detail="Katalog niedostępny")
+        produkt_dict = produkt.model_dump()
+        produkty.append(produkt_dict)
+        zadanie_06_zapisz_katalog(produkty, sciezka)
+        return {"liczba": len(produkty)}
+
+    return app
 
 
 def zadanie_12_zbuduj_katalog(url: str, sciezka: str) -> bool | None:
@@ -246,11 +272,13 @@ def zadanie_12_zbuduj_katalog(url: str, sciezka: str) -> bool | None:
         bool | None: True po zapisaniu czystego katalogu; None, gdy
             zewnętrzne API zawiodło (wtedy plik w ogóle nie powstaje).
     """
-    # TODO: to dyrygent (teoria, sekcja 6) — połącz klocki: pobranie ->
-    #       filtr dostępnych -> przycięcie pól -> zapis do pliku
-    # TODO: gdy pobranie zwróci None, przerwij early returnem ZANIM
-    #       cokolwiek trafi na dysk
-    pass
+    produkty = zadanie_01_pobierz_katalog(url)
+    if produkty is None:
+        return None
+    przefiltrowane_produkty = zadanie_03_filtruj_dostepne(produkty)
+    przyciete_produkty = zadanie_04_wybierz_pola(przefiltrowane_produkty)
+    zadanie_06_zapisz_katalog(przyciete_produkty, sciezka)
+    return True
 
 
 def zadanie_13_pelne_api(url: str, sciezka: str) -> FastAPI | None:
@@ -266,9 +294,59 @@ def zadanie_13_pelne_api(url: str, sciezka: str) -> FastAPI | None:
             albo 404) i POST /produkty (walidacja modelem, dopisanie
             do pliku) — albo None, gdy zaopatrzenie się nie powiodło.
     """
-    # TODO: najpierw zaopatrzenie gotowym dyrygentem z zadania 12;
-    #       niepowodzenie propaguj kontraktem None (teoria, sekcja 6)
-    # TODO: potem zbuduj JEDNĄ aplikację łączącą trzy endpointy,
-    #       które ćwiczyłeś w zadaniach 09-11 (wszystkie def w def
-    #       na wspólnym app)
-    pass
+    zaopatrzenie = zadanie_12_zbuduj_katalog(url, sciezka)
+    if zaopatrzenie is None:
+        return None
+    app = FastAPI()
+
+    @app.get("/produkty")
+    def zwroc_produkty() -> list[dict]:
+        """Zwraca listę produktów.
+
+        Args:
+            Brak.
+
+        Returns:
+            list[dict]: Lista produktów.
+        """
+        with open(sciezka, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @app.get("/produkty/{id_produktu}")
+    def zwroc_produkt(id_produktu: int) -> dict:
+        """Zwraca szczegóły jednego produktu albo 404.
+
+        Args:
+            id_produktu: numer produktu z adresu URL.
+
+        Returns:
+            dict: produkt o podanym id.
+        """
+        produkty = zadanie_07_wczytaj_katalog(sciezka)
+        if produkty is None:
+            raise HTTPException(status_code=500, detail="Katalog niedostępny")
+        produkt = zadanie_05_znajdz_produkt(produkty, id_produktu)
+        if produkt is None:
+            raise HTTPException(status_code=404, detail="Nie znaleziono produktu")
+        return produkt
+
+    @app.post("/produkty")
+    def dodaj_produkt(produkt: Produkt) -> dict:
+        """Dodaje produkt do katalogu.
+
+        Args:
+            produkt: obiekt produktu do dodania.
+
+        Returns:
+            dict: Słownik z długością listy katalogu.
+        """
+        produkty = zadanie_07_wczytaj_katalog(sciezka)
+        if produkty is None:
+            raise HTTPException(status_code=500, detail="Katalog niedostępny")
+        produkt_dict = produkt.model_dump()
+        produkty.append(produkt_dict)
+        zadanie_06_zapisz_katalog(produkty, sciezka)
+        return {"liczba": len(produkty)}
+
+    return app
+

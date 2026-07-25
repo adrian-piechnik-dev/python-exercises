@@ -34,26 +34,55 @@ def test_zadanie_01_zwraca_liste_produktow(
     surowe_produkty).
     Co sprawdzam: wynik to dokładnie lista z atrapy.
     """
-    # TODO: przygotuj podmienioną funkcję zwracającą atrapę z kodem 200
-    #       i danymi z fixture (wzorzec podmiany znasz z tematu 11 —
-    #       podmieniaj requests.get W MODULE mini_api_katalog)
-    # TODO: wywołaj testowaną funkcję z dowolnym adresem
-    # TODO: sprawdź, że wynik równa się liście z fixture
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get zwracająca zdrową odpowiedź z fixture.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 200 i danymi z fixture.
+        """
+        return FakeResponse(200, surowe_produkty)
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    wynik = zadanie_01_pobierz_katalog("https://www.example.pl")
+    assert wynik == surowe_produkty
 
 
 def test_zadanie_01_zwraca_none_przy_bledzie_serwera(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Co testuje: kontrakt None, gdy serwer odpowiada błędem 500.
-    Co udaje: requests.get — zwraca FakeResponse(500, {}); jej
+    Co udaje: requests.get — zwraca FakeResponse(500, []); jej
     raise_for_status rzuci HTTPError jak prawdziwa odpowiedź.
     Co sprawdzam: wynik is None (bez wyjątku na zewnątrz).
     """
-    # TODO: przygotuj podmienioną funkcję zwracającą atrapę z kodem 500
-    # TODO: podmień requests.get w module tematu i wywołaj funkcję
-    # TODO: sprawdź kontrakt None
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get udająca awarię serwera.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 500 i pustymi danymi — jej
+                raise_for_status rzuci HTTPError.
+        """
+        return FakeResponse(500, [])
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    wynik = zadanie_01_pobierz_katalog("https://www.example.pl")
+    assert wynik is None
 
 
 # --- zadanie_02 ---
@@ -67,12 +96,26 @@ def test_zadanie_02_skleja_strony_w_plaska_liste(
     Co sprawdzam: dla 3 stron wynik ma 6 elementów i pierwszy jest
     słownikiem (nie listą — pułapka append vs extend).
     """
-    # TODO: przygotuj podmienioną funkcję zwracającą przy każdym
-    #       wywołaniu atrapę (200) ze stałą listą 2 słowników
-    # TODO: podmień requests.get w module tematu
-    # TODO: wywołaj testowaną funkcję z liczba_stron równym 3
-    # TODO: sprawdź długość wyniku i typ pierwszego elementu (isinstance)
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get zwracająca zdrową odpowiedź z fixture.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 200 i danymi jako lista dwóch słowników.
+        """
+        return FakeResponse(200, [{"id": 1}, {"id": 2}])
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    wynik = zadanie_02_pobierz_strony("https://www.example.pl", 3)
+    assert len(wynik) == 6
+    assert isinstance(wynik[0], dict)
 
 
 def test_zadanie_02_zero_stron_daje_pusta_liste(
@@ -82,11 +125,26 @@ def test_zadanie_02_zero_stron_daje_pusta_liste(
     Co udaje: requests.get — atrapa nie powinna być w ogóle użyta.
     Co sprawdzam: dla liczba_stron równego 0 wynik to pusta lista.
     """
-    # TODO: podmień requests.get atrapą (dowolną — nie powinna zostać
-    #       wywołana)
-    # TODO: wywołaj testowaną funkcję z liczba_stron równym 0
-    # TODO: sprawdź, że wynik to dokładnie pusta lista
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get zwracająca zdrową odpowiedź z fixture.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 200 i danymi jako lista dwóch słowników.
+        """
+        return FakeResponse(200, [{"id": 1}, {"id": 2}])
+
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    wynik = zadanie_02_pobierz_strony("https://www.example.pl", 0)
+    assert wynik == []
 
 
 # --- zadanie_03 ---
@@ -98,11 +156,10 @@ def test_zadanie_03_zostawia_tylko_dostepne(
     Co udaje: nic — gotowa lista z fixture surowe_produkty (3 z 4 dostępne).
     Co sprawdzam: wynik ma 3 produkty i nie ma wśród nich Myszy (id 2).
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź długość wyniku
-    # TODO: sprawdź, że żaden produkt wyniku nie ma id równego 2
-    #       (comprehension po id + operator in / not in)
-    pass
+    wynik = zadanie_03_filtruj_dostepne(surowe_produkty)
+    assert len(wynik) == 3
+    ids_wynik = [p["id"] for p in wynik]
+    assert 2 not in ids_wynik
 
 
 def test_zadanie_03_pusta_lista_daje_pusta_liste() -> None:
@@ -110,8 +167,8 @@ def test_zadanie_03_pusta_lista_daje_pusta_liste() -> None:
     Co udaje: nic — podaję pustą listę wprost.
     Co sprawdzam: wynik to pusta lista (nie None, nie wyjątek).
     """
-    # TODO: wywołaj testowaną funkcję z pustą listą i sprawdź wynik
-    pass
+    wynik = zadanie_03_filtruj_dostepne([])
+    assert wynik == []
 
 
 # --- zadanie_04 ---
@@ -125,10 +182,9 @@ def test_zadanie_04_zostawia_trzy_pola(
     Co sprawdzam: pierwszy produkt wyniku ma DOKŁADNIE klucze id,
     nazwa i cena.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: porównaj zestaw kluczy pierwszego produktu z oczekiwanym
-    #       (set(slownik) daje zbiór kluczy — zbiory porównuje się ==)
-    pass
+    wynik = zadanie_04_wybierz_pola(surowe_produkty)
+    pierwszy_produkt = wynik[0]
+    assert set(pierwszy_produkt) == {"id", "nazwa", "cena"}
 
 
 def test_zadanie_04_nie_modyfikuje_wejscia(
@@ -139,10 +195,8 @@ def test_zadanie_04_nie_modyfikuje_wejscia(
     Co sprawdzam: po wywołaniu pierwszy produkt ORYGINAŁU nadal ma
     klucz magazyn.
     """
-    # TODO: wywołaj testowaną funkcję na fixture
-    # TODO: sprawdź, że w pierwszym słowniku fixture nadal jest klucz
-    #       magazyn (operator in)
-    pass
+    zadanie_04_wybierz_pola(surowe_produkty)
+    assert "magazyn" in surowe_produkty[0]
 
 
 # --- zadanie_05 ---
@@ -154,9 +208,8 @@ def test_zadanie_05_znajduje_produkt_po_id(
     Co udaje: nic — fixture czyste_produkty.
     Co sprawdzam: dla id 3 wynik to słownik z nazwą Monitor.
     """
-    # TODO: wywołaj testowaną funkcję z id 3
-    # TODO: sprawdź nazwę znalezionego produktu
-    pass
+    wynik = zadanie_05_znajdz_produkt(czyste_produkty, 3)
+    assert wynik["nazwa"] == "Monitor"
 
 
 def test_zadanie_05_zwraca_none_gdy_brak_id(
@@ -166,8 +219,8 @@ def test_zadanie_05_zwraca_none_gdy_brak_id(
     Co udaje: nic — fixture czyste_produkty (nie ma id 999).
     Co sprawdzam: wynik is None.
     """
-    # TODO: wywołaj testowaną funkcję z id 999 i sprawdź kontrakt None
-    pass
+    wynik = zadanie_05_znajdz_produkt(czyste_produkty, 999)
+    assert wynik is None
 
 
 # --- zadanie_06 ---
@@ -179,10 +232,10 @@ def test_zadanie_06_tworzy_plik_i_zwraca_true(
     Co udaje: nic — prawdziwy zapis do tmp_path.
     Co sprawdzam: wynik is True i plik istnieje.
     """
-    # TODO: przygotuj ścieżkę docelową w tmp_path
-    # TODO: wywołaj testowaną funkcję
-    # TODO: sprawdź zwróconą wartość i istnienie pliku (Path.exists)
-    pass
+    sciezka = tmp_path / "produkty.json"
+    wynik = zadanie_06_zapisz_katalog(czyste_produkty, str(sciezka))
+    assert wynik is True
+    assert sciezka.exists()
 
 
 def test_zadanie_06_zapisuje_pelna_zawartosc(
@@ -192,10 +245,10 @@ def test_zadanie_06_zapisuje_pelna_zawartosc(
     Co udaje: nic — zapis i samodzielny odczyt pliku.
     Co sprawdzam: treść pliku wczytana JSON-em równa się liście z fixture.
     """
-    # TODO: zapisz katalog do pliku w tmp_path testowaną funkcją
-    # TODO: wczytaj plik z powrotem (wzorzec odczytu z tematu 7)
-    # TODO: porównaj wczytaną listę z fixture
-    pass
+    sciezka = tmp_path / "produkty.json"
+    zadanie_06_zapisz_katalog(czyste_produkty, str(sciezka))
+    with open(str(sciezka), "r", encoding="utf-8") as f:
+        assert json.load(f) == czyste_produkty
 
 
 # --- zadanie_07 ---
@@ -205,9 +258,9 @@ def test_zadanie_07_wczytuje_katalog(katalog_json: Path) -> None:
     Co udaje: nic — gotowy plik z fixture katalog_json (3 produkty).
     Co sprawdzam: wynik ma 3 produkty, pierwszy to Klawiatura.
     """
-    # TODO: wywołaj testowaną funkcję ze ścieżką z fixture (jako string)
-    # TODO: sprawdź długość listy i nazwę pierwszego produktu
-    pass
+    wynik = zadanie_07_wczytaj_katalog(str(katalog_json))
+    assert len(wynik) == 3
+    assert wynik[0]["nazwa"] == "Klawiatura"
 
 
 def test_zadanie_07_none_gdy_brak_pliku(tmp_path: Path) -> None:
@@ -215,9 +268,9 @@ def test_zadanie_07_none_gdy_brak_pliku(tmp_path: Path) -> None:
     Co udaje: nic — ścieżka w pustym katalogu tymczasowym.
     Co sprawdzam: wynik is None.
     """
-    # TODO: przygotuj ścieżkę do pliku, którego nie ma
-    # TODO: wywołaj testowaną funkcję i sprawdź kontrakt None
-    pass
+    sciezka = tmp_path / "nieistnieje.json"
+    wynik = zadanie_07_wczytaj_katalog(str(sciezka))
+    assert wynik is None
 
 
 def test_zadanie_07_none_gdy_zepsuty_json(zepsuty_json: Path) -> None:
@@ -225,9 +278,8 @@ def test_zadanie_07_none_gdy_zepsuty_json(zepsuty_json: Path) -> None:
     Co udaje: nic — gotowy plik-podróbka z fixture zepsuty_json.
     Co sprawdzam: wynik is None (JSONDecodeError złapany w środku).
     """
-    # TODO: wywołaj testowaną funkcję ze ścieżką z fixture
-    # TODO: sprawdź kontrakt None
-    pass
+    wynik = zadanie_07_wczytaj_katalog(str(zepsuty_json))
+    assert wynik is None
 
 
 # --- zadanie_08 ---
@@ -238,10 +290,10 @@ def test_zadanie_08_buduje_obiekt_z_poprawnych_danych() -> None:
     Co sprawdzam: wynik ma pola nazwa i cena o podanych wartościach
     (dostęp przez kropkę, jak w temacie 16).
     """
-    # TODO: przygotuj słownik z poprawnymi polami id, nazwa, cena
-    # TODO: wywołaj testowaną funkcję
-    # TODO: sprawdź wartości pól obiektu (wynik.nazwa, wynik.cena)
-    pass
+    dane = {"id": 1, "nazwa": "Mysz", "cena": 19.99}
+    wynik = zadanie_08_waliduj_produkt(dane)
+    assert wynik.nazwa == "Mysz"
+    assert wynik.cena == 19.99
 
 
 def test_zadanie_08_zwraca_none_gdy_zle_dane() -> None:
@@ -250,9 +302,9 @@ def test_zadanie_08_zwraca_none_gdy_zle_dane() -> None:
     na float).
     Co sprawdzam: wynik is None (ValidationError złapany w środku).
     """
-    # TODO: przygotuj słownik z ceną, której Pydantic nie skonwertuje
-    # TODO: wywołaj testowaną funkcję i sprawdź kontrakt None
-    pass
+    dane = {"id": 1, "nazwa": "Mysz", "cena": "abc"}
+    wynik = zadanie_08_waliduj_produkt(dane)
+    assert wynik is None
 
 
 # --- zadanie_09 ---
@@ -263,11 +315,10 @@ def test_zadanie_09_get_zwraca_liste_z_pliku(katalog_json: Path) -> None:
     plik jest prawdziwy (fixture katalog_json).
     Co sprawdzam: kod 200 i 3 produkty w odpowiedzi JSON.
     """
-    # TODO: zbuduj aplikację testowaną funkcją i opakuj ją w TestClient
-    #       (wzorzec z tematu 16)
-    # TODO: wykonaj zapytanie GET /produkty
-    # TODO: sprawdź status_code odpowiedzi i długość listy z .json()
-    pass
+    client = TestClient(zadanie_09_api_listy(str(katalog_json)))
+    response = client.get("/produkty")
+    assert response.status_code == 200
+    assert len(response.json()) == 3
 
 
 def test_zadanie_09_pusty_katalog_daje_pusta_liste(tmp_path: Path) -> None:
@@ -275,11 +326,12 @@ def test_zadanie_09_pusty_katalog_daje_pusta_liste(tmp_path: Path) -> None:
     Co udaje: nic — sam przygotowuję plik z treścią "[]".
     Co sprawdzam: kod 200 i pusta lista w odpowiedzi.
     """
-    # TODO: przygotuj w tmp_path plik .json z pustą listą (zapis tekstu
-    #       do pliku przez Path.write_text znasz z teorii M1 / tematu 5)
-    # TODO: zbuduj aplikację, opakuj w TestClient i wykonaj GET /produkty
-    # TODO: sprawdź kod i treść odpowiedzi
-    pass
+    sciezka = tmp_path / "pusta.json"
+    sciezka.write_text("[]", encoding="utf-8")
+    client = TestClient(zadanie_09_api_listy(str(sciezka)))
+    response = client.get("/produkty")
+    assert response.status_code == 200
+    assert response.json() == []
 
 
 # --- zadanie_10 ---
@@ -289,10 +341,10 @@ def test_zadanie_10_zwraca_szczegoly_produktu(katalog_json: Path) -> None:
     Co udaje: nic — TestClient + prawdziwy plik z fixture.
     Co sprawdzam: kod 200 i nazwa Monitor dla id 3.
     """
-    # TODO: zbuduj aplikację i TestClient
-    # TODO: wykonaj GET /produkty/3
-    # TODO: sprawdź kod odpowiedzi i nazwę produktu z .json()
-    pass
+    client = TestClient(zadanie_10_api_szczegolow(str(katalog_json)))
+    response = client.get("/produkty/3")
+    assert response.status_code == 200
+    assert response.json()["nazwa"] == "Monitor"
 
 
 def test_zadanie_10_kod_404_gdy_brak_produktu(katalog_json: Path) -> None:
@@ -300,9 +352,9 @@ def test_zadanie_10_kod_404_gdy_brak_produktu(katalog_json: Path) -> None:
     Co udaje: nic — TestClient + prawdziwy plik (nie ma id 999).
     Co sprawdzam: status_code odpowiedzi to 404.
     """
-    # TODO: zbuduj aplikację i TestClient
-    # TODO: wykonaj GET /produkty/999 i sprawdź kod odpowiedzi
-    pass
+    client = TestClient(zadanie_10_api_szczegolow(str(katalog_json)))
+    response = client.get("/produkty/999")
+    assert response.status_code == 404
 
 
 # --- zadanie_11 ---
@@ -312,11 +364,13 @@ def test_zadanie_11_post_dopisuje_produkt(katalog_json: Path) -> None:
     Co udaje: nic — TestClient + prawdziwy plik (startowo 3 produkty).
     Co sprawdzam: odpowiedź {"liczba": 4} i 4 pozycje w pliku po zapisie.
     """
-    # TODO: zbuduj aplikację i TestClient
-    # TODO: wykonaj POST /produkty z poprawnym JSON-em produktu
-    #       (przekazywanie treści przez json=... znasz z tematów 11 i 16)
-    # TODO: sprawdź odpowiedź oraz zawartość pliku po zapisie
-    pass
+    client = TestClient(zadanie_11_api_dodawania(str(katalog_json)))
+    nowy_produkt = {"id": 5, "nazwa": "Monitor LG", "cena": 1299.0}
+    response = client.post("/produkty", json=nowy_produkt)
+    assert response.status_code == 200
+    assert response.json() == {"liczba": 4}
+    produkty = json.loads(katalog_json.read_text(encoding="utf-8"))
+    assert len(produkty) == 4
 
 
 def test_zadanie_11_kod_422_gdy_zle_dane(katalog_json: Path) -> None:
@@ -325,10 +379,12 @@ def test_zadanie_11_kod_422_gdy_zle_dane(katalog_json: Path) -> None:
     Co sprawdzam: POST bez pola cena daje kod 422, a plik ma nadal
     3 pozycje (nic nie dopisano).
     """
-    # TODO: zbuduj aplikację i TestClient
-    # TODO: wykonaj POST /produkty z JSON-em bez ceny
-    # TODO: sprawdź kod 422 i niezmienioną zawartość pliku
-    pass
+    client = TestClient(zadanie_11_api_dodawania(str(katalog_json)))
+    nowy_produkt = {"id": 5, "nazwa": "Monitor LG"}
+    response = client.post("/produkty", json=nowy_produkt)
+    assert response.status_code == 422
+    produkty = json.loads(katalog_json.read_text(encoding="utf-8"))
+    assert len(produkty) == 3
 
 
 # --- zadanie_12 ---
@@ -343,11 +399,29 @@ def test_zadanie_12_buduje_czysty_katalog_na_dysku(
     Co sprawdzam: wynik is True; plik ma 3 produkty (bez Myszy),
     a pierwszy nie ma już pola magazyn.
     """
-    # TODO: podmień requests.get w module tematu atrapą z fixture
-    # TODO: wywołaj testowaną funkcję ze ścieżką w tmp_path
-    # TODO: wczytaj zapisany plik i sprawdź: liczbę produktów,
-    #       nieobecność id 2, nieobecność klucza magazyn
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get zwracająca zdrową odpowiedź z fixture.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 200 i danymi z fixture.
+        """
+        return FakeResponse(200, surowe_produkty)
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    sciezka = tmp_path / "produkty.json"
+    wynik = zadanie_12_zbuduj_katalog("https://www.example.pl", str(sciezka))
+    assert wynik is True
+    plik_z_produktami = json.loads(sciezka.read_text(encoding="utf-8"))
+    assert len(plik_z_produktami) == 3
+    assert "magazyn" not in plik_z_produktami[0]
 
 
 def test_zadanie_12_none_i_brak_pliku_gdy_api_padlo(
@@ -357,10 +431,28 @@ def test_zadanie_12_none_i_brak_pliku_gdy_api_padlo(
     Co udaje: requests.get — atrapa z kodem 500.
     Co sprawdzam: wynik is None i plik katalogu NIE powstał.
     """
-    # TODO: podmień requests.get atrapą z kodem 500
-    # TODO: wywołaj testowaną funkcję ze ścieżką w tmp_path
-    # TODO: sprawdź kontrakt None i nieistnienie pliku
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get udająca awarię serwera.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 500 i pustymi danymi — jej
+                raise_for_status rzuci HTTPError.
+        """
+        return FakeResponse(500, [])
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    sciezka = tmp_path / "produkty.json"
+    wynik = zadanie_12_zbuduj_katalog("https://www.example.pl", str(sciezka))
+    assert wynik is None
+    assert not sciezka.exists()
 
 
 # --- zadanie_13 ---
@@ -376,10 +468,33 @@ def test_zadanie_13_buduje_dzialajacy_sklep(
     Co sprawdzam: GET /produkty daje 3 produkty; GET /produkty/3 daje
     Monitor; GET /produkty/999 daje 404.
     """
-    # TODO: podmień requests.get w module tematu atrapą z fixture
-    # TODO: wywołaj testowaną funkcję i opakuj wynik w TestClient
-    # TODO: sprawdź kolejno trzy zapytania z docstringa
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get zwracająca zdrową odpowiedź z fixture.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 200 i danymi z fixture.
+        """
+        return FakeResponse(200, surowe_produkty)
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    sciezka = tmp_path / "produkty.json"
+    client = TestClient(zadanie_13_pelne_api("https://www.example.pl", str(sciezka)))
+    response = client.get("/produkty")
+    assert response.status_code == 200
+    assert len(response.json()) == 3
+    response = client.get("/produkty/3")
+    assert response.status_code == 200
+    assert response.json()["nazwa"] == "Monitor"
+    response = client.get("/produkty/999")
+    assert response.status_code == 404
 
 
 def test_zadanie_13_none_gdy_zaopatrzenie_padlo(
@@ -389,6 +504,24 @@ def test_zadanie_13_none_gdy_zaopatrzenie_padlo(
     Co udaje: requests.get — atrapa z kodem 500.
     Co sprawdzam: wynik is None (aplikacja w ogóle nie powstaje).
     """
-    # TODO: podmień requests.get atrapą z kodem 500
-    # TODO: wywołaj testowaną funkcję i sprawdź kontrakt None
-    pass
+    def podmieniony_get(
+            url: str,
+            params: dict[str, Any] | None = None,
+            timeout: int | None = None,
+    ) -> FakeResponse:
+        """Atrapa requests.get udająca awarię serwera.
+
+        Args:
+            url: ignorowany adres.
+            params: ignorowane parametry zapytania.
+            timeout: ignorowany limit czasu.
+
+        Returns:
+            FakeResponse: atrapa z kodem 500 i pustymi danymi — jej
+                raise_for_status rzuci HTTPError.
+        """
+        return FakeResponse(500, [])
+    monkeypatch.setattr("mini_api_katalog.requests.get", podmieniony_get)
+    sciezka = tmp_path / "produkty.json"
+    wynik = zadanie_13_pelne_api("https://www.example.pl", str(sciezka))
+    assert wynik is None

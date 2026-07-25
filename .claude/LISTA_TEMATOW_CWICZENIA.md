@@ -314,7 +314,7 @@ Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 24. playwright_podstawy — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 25. playwright_pytest_network — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M1. mini_raport_wydatkow — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-M2. mini_api_katalog — ✅ wygenerowany
+M2. mini_api_katalog — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M3. mini_monitor_cen — ✅ wygenerowany
 
 ### Zasada auto-odhaczania (dla CC):

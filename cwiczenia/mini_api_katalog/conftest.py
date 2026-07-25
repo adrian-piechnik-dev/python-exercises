@@ -1,8 +1,3 @@
-# UWAGA (reguły mini-projektu M2): ten conftest dostajesz GOTOWY, bez TODO.
-# Infrastruktura testowa (FakeResponse) i dane są żmudne, a niczego nowego
-# nie uczą — twoja praca to logika w mini_api_katalog.py i asserty w testach.
-# Przeczytaj jednak całość uważnie: musisz znać dane, żeby testować.
-
 import json
 import os
 import sys
