@@ -315,7 +315,7 @@ Po temacie 20 (odblokowane po ✅ sprawdzony na 20):
 25. playwright_pytest_network — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M1. mini_raport_wydatkow — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 M2. mini_api_katalog — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
-M3. mini_monitor_cen — ✅ wygenerowany
+M3. mini_monitor_cen — ✅ wygenerowany, ✅ wykonany, ✅ sprawdzony
 
 ### Zasada auto-odhaczania (dla CC):
 - Po wykonaniu /nowy-temat <slug> → CC sam zmienia status z ⬜ na ✅ wygenerowany

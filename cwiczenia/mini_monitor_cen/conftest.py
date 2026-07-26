@@ -1,9 +1,3 @@
-# UWAGA (reguły mini-projektu M3): ten conftest dostajesz GOTOWY, bez TODO.
-# Atrapy FakeResponse (temat 12) i FakeCursor/FakeConnection (temat 15)
-# budowałeś już sam — tu są wypełnione, żebyś pisał logikę i asserty,
-# nie infrastrukturę. Przeczytaj całość uważnie: w testach będziesz
-# zaglądać w notatki szpiega (wykonane, wykonane_wiele, liczba_commitow).
-
 import os
 import sys
 from typing import Any, Optional

@@ -1,18 +1,3 @@
-# Spis zadań (mini-projekt M3 — pipeline: scraping -> baza danych -> raport zmian):
-# 01 — pobranie HTML strony sklepu z kontrolą błędów (None przy awarii)
-# 02 — parsowanie produktów z HTML (nazwa + surowy tekst ceny)
-# 03 — czyszczenie tekstu ceny do float (None gdy nieczytelna)
-# 04 — zebranie czystych cen ze strony (parsowanie + czyszczenie, pomija zepsute)
-# 05 — patrol po wielu stronach z pauzą między zapytaniami
-# 06 — utworzenie tabeli ceny w bazie (dziennik odczytów)
-# 07 — zapis jednego odczytu ceny (INSERT z %s + commit)
-# 08 — zapis hurtowy wielu odczytów (executemany + commit)
-# 09 — historia cen produktu (SELECT + fetchall)
-# 10 — ostatnia zapisana cena produktu (ORDER BY DESC + LIMIT 1, None gdy brak)
-# 11 — werdykt zmiany ceny: wzrost / spadek / bez zmian / nowy produkt
-# 12 — dyrygent zapisu: z HTML prosto do bazy (zwraca liczbę wpisów)
-# 13 — dyrygent całości: patrol + porównanie + zapis + meldunek ze statusami
-
 import time
 from typing import Any
 
@@ -30,12 +15,16 @@ def zadanie_01_pobierz_html(url: str) -> str | None:
         str | None: treść strony (response.text) albo None przy
             jakimkolwiek błędzie sieci lub serwera (także 4xx/5xx).
     """
-    # TODO: pobierz stronę grzecznym scraperem z tematu 12 — przedstaw
-    #       się nagłówkiem User-Agent, ustaw timeout, skontroluj kod
-    #       odpowiedzi
-    # TODO: awarię sieci/serwera obsłuż kontraktem None (wspólnego
-    #       rodzica wyjątków sieciowych znasz z tematu 11)
-    pass
+    try:
+        response = requests.get(
+            url,
+            headers={"User-Agent": "Jestem Adrian"},
+            timeout=5
+        )
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException:
+        return None
 
 
 def zadanie_02_parsuj_produkty(html: str) -> list[dict[str, str]]:
@@ -49,11 +38,14 @@ def zadanie_02_parsuj_produkty(html: str) -> list[dict[str, str]]:
         list[dict[str, str]]: słowniki {"nazwa": ..., "cena_tekst": ...}
             w kolejności ze strony; pusta lista, gdy brak produktów.
     """
-    # TODO: sparsuj HTML i znajdź wszystkie divy produktów
-    #       (find_all z klasą — temat 12)
-    # TODO: z każdego diva wyciągnij tekst obu spanów (find wewnątrz
-    #       elementu + get_text — temat 12) i zbuduj słownik
-    pass
+    soup = BeautifulSoup(html, "html.parser")
+    produkty = soup.find_all("div", class_="produkt")
+    lista_produktow = []
+    for produkt in produkty:
+        nazwa = produkt.find("span", class_="nazwa").get_text()
+        cena = produkt.find("span", class_="cena").get_text()
+        lista_produktow.append({"nazwa": nazwa, "cena_tekst": cena})
+    return lista_produktow
 
 
 def zadanie_03_wyczysc_cene(cena_tekst: str) -> float | None:
@@ -66,11 +58,14 @@ def zadanie_03_wyczysc_cene(cena_tekst: str) -> float | None:
         float | None: cena jako liczba albo None, gdy tekst nie jest
             czytelną ceną (np. "brak danych").
     """
-    # TODO: wysprzątaj tekst wzorcem z teorii (sekcja 3): białe znaki
-    #       z końców, napis waluty, spacje w środku, przecinek na kropkę
-    # TODO: konwersję ubezpiecz bramką znaną z M1 — nieczytelna metka
-    #       to kontrakt None, nie wyjątek
-    pass
+    czysty = cena_tekst.strip()
+    bez_waluty = czysty.replace("zł", "")
+    bez_spacji = bez_waluty.replace(" ", "")
+    z_kropka = bez_spacji.replace(",", ".")
+    try:
+        return float(z_kropka)
+    except ValueError:
+        return None
 
 
 def zadanie_04_zbierz_ceny(html: str) -> list[dict[str, Any]]:
@@ -83,11 +78,16 @@ def zadanie_04_zbierz_ceny(html: str) -> list[dict[str, Any]]:
         list[dict[str, Any]]: słowniki {"nazwa": str, "cena": float};
             produkty z nieczytelną ceną są POMIJANE (patrol trwa dalej).
     """
-    # TODO: połącz dwa gotowe klocki: parsowanie (zadanie 02)
-    #       i czyszczenie (zadanie 03)
-    # TODO: produkt, którego cena wyszła None, pomiń — do wyniku
-    #       trafiają tylko czytelne metki
-    pass
+    lista_produktow = zadanie_02_parsuj_produkty(html)
+    czyste_ceny_produktow = []
+    for produkt in lista_produktow:
+        cena = produkt["cena_tekst"]
+        czysta_cena = zadanie_03_wyczysc_cene(cena)
+        if czysta_cena is None:
+            continue
+        czyste_ceny_produktow.append({"nazwa": produkt["nazwa"], "cena": czysta_cena})
+
+    return czyste_ceny_produktow
 
 
 def zadanie_05_patroluj_strony(adresy: list[str]) -> list[dict[str, Any]]:
@@ -101,12 +101,15 @@ def zadanie_05_patroluj_strony(adresy: list[str]) -> list[dict[str, Any]]:
             płaskiej liście; strony, których nie udało się pobrać
             (None z zadania 01), są pomijane.
     """
-    # TODO: dla każdego adresu: pauza grzecznościowa 1 sekundy
-    #       (temat 12), pobranie HTML (zadanie 01), zebranie cen
-    #       (zadanie 04)
-    # TODO: nieudane pobranie pomiń; udane porcje doklejaj do
-    #       akumulatora (pułapkę append vs extend znasz z M2)
-    pass
+    lista_cen_produktow = []
+    for adres in adresy:
+        html = zadanie_01_pobierz_html(adres)
+        if html is None:
+            continue
+        czyste_ceny_produktow = zadanie_04_zbierz_ceny(html)
+        lista_cen_produktow.extend(czyste_ceny_produktow)
+        time.sleep(1)
+    return lista_cen_produktow
 
 
 def zadanie_06_utworz_tabele(polaczenie: Any) -> None:
@@ -118,16 +121,17 @@ def zadanie_06_utworz_tabele(polaczenie: Any) -> None:
     Returns:
         None
     """
-    # TODO: w bloku with na kursorze wykonaj utworzenie tabeli:
-    #       CREATE TABLE ceny (
-    #           id SERIAL PRIMARY KEY,
-    #           nazwa TEXT,
-    #           cena NUMERIC,
-    #           data_odczytu TEXT
-    #       )
-    #       (wzorzec pracy z kursorem znasz z tematu 15)
-    # TODO: po bloku with zatwierdź zmianę
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute("""
+            CREATE TABLE ceny(
+                id SERIAL PRIMARY KEY,
+                nazwa TEXT,
+                cena NUMERIC,
+                data_odczytu TEXT
+            )
+            """
+        )
+    polaczenie.commit()
 
 
 def zadanie_07_zapisz_cene(
@@ -144,12 +148,12 @@ def zadanie_07_zapisz_cene(
     Returns:
         None
     """
-    # TODO: w bloku with na kursorze wykonaj INSERT do tabeli ceny
-    #       (kolumny nazwa, cena, data_odczytu) — wartości WYŁĄCZNIE
-    #       przez zaślepki %s i krotkę parametrów (temat 15; pamiętaj,
-    #       dlaczego f-string w SQL to przestępstwo)
-    # TODO: po bloku with zatwierdź zmianę
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute(
+            "INSERT INTO ceny (nazwa, cena, data_odczytu) VALUES (%s, %s, %s)",
+            (nazwa, cena, data_odczytu)
+        )
+    polaczenie.commit()
 
 
 def zadanie_08_zapisz_wiele_cen(
@@ -164,10 +168,12 @@ def zadanie_08_zapisz_wiele_cen(
     Returns:
         None
     """
-    # TODO: jak zadanie 07, ale hurtem — metodę kursora do wielu
-    #       krotek naraz znasz z tematu 15
-    # TODO: po bloku with zatwierdź zmianę
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.executemany(
+            "INSERT INTO ceny (nazwa, cena, data_odczytu) VALUES (%s, %s, %s)",
+            wpisy
+        )
+    polaczenie.commit()
 
 
 def zadanie_09_historia_cen(polaczenie: Any, nazwa: str) -> list[tuple]:
@@ -181,11 +187,16 @@ def zadanie_09_historia_cen(polaczenie: Any, nazwa: str) -> list[tuple]:
         list[tuple]: krotki (cena, data_odczytu) posortowane rosnąco
             po dacie; pusta lista, gdy produktu nie ma w dzienniku.
     """
-    # TODO: w bloku with wykonaj SELECT cena, data_odczytu z filtrem
-    #       WHERE po nazwie (parametr przez %s) i sortowaniem po dacie
-    # TODO: zwróć wszystkie wiersze (metoda odczytu wielu wierszy —
-    #       temat 15); odczyt nie wymaga commita
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute("""
+            SELECT cena, data_odczytu 
+            FROM ceny 
+            WHERE nazwa = %s 
+            ORDER BY data_odczytu
+            """,
+            (nazwa,)
+        )
+        return kursor.fetchall()
 
 
 def zadanie_10_ostatnia_cena(polaczenie: Any, nazwa: str) -> float | None:
@@ -199,11 +210,21 @@ def zadanie_10_ostatnia_cena(polaczenie: Any, nazwa: str) -> float | None:
         float | None: ostatnia cena jako float albo None, gdy produktu
             nie ma jeszcze w dzienniku.
     """
-    # TODO: zbuduj zapytanie o „ostatni wpis" wzorcem z teorii
-    #       (sekcja 4) i pobierz jeden wiersz
-    # TODO: brak wiersza obsłuż kontraktem None; wartość z wiersza
-    #       rzutuj na float (teoria, sekcja 4 — pułapka fetchone[0])
-    pass
+    with polaczenie.cursor() as kursor:
+        kursor.execute("""
+            SELECT cena 
+            FROM ceny 
+            WHERE nazwa = %s 
+            ORDER BY data_odczytu 
+            DESC LIMIT 1
+            """,
+            (nazwa,)
+        )
+        wiersz = kursor.fetchone()
+        if wiersz is None:
+            return None
+        cena = wiersz[0]
+        return float(cena)
 
 
 def zadanie_11_werdykt(stara: float | None, nowa: float) -> str:
@@ -218,10 +239,13 @@ def zadanie_11_werdykt(stara: float | None, nowa: float) -> str:
             albo "bez zmian" — wartości domenowe, nie sygnały błędów
             (teoria, sekcja 5).
     """
-    # TODO: rozstrzygnij cztery przypadki łańcuchem warunków z early
-    #       returnem (temat 1); zacznij od przypadku nowego produktu
-    #       (porównanie z None — pamiętaj o is)
-    pass
+    if stara is None:
+        return "nowy produkt"
+    if nowa > stara:
+        return "wzrost"
+    if nowa < stara:
+        return "spadek"
+    return "bez zmian"
 
 
 def zadanie_12_zapisz_odczyt(
@@ -238,12 +262,15 @@ def zadanie_12_zapisz_odczyt(
         int: liczba zapisanych wpisów; 0 gdy strona nie miała żadnej
             czytelnej ceny (wtedy nie wykonuje zapisu wcale).
     """
-    # TODO: zbierz czyste ceny gotowym klockiem (zadanie 04)
-    # TODO: gdy lista pusta — zakończ early returnem zerem, bez
-    #       dotykania bazy
-    # TODO: zbuduj listę krotek (nazwa, cena, data_odczytu) i zapisz
-    #       hurtem gotowym klockiem (zadanie 08); zwróć liczbę wpisów
-    pass
+    produkty_oczyszczone = zadanie_04_zbierz_ceny(html)
+    if not produkty_oczyszczone:
+        return 0
+    wpisy = [
+        (produkt["nazwa"], produkt["cena"], data_odczytu)
+        for produkt in produkty_oczyszczone
+    ]
+    zadanie_08_zapisz_wiele_cen(polaczenie, wpisy)
+    return len(produkty_oczyszczone)
 
 
 def zadanie_13_monitoruj(
@@ -262,11 +289,20 @@ def zadanie_13_monitoruj(
             (status z zadania 11); None, gdy strony nie udało się
             pobrać (wtedy baza zostaje nietknięta).
     """
-    # TODO: pobierz HTML (zadanie 01); awarię propaguj kontraktem None
-    #       ZANIM cokolwiek trafi do bazy (teoria, sekcja 5)
-    # TODO: zbierz czyste ceny (zadanie 04) i dla każdego produktu:
-    #       ostatnia cena z dziennika (zadanie 10) -> werdykt
-    #       (zadanie 11) -> zapis nowego odczytu (zadanie 07) ->
-    #       wpis do meldunku
-    # TODO: zwróć meldunek jako listę słowników
-    pass
+    html = zadanie_01_pobierz_html(url)
+    if html is None:
+        return None
+    produkty = zadanie_04_zbierz_ceny(html)
+    meldunek = []
+    for produkt in produkty:
+        nazwa = produkt["nazwa"]
+        nowa_cena = produkt["cena"]
+        stara_cena = zadanie_10_ostatnia_cena(polaczenie, nazwa)
+        status = zadanie_11_werdykt(stara_cena, nowa_cena)
+        zadanie_07_zapisz_cene(polaczenie, nazwa, nowa_cena, data_odczytu)
+        meldunek.append({
+            "nazwa": nazwa,
+            "cena": nowa_cena,
+            "status": status
+        })
+    return meldunek
